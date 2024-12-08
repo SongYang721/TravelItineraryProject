@@ -19,6 +19,9 @@ namespace TravelItineraryProject.Data
             base.OnModelCreating(builder);
 
             builder.ApplyConfiguration(new ColourSeed());
+            builder.ApplyConfiguration(new UserSeed());
+            builder.ApplyConfiguration(new RoleSeed());
+            builder.ApplyConfiguration(new UserRoleSeed());
         }
     }
 }
