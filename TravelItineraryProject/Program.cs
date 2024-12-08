@@ -34,9 +34,10 @@ builder.Services.AddAuthentication(options =>
     .AddIdentityCookies();
 
 builder.Services.AddIdentityCore<TravelItineraryProjectUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<TravelItineraryProjectContext>()
-    .AddSignInManager()
-    .AddDefaultTokenProviders();
+.AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<TravelItineraryProjectContext>()
+.AddSignInManager()
+.AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<TravelItineraryProjectUser>, IdentityNoOpEmailSender>();
 
