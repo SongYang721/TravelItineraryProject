@@ -18,7 +18,12 @@ namespace TravelItineraryProject.Data
         {
             base.OnModelCreating(builder);
 
-
+            builder.ApplyConfiguration(new BookinigSeed());
+            builder.ApplyConfiguration(new CustomerSeed());
+            builder.ApplyConfiguration(new ItinerarySeed());
+            builder.ApplyConfiguration(new PaymentSeed());
+            builder.ApplyConfiguration(new ReviewSeed());
+            builder.ApplyConfiguration(new StaffSeed());
             builder.ApplyConfiguration(new UserSeed());
             builder.ApplyConfiguration(new RoleSeed());
             builder.ApplyConfiguration(new UserRoleSeed());

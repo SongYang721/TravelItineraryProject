@@ -14,7 +14,7 @@
         public virtual Itinerary? Itinerary { get; set; } // Nav
 
         public int PaymentId { get; set; } // Fk
-        public virtual Payment? Payment { get; set; } // Nav
+        public Payment? Payment { get; set; } // Nav
 
 
         public int StaffId { get; set; } // Fk
