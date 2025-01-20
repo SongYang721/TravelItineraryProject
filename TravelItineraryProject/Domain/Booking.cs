@@ -1,6 +1,6 @@
 ﻿namespace TravelItineraryProject.Domain
 {
-    public class Booking : BaseDomainModel
+    public class Booking : BaseDomainMode
     {
         public DateTime DateOut { get; set; }
         public DateTime DateIn { get; set; }
