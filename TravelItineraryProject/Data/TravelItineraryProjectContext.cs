@@ -7,10 +7,10 @@ namespace TravelItineraryProject.Data
 {
     public class TravelItineraryProjectContext(DbContextOptions<TravelItineraryProjectContext> options) : IdentityDbContext<TravelItineraryProjectUser>(options)
     {
-        public DbSet<TravelItineraryProject.Domain.Make> Make { get; set; } = default!;
-        public DbSet<TravelItineraryProject.Domain.Model> Model { get; set; } = default!;
-        public DbSet<TravelItineraryProject.Domain.Vehicle> Vehicle { get; set; } = default!;
-        public DbSet<TravelItineraryProject.Domain.Colour> Colour { get; set; } = default!;
+        public DbSet<TravelItineraryProject.Domain.Payment> Make { get; set; } = default!;
+        public DbSet<TravelItineraryProject.Domain.Review> Model { get; set; } = default!;
+        public DbSet<TravelItineraryProject.Domain.Staff> Vehicle { get; set; } = default!;
+        public DbSet<TravelItineraryProject.Domain.Itinerary> Colour { get; set; } = default!;
         public DbSet<TravelItineraryProject.Domain.Booking> Booking { get; set; } = default!;
         public DbSet<TravelItineraryProject.Domain.Customer> Customer { get; set; } = default!;
 
@@ -18,7 +18,7 @@ namespace TravelItineraryProject.Data
         {
             base.OnModelCreating(builder);
 
-            builder.ApplyConfiguration(new ColourSeed());
+
             builder.ApplyConfiguration(new UserSeed());
             builder.ApplyConfiguration(new RoleSeed());
             builder.ApplyConfiguration(new UserRoleSeed());

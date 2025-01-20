@@ -2,10 +2,13 @@
 {
     public class Customer : BaseDomainModel
     {
-        public string? DrivingLicense { get; set; }
-        public string? Address { get; set; }
-        public string? ContactNumber { get; set; }
+        public int UserId { get; set; }
+        public string? Password { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
         public string? EmailAddress { get; set; }
-        public virtual List<Booking>? Bookings { get; set; }
+        public string? RequestID { get; set; }
+        public ICollection<Booking>? Bookings { get; set; } //  = new List<Booking>();
+        public ICollection<Review>? Reviews { get; set; } // = new List<Review>();
     }
 }
