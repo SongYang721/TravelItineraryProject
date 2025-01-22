@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace TravelItineraryProject.Domain
 {
@@ -19,6 +20,7 @@ namespace TravelItineraryProject.Domain
         public int UserId { get; set; } // Fk
         public Customer? User { get; set; } // Nav
         public int StaffId { get; set; } // FK
+        [DeleteBehavior(DeleteBehavior.Restrict)]
         public Staff? Staff { get; set; } // Nav
 
     }

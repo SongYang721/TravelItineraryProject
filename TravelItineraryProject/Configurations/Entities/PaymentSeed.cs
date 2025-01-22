@@ -18,7 +18,7 @@ namespace TravelItineraryProject.Configurations.Entities
                     ExpiryDateOfCard = "12-25",
                     SecurityCode = "123",
                     PaymentStatus = true,
-                    BookingId = 1,
+                    //BookingId = 1,
                 },
                 new Payment
                 {
@@ -28,7 +28,7 @@ namespace TravelItineraryProject.Configurations.Entities
                     ExpiryDateOfCard = "11-24",
                     SecurityCode = "456",
                     PaymentStatus = false,
-                    BookingId = 2,
+                    //BookingId = 2,
                 }
             );
         }

@@ -13,7 +13,7 @@ namespace TravelItineraryProject.Configurations.Entities
             builder.HasData(
                 new Customer
                 {
-                    UserId = 1,
+                    CustomerId = 1,
                     Password = "hashedPasswordUser1", // Ensure this is a hashed password in real scenarios
                     FirstName = "John",
                     LastName = "Doe",
@@ -22,7 +22,7 @@ namespace TravelItineraryProject.Configurations.Entities
                 },
                 new Customer
                 {
-                    UserId = 2,
+                    CustomerId = 2,
                     Password = "hashedPasswordUser2", // Ensure this is a hashed password in real scenarios
                     FirstName = "Jane",
                     LastName = "Smith",

@@ -5,12 +5,8 @@
         public int PaymentId { get; set; } // PK
         public string? NameOnCard { get; set; }
         public string? CardNumber { get; set; }
-
         public string? ExpiryDateOfCard { get; set; }
         public string? SecurityCode { get; set; }
         public bool? PaymentStatus { get; set; }
-
-        public int BookingId { get; set; }
-        public Booking? Booking { get; set; }
     }
 }

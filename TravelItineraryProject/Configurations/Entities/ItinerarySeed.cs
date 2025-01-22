@@ -22,7 +22,7 @@ namespace TravelItineraryProject.Configurations.Entities
                 },
                 new Itinerary
                 {
-                    ItineraryId = 1,
+                    ItineraryId = 2,
                     Price = 873,
                     Duration = 6,
                     Title = "Taiwan",

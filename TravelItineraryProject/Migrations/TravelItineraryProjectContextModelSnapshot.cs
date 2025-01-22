@@ -251,7 +251,7 @@ namespace TravelItineraryProject.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8d1a798c-7d4c-439d-9830-4a52188153be",
+                            ConcurrencyStamp = "ef25d428-fd6f-436c-8927-2f2f1e743757",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -259,9 +259,9 @@ namespace TravelItineraryProject.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGzmxFWTO/c9gjpUKzFBgiQa+Yjn1wQVFsM1n44CQiORfiWagfkkCGxobjbISvtmuQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEI3TNTP49fH543T1y+fur3uAlsJCX6Ne5UZGh1TZ1Qcv2/Y7N1tVejSqhPvSkHWReQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "06aa0263-1ab8-45e1-aa50-3e390fe9ecde",
+                            SecurityStamp = "6de07a36-c429-4d5c-93b5-5574cf2c28cb",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         });
@@ -269,224 +269,306 @@ namespace TravelItineraryProject.Migrations
 
             modelBuilder.Entity("TravelItineraryProject.Domain.Booking", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("BookingId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingId"));
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateOnly>("BookingDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateIn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateOut")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("VehicleId")
+                    b.Property<int>("ItineraryId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("PaymentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StaffId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BookingId");
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("VehicleId");
+                    b.HasIndex("ItineraryId");
+
+                    b.HasIndex("PaymentId");
+
+                    b.HasIndex("StaffId");
 
                     b.ToTable("Booking");
-                });
-
-            modelBuilder.Entity("TravelItineraryProject.Domain.Colour", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Colour");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 12, 8, 15, 50, 31, 639, DateTimeKind.Local).AddTicks(8116),
-                            DateUpdated = new DateTime(2024, 12, 8, 15, 50, 31, 639, DateTimeKind.Local).AddTicks(8141),
-                            Name = "Black",
-                            UpdatedBy = "System"
+                            BookingId = 1,
+                            BookingDate = new DateOnly(2024, 1, 3),
+                            CustomerId = 1,
+                            ItineraryId = 1,
+                            PaymentId = 1,
+                            StaffId = 1
                         },
                         new
                         {
-                            Id = 2,
-                            CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 12, 8, 15, 50, 31, 639, DateTimeKind.Local).AddTicks(8147),
-                            DateUpdated = new DateTime(2024, 12, 8, 15, 50, 31, 639, DateTimeKind.Local).AddTicks(8149),
-                            Name = "Blue",
-                            UpdatedBy = "System"
+                            BookingId = 2,
+                            BookingDate = new DateOnly(2025, 8, 2),
+                            CustomerId = 2,
+                            ItineraryId = 2,
+                            PaymentId = 2,
+                            StaffId = 2
                         });
                 });
 
             modelBuilder.Entity("TravelItineraryProject.Domain.Customer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CustomerId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DrivingLicense")
-                        .HasColumnType("nvarchar(max)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"));
 
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UpdatedBy")
+                    b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RequestID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CustomerId");
 
                     b.ToTable("Customer");
+
+                    b.HasData(
+                        new
+                        {
+                            CustomerId = 1,
+                            EmailAddress = "johndoe@example.com",
+                            FirstName = "John",
+                            LastName = "Doe",
+                            Password = "hashedPasswordUser1",
+                            RequestID = "REQ001"
+                        },
+                        new
+                        {
+                            CustomerId = 2,
+                            EmailAddress = "janesmith@example.com",
+                            FirstName = "Jane",
+                            LastName = "Smith",
+                            Password = "hashedPasswordUser2",
+                            RequestID = "REQ002"
+                        });
                 });
 
-            modelBuilder.Entity("TravelItineraryProject.Domain.Make", b =>
+            modelBuilder.Entity("TravelItineraryProject.Domain.Itinerary", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ItineraryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItineraryId"));
 
-                    b.Property<string>("CreatedBy")
+                    b.Property<int?>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("PromotionAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("StaffId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateCreated")
+                    b.Property<string>("TypeofTrip")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ItineraryId");
+
+                    b.HasIndex("StaffId");
+
+                    b.ToTable("Itinerary");
+
+                    b.HasData(
+                        new
+                        {
+                            ItineraryId = 1,
+                            Duration = 7,
+                            Price = 963m,
+                            PromotionAvailable = false,
+                            StaffId = 2,
+                            Title = "Japan",
+                            TypeofTrip = "Leisure"
+                        },
+                        new
+                        {
+                            ItineraryId = 2,
+                            Duration = 6,
+                            Price = 873m,
+                            PromotionAvailable = true,
+                            StaffId = 1,
+                            Title = "Taiwan",
+                            TypeofTrip = "Historical"
+                        });
+                });
+
+            modelBuilder.Entity("TravelItineraryProject.Domain.Payment", b =>
+                {
+                    b.Property<int>("PaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
+
+                    b.Property<string>("CardNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExpiryDateOfCard")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameOnCard")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("PaymentStatus")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PaymentId");
+
+                    b.ToTable("Payment");
+
+                    b.HasData(
+                        new
+                        {
+                            PaymentId = 1,
+                            CardNumber = "1234567812345678",
+                            ExpiryDateOfCard = "12-25",
+                            NameOnCard = "John Doe",
+                            PaymentStatus = true,
+                            SecurityCode = "123"
+                        },
+                        new
+                        {
+                            PaymentId = 2,
+                            CardNumber = "2345678923456789",
+                            ExpiryDateOfCard = "11-24",
+                            NameOnCard = "Jane Smith",
+                            PaymentStatus = false,
+                            SecurityCode = "456"
+                        });
+                });
+
+            modelBuilder.Entity("TravelItineraryProject.Domain.Review", b =>
+                {
+                    b.Property<int>("ReviewId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReviewId"));
+
+                    b.Property<bool?>("ApprovedByStaff")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ItineraryId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ReviewDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("StaffId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReviewId");
+
+                    b.HasIndex("ItineraryId");
+
+                    b.HasIndex("StaffId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Review");
+
+                    b.HasData(
+                        new
+                        {
+                            ReviewId = 1,
+                            ApprovedByStaff = true,
+                            Comment = "Excellent experience!",
+                            ItineraryId = 1,
+                            Rating = 5,
+                            ReviewDate = new DateTime(2025, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StaffId = 1,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            ReviewId = 2,
+                            ApprovedByStaff = false,
+                            Comment = "Great service, but could improve the food quality.",
+                            ItineraryId = 2,
+                            Rating = 4,
+                            ReviewDate = new DateTime(2025, 1, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StaffId = 2,
+                            UserId = 2
+                        });
+                });
+
+            modelBuilder.Entity("TravelItineraryProject.Domain.Staff", b =>
+                {
+                    b.Property<int>("StaffId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StaffId"));
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UpdatedBy")
+                    b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("StaffId");
 
-                    b.ToTable("Make");
-                });
+                    b.ToTable("Staff");
 
-            modelBuilder.Entity("TravelItineraryProject.Domain.Model", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Model");
-                });
-
-            modelBuilder.Entity("TravelItineraryProject.Domain.Vehicle", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ColourId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LicensePlateNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("MakeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ModelId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Vehicle");
+                    b.HasData(
+                        new
+                        {
+                            StaffId = 1,
+                            Name = "Alice Johnson",
+                            Password = "hashedPassword123"
+                        },
+                        new
+                        {
+                            StaffId = 2,
+                            Name = "Bob Smith",
+                            Password = "hashedPassword456"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -548,20 +630,90 @@ namespace TravelItineraryProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TravelItineraryProject.Domain.Vehicle", "Vehicle")
-                        .WithMany()
-                        .HasForeignKey("VehicleId")
+                    b.HasOne("TravelItineraryProject.Domain.Itinerary", "Itinerary")
+                        .WithMany("Bookings")
+                        .HasForeignKey("ItineraryId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TravelItineraryProject.Domain.Payment", "Payment")
+                        .WithMany()
+                        .HasForeignKey("PaymentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TravelItineraryProject.Domain.Staff", "Staff")
+                        .WithMany("Bookings")
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Customer");
 
-                    b.Navigation("Vehicle");
+                    b.Navigation("Itinerary");
+
+                    b.Navigation("Payment");
+
+                    b.Navigation("Staff");
+                });
+
+            modelBuilder.Entity("TravelItineraryProject.Domain.Itinerary", b =>
+                {
+                    b.HasOne("TravelItineraryProject.Domain.Staff", "Staff")
+                        .WithMany("Itineraries")
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Staff");
+                });
+
+            modelBuilder.Entity("TravelItineraryProject.Domain.Review", b =>
+                {
+                    b.HasOne("TravelItineraryProject.Domain.Itinerary", "Itinerary")
+                        .WithMany()
+                        .HasForeignKey("ItineraryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TravelItineraryProject.Domain.Staff", "Staff")
+                        .WithMany("Reviews")
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TravelItineraryProject.Domain.Customer", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Itinerary");
+
+                    b.Navigation("Staff");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TravelItineraryProject.Domain.Customer", b =>
                 {
                     b.Navigation("Bookings");
+
+                    b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("TravelItineraryProject.Domain.Itinerary", b =>
+                {
+                    b.Navigation("Bookings");
+                });
+
+            modelBuilder.Entity("TravelItineraryProject.Domain.Staff", b =>
+                {
+                    b.Navigation("Bookings");
+
+                    b.Navigation("Itineraries");
+
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

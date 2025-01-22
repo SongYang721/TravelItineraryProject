@@ -7,10 +7,10 @@ namespace TravelItineraryProject.Data
 {
     public class TravelItineraryProjectContext(DbContextOptions<TravelItineraryProjectContext> options) : IdentityDbContext<TravelItineraryProjectUser>(options)
     {
-        public DbSet<TravelItineraryProject.Domain.Payment> Make { get; set; } = default!;
-        public DbSet<TravelItineraryProject.Domain.Review> Model { get; set; } = default!;
-        public DbSet<TravelItineraryProject.Domain.Staff> Vehicle { get; set; } = default!;
-        public DbSet<TravelItineraryProject.Domain.Itinerary> Colour { get; set; } = default!;
+        public DbSet<TravelItineraryProject.Domain.Payment> Payment { get; set; } = default!;
+        public DbSet<TravelItineraryProject.Domain.Review> Review { get; set; } = default!;
+        public DbSet<TravelItineraryProject.Domain.Staff> Staff { get; set; } = default!;
+        public DbSet<TravelItineraryProject.Domain.Itinerary> Itinerary { get; set; } = default!;
         public DbSet<TravelItineraryProject.Domain.Booking> Booking { get; set; } = default!;
         public DbSet<TravelItineraryProject.Domain.Customer> Customer { get; set; } = default!;
 

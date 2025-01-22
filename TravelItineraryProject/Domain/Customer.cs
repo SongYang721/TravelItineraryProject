@@ -2,7 +2,7 @@
 {
     public class Customer : BaseDomainModel
     {
-        public int UserId { get; set; }
+        public int CustomerId { get; set; }
         public string? Password { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
