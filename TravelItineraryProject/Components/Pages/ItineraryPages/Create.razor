@@ -1,0 +1,69 @@
+﻿@page "/itineraries/create"
+@using Microsoft.EntityFrameworkCore
+@using TravelItineraryProject.Domain
+@inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Itinerary</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Itinerary" OnValidSubmit="AddItinerary" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="price" class="form-label">Price:</label> 
+                <InputNumber id="price" @bind-Value="Itinerary.Price" class="form-control" /> 
+                <ValidationMessage For="() => Itinerary.Price" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="duration" class="form-label">Duration:</label> 
+                <InputNumber id="duration" @bind-Value="Itinerary.Duration" class="form-control" /> 
+                <ValidationMessage For="() => Itinerary.Duration" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="title" class="form-label">Title:</label> 
+                <InputText id="title" @bind-Value="Itinerary.Title" class="form-control" /> 
+                <ValidationMessage For="() => Itinerary.Title" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="promotionavailable" class="form-label">PromotionAvailable:</label> 
+                <InputCheckbox id="promotionavailable" @bind-Value="Itinerary.PromotionAvailable" class="form-check-input" /> 
+                <ValidationMessage For="() => Itinerary.PromotionAvailable" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="typeoftrip" class="form-label">TypeofTrip:</label> 
+                <InputText id="typeoftrip" @bind-Value="Itinerary.TypeofTrip" class="form-control" /> 
+                <ValidationMessage For="() => Itinerary.TypeofTrip" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="staffid" class="form-label">StaffId:</label> 
+                <InputNumber id="staffid" @bind-Value="Itinerary.StaffId" class="form-control" /> 
+                <ValidationMessage For="() => Itinerary.StaffId" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/itineraries">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Itinerary Itinerary { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddItinerary()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Itinerary.Add(Itinerary);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/itineraries");
+    }
+}

@@ -1,0 +1,114 @@
+﻿@page "/itineraries/edit"
+@using Microsoft.EntityFrameworkCore
+@using TravelItineraryProject.Domain
+@inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Itinerary</h2>
+<hr />
+@if (Itinerary is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Itinerary" OnValidSubmit="UpdateItinerary" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Itinerary.ItineraryId" value="@Itinerary.ItineraryId" />
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price:</label>
+                    <InputNumber id="price" @bind-Value="Itinerary.Price" class="form-control" />
+                    <ValidationMessage For="() => Itinerary.Price" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="duration" class="form-label">Duration:</label>
+                    <InputNumber id="duration" @bind-Value="Itinerary.Duration" class="form-control" />
+                    <ValidationMessage For="() => Itinerary.Duration" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title:</label>
+                    <InputText id="title" @bind-Value="Itinerary.Title" class="form-control" />
+                    <ValidationMessage For="() => Itinerary.Title" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="promotionavailable" class="form-label">PromotionAvailable:</label>
+                    <InputCheckbox id="promotionavailable" @bind-Value="Itinerary.PromotionAvailable" class="form-check-input" />
+                    <ValidationMessage For="() => Itinerary.PromotionAvailable" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="typeoftrip" class="form-label">TypeofTrip:</label>
+                    <InputText id="typeoftrip" @bind-Value="Itinerary.TypeofTrip" class="form-control" />
+                    <ValidationMessage For="() => Itinerary.TypeofTrip" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="staffid" class="form-label">StaffId:</label>
+                    <InputNumber id="staffid" @bind-Value="Itinerary.StaffId" class="form-control" />
+                    <ValidationMessage For="() => Itinerary.StaffId" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/itineraries">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int ItineraryId { get; set; }
+
+    [SupplyParameterFromForm]
+    private Itinerary? Itinerary { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Itinerary ??= await context.Itinerary.FirstOrDefaultAsync(m => m.ItineraryId == ItineraryId);
+
+        if (Itinerary is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateItinerary()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Itinerary!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ItineraryExists(Itinerary!.ItineraryId))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/itineraries");
+    }
+
+    private bool ItineraryExists(int itineraryid)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Itinerary.Any(e => e.ItineraryId == itineraryid);
+    }
+}

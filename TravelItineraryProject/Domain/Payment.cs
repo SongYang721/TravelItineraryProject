@@ -7,6 +7,6 @@
         public string? CardNumber { get; set; }
         public string? ExpiryDateOfCard { get; set; }
         public string? SecurityCode { get; set; }
-        public bool? PaymentStatus { get; set; }
+        public bool PaymentStatus { get; set; }
     }
 }
