@@ -18,7 +18,7 @@
             <div class="mb-3">
                 <label for="bookingdate" class="form-label">BookingDate:</label> 
                 <InputDate id="bookingdate" @bind-Value="Booking.BookingDate" class="form-control" /> 
-                <ValidationMessage For="() => Booking.BookingDate" class="text-danger" /> 
+                <ValidationMe   ssage For="() => Booking.BookingDate" class="text-danger" /> 
             </div>        
             <div class="mb-3">
                 <label for="customerid" class="form-label">CustomerId:</label> 
@@ -51,14 +51,22 @@
 
 @code {
     [SupplyParameterFromForm]
-    private Booking Booking { get; set; } = new();
+    private Booking Booking { get; set; } = new() {
+            BookingDate = DateOnly.FromDateTime(DateTime.Now)
+
+        };
+
+   
 
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddBooking()
     {
+        
         using var context = DbFactory.CreateDbContext();
+        
         context.Booking.Add(Booking);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/bookings");
+
     }
 }
