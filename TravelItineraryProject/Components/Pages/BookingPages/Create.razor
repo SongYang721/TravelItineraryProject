@@ -51,8 +51,10 @@
 
 @code {
     [SupplyParameterFromForm]
-    private Booking Booking { get; set; } = new();
-
+    private Booking Booking { get; set; } = new()
+    {
+            BookingDate = DateOnly.FromDateTime(DateTime.Now) // Set default date to the current date
+            };
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddBooking()
     {

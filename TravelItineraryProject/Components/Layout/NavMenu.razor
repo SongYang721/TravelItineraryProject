@@ -22,6 +22,43 @@
                         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
                     </NavLink>
                 </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="bookings">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Bookings
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="itineraries">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Travel Itinerary
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="customers">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Customer
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="staff">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Staff
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="payments">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Payment
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="reviews">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Review
+                    </NavLink>
+                </div>
+
                 <div class="nav-item px-3">
                     <form action="Account/Logout" method="post">
                         <AntiforgeryToken />
@@ -30,29 +67,6 @@
                             <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
                         </button>
                     </form>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="travelitinerary">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Travel Itinerary
-                    </NavLink>
-                </div>
-
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="createitinerary">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Create Custom Itinerary
-                    </NavLink>
-                </div>
-
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="booking">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Booking
-                    </NavLink>
-                </div>
-
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Review">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Review
-                    </NavLink>
                 </div>
             </Authorized>
             <NotAuthorized>
