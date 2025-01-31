@@ -12,8 +12,7 @@ namespace TravelItineraryProject.Domain
         public int? Rating { get; set; }
         public DateTime? ReviewDate { get; set; }
         public string? Comment { get; set; }
-        public bool? ApprovedByStaff { get; set; }
-
+        public bool ApprovedByStaff { get; set; }
 
         public int ItineraryId { get; set; } // Fk
         public Itinerary? Itinerary { get; set; } // Nav

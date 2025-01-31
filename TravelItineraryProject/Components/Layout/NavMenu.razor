@@ -22,36 +22,21 @@
                         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
                     </NavLink>
                 </div>
-                <div class="nav-item px-3">
-                    <form action="Account/Logout" method="post">
-                        <AntiforgeryToken />
-                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit" class="nav-link">
-                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
-                        </button>
-                    </form>
-                </div>
+
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="itineraries/create">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Create Custom Travel Itinerary
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Create Custom Itinerary
                     </NavLink>
                 </div>
 
                 <div class="nav-item px-3"> 
-                    <NavLink class="nav-link" href="itineraries/details"> 
+                    <NavLink class="nav-link" href="itineraries"> 
                         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Travel Itinerary
                     </NavLink>
                 </div>
 
-                @* <div class="nav-item px-3"> *@
-                @*     <NavLink class="nav-link" href="itineraries/create"> *@
-                @*         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Create Custom Itinerary *@
-                @*     </NavLink> *@
-                @* </div> *@
-
-
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="bookings/create">
+                    <NavLink class="nav-link" href="bookings">
                         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Booking
                     </NavLink>
                 </div>
@@ -63,9 +48,19 @@
                 </div>
 
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="payments/create">
+                    <NavLink class="nav-link" href="payments">
                         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Payment
                     </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <form action="Account/Logout" method="post">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                        <button type="submit" class="nav-link">
+                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
+                        </button>
+                    </form>
                 </div>
             </Authorized>
             <NotAuthorized>
@@ -74,24 +69,18 @@
                         <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
                     </NavLink>
                 </div>
+
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Login">
                         <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
                     </NavLink>
                 </div>
-                @* <div class="nav-item px-3"> *@
-                @*     <NavLink class="nav-link" href="bookings/create"> *@
-                @*         <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Booking *@
-                @*     </NavLink> *@
-                @* </div> *@
-               
+
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="itineraries/details">
                         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Travel Itinerary
                     </NavLink>
                 </div>
-             
-
             </NotAuthorized>
         </AuthorizeView>
     </nav>

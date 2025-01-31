@@ -262,7 +262,7 @@ namespace TravelItineraryProject.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "67be4ddc-deed-44b7-b18e-ce20a20c414f",
+                            ConcurrencyStamp = "eb8eb38d-cf49-4c46-88cc-311b0833c07d",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -270,9 +270,9 @@ namespace TravelItineraryProject.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENH0Kqz+AXt5rGWXQGgeXAnv3Vt489oKKI3qdfFH0mlZHTWEhmIxB5ULt9nFsLnfGQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDRIi1hL95ggwOWcLUi4qOYOivBLuAFf6s7yt8LS9I3a/rmMxc2KmrnMiEcjWP6yZg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "72386630-bb49-44e6-8536-3ab6e86c9d9d",
+                            SecurityStamp = "cbe2213d-06eb-4eca-98a0-31254623efba",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         });
