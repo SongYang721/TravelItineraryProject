@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TravelItineraryProject.Data;
 
@@ -11,9 +12,11 @@ using TravelItineraryProject.Data;
 namespace TravelItineraryProject.Migrations
 {
     [DbContext(typeof(TravelItineraryProjectContext))]
-    partial class TravelItineraryProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20250129110718_AddStaffRole")]
+    partial class AddStaffRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,11 +163,6 @@ namespace TravelItineraryProject.Migrations
                         {
                             UserId = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             RoleId = "ad2bcf0c-20db-474f-8407-5a6b159518ba"
-                        },
-                        new
-                        {
-                            UserId = "10e93995-24eb-48b5-805b-824adeb6fb96",
-                            RoleId = "cd2bcf0c-20db-474f-8407-5a6b159518bc"
                         });
                 });
 
@@ -262,7 +260,7 @@ namespace TravelItineraryProject.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "67be4ddc-deed-44b7-b18e-ce20a20c414f",
+                            ConcurrencyStamp = "7a78dfe3-3323-4b38-8ccf-9919fd33a29f",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -270,9 +268,9 @@ namespace TravelItineraryProject.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENH0Kqz+AXt5rGWXQGgeXAnv3Vt489oKKI3qdfFH0mlZHTWEhmIxB5ULt9nFsLnfGQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENgitZDtNLlq+9byVLN8Yk7UIlI9m8epLw4cFWOv+3dFx3ttLdCkb0vNYKKiCLQHfg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "72386630-bb49-44e6-8536-3ab6e86c9d9d",
+                            SecurityStamp = "f10a03d6-372c-42af-b262-4d2232d7752e",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         });

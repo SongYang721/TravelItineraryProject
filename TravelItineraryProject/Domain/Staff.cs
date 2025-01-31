@@ -8,8 +8,8 @@ namespace TravelItineraryProject.Domain
         public string? Password { get; set; }
         public string? Name { get; set; }
 
-        public List<Itinerary>? Itineraries { get; set; } // = new List<Itinerary>();
-        public List<Review>? Reviews { get; set; } // = new List<Review>();
-        public List<Booking>? Bookings { get; set; } // = new List<Booking>();
+        public ICollection<Itinerary>? Itineraries { get; set; } // = new List<Itinerary>();
+        public ICollection<Review>? Reviews { get; set; } // = new List<Review>();
+        public ICollection<Booking>? Bookings { get; set; } // = new List<Booking>();
     }
 }

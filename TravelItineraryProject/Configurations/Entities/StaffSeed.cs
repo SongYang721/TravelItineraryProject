@@ -15,12 +15,15 @@ namespace TravelItineraryProject.Configurations.Entities
                     StaffId = 1,
                     Password = "hashedPassword123", // Ensure this is a hashed password in real scenarios
                     Name = "Alice Johnson",
+                    Email = "staff1@gmail.com"
+
                 },
                 new Staff
                 {
                     StaffId = 2,
                     Password = "hashedPassword456", // Ensure this is a hashed password in real scenarios
-                    Name = "Bob Smith"
+                    Name = "Bob Smith",
+                    Email = "staff2@gmail.com"
                 }
             );
         }
