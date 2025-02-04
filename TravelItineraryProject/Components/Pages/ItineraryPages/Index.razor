@@ -1,10 +1,14 @@
 ﻿@page "/itineraries"
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
+@using System.Diagnostics
 @using TravelItineraryProject.Domain
 @using TravelItineraryProject.Data
+@rendermode InteractiveServer
 @implements IAsyncDisposable
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Index</PageTitle>
 
@@ -20,12 +24,19 @@
     <PropertyColumn Property="itinerary => itinerary.Title" />
     <PropertyColumn Property="itinerary => itinerary.PromotionAvailable" />
     <PropertyColumn Property="itinerary => itinerary.TypeofTrip" />
-    <PropertyColumn Property="itinerary => itinerary.StaffId" />
+    <AuthorizeView Roles = "Administrator, Staff">
+        <PropertyColumn Property="itinerary => itinerary.StaffId" />
+    </AuthorizeView>
+
 
     <TemplateColumn Context="itinerary">
-        <a href="@($"itineraries/edit?itineraryid={itinerary.ItineraryId}")">Edit</a> |
-        <a href="@($"itineraries/details?itineraryid={itinerary.ItineraryId}")">Details</a> |
-        <a href="@($"itineraries/delete?itineraryid={itinerary.ItineraryId}")">Delete</a>
+        <AuthorizeView Roles="Administrator, Staff">
+            <a href="@($"itineraries/edit?itineraryid={itinerary.ItineraryId}")">Edit</a> |
+            <a href="@($"itineraries/details?itineraryid={itinerary.ItineraryId}")">Details</a> |
+            <a href="@($"itineraries/delete?itineraryid={itinerary.ItineraryId}")">Delete</a>
+        </AuthorizeView>
+
+        <button class="btn btn-primary" @onclick="(() => CreatePayment(itinerary.ItineraryId))">Book</button>
     </TemplateColumn>
 </QuickGrid>
 
@@ -35,6 +46,49 @@
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
+        context.Itinerary.Load();
+    }
+    // Redirect the user to the payment page with the itinerary ID
+    private async Task CreatePayment(int itineraryId)
+    {
+        // Get the current logged-in user
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userEmail = authState.User.Identity?.Name;
+
+        if (userEmail == null)
+        {
+            NavigationManager.NavigateTo("/login");
+            return;
+        }
+
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+        if (user == null)
+        {
+            return; // Handle user not found
+        }
+
+        // Create a new booking linked to the itinerary and user
+        var payment = new Payment
+            {
+
+                NameOnCard = $"{user.FirstName} {user.LastName}",
+                CardNumber = "5431 2345 1234 5678", // Placeholder 
+                ExpiryDateOfCard = "12-25", // Placeholder 
+                SecurityCode = "909", // Placeholder 
+                PaymentStatus = false, // Initially unpaid
+
+                // ItineraryId = itineraryId,
+                // CustomerId= user.CustomerId,
+                // BookingDate = DateOnly.FromDateTime(DateTime.Now),
+                // BookingStatus = false, Booking is created with "Pending" status
+                // StaffId = null
+            };
+
+        context.Payment.Add(payment);
+        await context.SaveChangesAsync();
+
+        // Redirect to payment page with the payment ID
+        NavigationManager.NavigateTo($"/payments/create?paymentId={payment.PaymentId}&itineraryId={itineraryId}");
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();

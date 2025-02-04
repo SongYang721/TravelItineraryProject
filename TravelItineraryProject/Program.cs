@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using TravelItineraryProject.Components.Account;
 
+
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContextFactory<TravelItineraryProjectContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TravelItineraryProjectContext") ?? throw new InvalidOperationException("Connection string 'TravelItineraryProjectContext' not found.")));

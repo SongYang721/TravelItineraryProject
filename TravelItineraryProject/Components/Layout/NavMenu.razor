@@ -1,5 +1,9 @@
 ﻿@implements IDisposable
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using System.Security.Claims
+
+
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">TravelItineraryProject</a>
@@ -15,11 +19,12 @@
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
             </NavLink>
         </div>
+
         <AuthorizeView>
             <Authorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @userName
                     </NavLink>
                 </div>
 
@@ -29,9 +34,9 @@
                     </NavLink>
                 </div>
 
-                <div class="nav-item px-3"> 
-                    <NavLink class="nav-link" href="itineraries"> 
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Travel Itinerary
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="itineraries">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Travel Itineraries Available
                     </NavLink>
                 </div>
 
@@ -41,17 +46,66 @@
                     </NavLink>
                 </div>
 
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="reviews/create">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Review
-                    </NavLink>
-                </div>
+                @* Debugging: Display All Roles *@
+                @if (userRoles != null && userRoles.Any())
+                {
+                    <p><strong>Your Roles:</strong></p>
+                    <ul>
+                        @foreach (var role in userRoles)
+                        {
+                            <li>@role</li>
+                        }
+                    </ul>
+                }
 
+
+                <AuthorizeView Roles="Administrator, User" Context="innerContext">
+                 <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="reviews/create">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Create Review
+                        </NavLink>
+                    </div>
+                </AuthorizeView>
+
+
+                @* 
+               Show "Review" ONLY if user is "User" or "Administrator" 
+                @if (userRoles.Contains("User") || userRoles.Contains("Administrator"))
+                {
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="reviews/create">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Review
+                        </NavLink>
+                    </div>
+                } *@ 
+
+                <AuthorizeView Roles="Administrator" Context="innerContext">
+                 <div class="nav-item px-3">
+                       <NavLink class="nav-link" href="staff">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> All Staffs
+                       </NavLink>
+                    </div>
+                </AuthorizeView>
+
+
+                <AuthorizeView Roles="Administrator, User" Context="innerContext">
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="payments">
                         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Payment
                     </NavLink>
                 </div>
+                </AuthorizeView>
+
+
+
+                <AuthorizeView Roles="Administrator" Context="innerContext">
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="customers">
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Customers
+                    </NavLink>
+                </div>
+                </AuthorizeView>
+
 
                 <div class="nav-item px-3">
                     <form action="Account/Logout" method="post">
@@ -63,6 +117,7 @@
                     </form>
                 </div>
             </Authorized>
+
             <NotAuthorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Register">
@@ -75,12 +130,6 @@
                         <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
                     </NavLink>
                 </div>
-
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="itineraries/details">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Travel Itinerary
-                    </NavLink>
-                </div>
             </NotAuthorized>
         </AuthorizeView>
     </nav>
@@ -88,10 +137,26 @@
 
 @code {
     private string? currentUrl;
-    protected override void OnInitialized()
+    private string? userName;
+    private List<string> userRoles = new();
+
+    protected override async Task OnInitializedAsync()
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
+
+        // Get Authentication State
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            userName = user.Identity.Name;
+            userRoles = user.Claims
+                .Where(c => c.Type == ClaimTypes.Role)
+                .Select(c => c.Value)
+                .ToList();
+        }
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
@@ -104,5 +169,4 @@
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
-
 }

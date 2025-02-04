@@ -4,6 +4,8 @@
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 @inject NavigationManager NavigationManager
 
+@attribute [Authorize(Roles = "Administrator,User")]
+
 <PageTitle>Create</PageTitle>
 
 <h1>Create</h1>

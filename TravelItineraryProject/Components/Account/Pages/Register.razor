@@ -5,7 +5,9 @@
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.EntityFrameworkCore
 @using TravelItineraryProject.Data
+@using TravelItineraryProject.Domain
 
 @inject UserManager<TravelItineraryProjectUser> UserManager
 @inject IUserStore<TravelItineraryProjectUser> UserStore
@@ -15,6 +17,7 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @inject RoleManager<IdentityRole> RoleManager
+@inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 
 <PageTitle>Register</PageTitle>
 
@@ -87,6 +90,30 @@
         user.FirstName = Input.FirstName;
         user.LastName = Input.LastName;
 
+        string assignedRole = Input.Email.ToLower().Contains("staff") ? "Staff" : "User";
+
+        // Check if role exists, create it if not
+        if (!await RoleManager.RoleExistsAsync(assignedRole))
+        {
+            await RoleManager.CreateAsync(new IdentityRole(assignedRole));
+        }
+
+        // Create Customer for "User" role
+        if (assignedRole == "User")
+        {
+            using var context = DbFactory.CreateDbContext();
+            var newCustomer = new Customer
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                };
+
+            context.Customer.Add(newCustomer);
+            await context.SaveChangesAsync();
+
+            user.CustomerId = newCustomer.CustomerId;
+        }
+
         var result = await UserManager.CreateAsync(user, Input.Password);
 
         if (!result.Succeeded)
@@ -95,17 +122,13 @@
             return;
         }
 
-        //create the user role if it doesn't exist
-        if (!await RoleManager.RoleExistsAsync("User"))
-        {
-            await RoleManager.CreateAsync(new IdentityRole("User"));
-        }
-        //add the user to the user role
-        await UserManager.AddToRoleAsync(user, "User");
-        //add the user id as claim when user registers
+        // Add user to role
+        await UserManager.AddToRoleAsync(user, assignedRole);
+
+        // Add claims for user
         await UserManager.AddClaimAsync(user, new System.Security.Claims.Claim("userId", user.Id));
-    
-        Logger.LogInformation("User created a new account with password.");
+
+        Logger.LogInformation($"User created a new account with password. Assigned role: {assignedRole}");
 
         var userId = await UserManager.GetUserIdAsync(user);
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
@@ -124,7 +147,8 @@
         }
 
         await SignInManager.SignInAsync(user, isPersistent: false);
-        RedirectManager.RedirectTo(ReturnUrl);
+        NavigationManager.NavigateTo(ReturnUrl ?? "/");
+
     }
 
     private TravelItineraryProjectUser CreateUser()
@@ -163,7 +187,6 @@
         [Required]
         [Display(Name = "Last Name")]
         public string LastName { get; set; } = "";
-
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
