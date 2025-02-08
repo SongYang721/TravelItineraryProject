@@ -51,20 +51,50 @@
 </div>
 
 @code {
+    // // Create a string to store the CustomerId, default value is "System".
+    // private string CustomerId = "System";
+
+    // // Inject the AuthenticationStateProvider to get the CustomerId.
+    // @inject AuthenticationStateProvider authenticationStateProvider
+
+    // // Override the OnInitialized method to get the CustomerId.
+    // protected override async void OnInitialized()
+    // {
+    //     var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+    //     var user = authState.User;
+
+    //     // Get the CustomerId claim
+    //     var CustomerIdClaim = user.FindFirst("CustomerId");
+    //     if (CustomerIdClaim != null)
+    //     {
+    //         CustomerId = CustomerIdClaim.Value;
+    //     }
+    // }
+
     [SupplyParameterFromForm]
-    private Booking Booking { get; set; } = new() {
+    private Booking Booking { get; set; } = new()
+        {
             BookingDate = DateOnly.FromDateTime(DateTime.Now)
 
         };
 
-   
+
 
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddBooking()
     {
-        
         using var context = DbFactory.CreateDbContext();
-        
+
+        // // Set the CustomerId on the Booking object
+        // if (int.TryParse(CustomerId, out var parsedCustomerId))
+        // {
+        //     Booking.CustomerId = parsedCustomerId;
+        // }
+        // else
+        // {
+        //     throw new InvalidOperationException("Invalid CustomerId format.");
+        // }
+
         context.Booking.Add(Booking);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/bookings");

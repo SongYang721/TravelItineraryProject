@@ -1,4 +1,4 @@
-﻿@page "/User/Register"
+﻿@page "/Staff/Register"
 
 @using System.ComponentModel.DataAnnotations
 @using System.Text
@@ -37,12 +37,14 @@
                 <ValidationMessage For="() => Input.Email" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.FirstName" class="form-control" autocomplete="firstname" aria-required="true" placeholder="Bill" />
+                <InputText @bind-Value="Input.FirstName" class="form-control"
+                           autocomplete="firstname" aria-required="true" placeholder="Bill" />
                 <label for="email">First Name</label>
                 <ValidationMessage For="() => Input.FirstName" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.LastName" class="form-control" autocomplete="lastname" aria-required="true" placeholder="Gates" />
+                <InputText @bind-Value="Input.LastName" class="form-control"
+                           autocomplete="lastname" aria-required="true" placeholder="Gates" />
                 <label for="email">Last Name</label>
                 <ValidationMessage For="() => Input.LastName" class="text-danger" />
             </div>
@@ -83,38 +85,13 @@
     {
         var user = CreateUser();
 
+        string assignedRole = "Staff";
+
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         var emailStore = GetEmailStore();
-        await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-
         user.FirstName = Input.FirstName;
         user.LastName = Input.LastName;
-
-        string assignedRole = "User";
-
-        // Check if role exists, create it if not
-        if (!await RoleManager.RoleExistsAsync("User"))
-        {
-            await RoleManager.CreateAsync(new IdentityRole("User"));
-        }
-
-        // Create Customer for "User" role
-        if (assignedRole == "User")
-        {
-            using var context = DbFactory.CreateDbContext();
-            var newCustomer = new Customer
-                {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    EmailAddress = user.Email
-                };
-
-            context.Customer.Add(newCustomer);
-            await context.SaveChangesAsync();
-
-            user.CustomerId = newCustomer.CustomerId;
-        }
-
+        await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
         var result = await UserManager.CreateAsync(user, Input.Password);
 
         if (!result.Succeeded)
@@ -122,14 +99,30 @@
             identityErrors = result.Errors;
             return;
         }
+        if (!await RoleManager.RoleExistsAsync("Staff"))
+        {
+            await RoleManager.CreateAsync(new IdentityRole("Staff"));
+        }
+        //add the user to the user role
+        await UserManager.AddToRoleAsync(user, "Staff");
 
-        // Add user to role
-        await UserManager.AddToRoleAsync(user, "User");
+        if (assignedRole == "Staff"){
+            using var context = DbFactory.CreateDbContext();
+            var newStaff = new Staff
+                {
+                    Name = user.FirstName + " " + user.LastName,
+                    Email = user.Email
+                };
 
-        // Add claims for user
+            context.Staff.Add(newStaff);
+            await context.SaveChangesAsync();
+
+            user.StaffId = newStaff.StaffId;
+        }
+
+        //add the user id as claim when user registers
         await UserManager.AddClaimAsync(user, new System.Security.Claims.Claim("userId", user.Id));
-
-        Logger.LogInformation($"User created a new account with password.");
+        Logger.LogInformation("User created a new account with password.");
 
         var userId = await UserManager.GetUserIdAsync(user);
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
@@ -148,8 +141,7 @@
         }
 
         await SignInManager.SignInAsync(user, isPersistent: false);
-        NavigationManager.NavigateTo(ReturnUrl ?? "/");
-
+        RedirectManager.RedirectTo(ReturnUrl);
     }
 
     private TravelItineraryProjectUser CreateUser()
@@ -182,18 +174,17 @@
         public string Email { get; set; } = "";
 
         [Required]
-        [Display(Name = "First Name")]
-        public string FirstName { get; set; } = "";
-
-        [Required]
-        [Display(Name = "Last Name")]
-        public string LastName { get; set; } = "";
-
-        [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; } = "";
+
+        [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; } = "";
+        [Required]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; } = "";
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]

@@ -6,7 +6,7 @@ namespace TravelItineraryProject.Domain
     {
         public int BookingId { get; set; } //PK
 
-        public bool? BookingStatus { get; set; }
+        public bool BookingStatus { get; set; }
         public DateOnly BookingDate { get; set; }
             
         public int? CustomerId { get; set; } //Fk

@@ -10,18 +10,22 @@
 
 <h1>Index</h1>
 
-<p>
-    <a href="staff/create">Create New</a>
-</p>
+<AuthorizeView Roles="Administrator">
+    <p>
+        <a href="staff/create">Create New</a>
+    </p>
+</AuthorizeView>
 
 <QuickGrid Class="table" Items="context.Staff">
-    <PropertyColumn Property="staff => staff.Password" />
+    <PropertyColumn Property="staff => staff.Email" />
     <PropertyColumn Property="staff => staff.Name" />
 
     <TemplateColumn Context="staff">
-        <a href="@($"staff/edit?staffid={staff.StaffId}")">Edit</a> |
-        <a href="@($"staff/details?staffid={staff.StaffId}")">Details</a> |
-        <a href="@($"staff/delete?staffid={staff.StaffId}")">Delete</a>
+        <AuthorizeView Roles="Administrator">
+            <a href="@($"staff/edit?staffid={staff.StaffId}")">Edit</a> |
+            <a href="@($"staff/delete?staffid={staff.StaffId}")">Delete</a> |
+        </AuthorizeView>
+        <a href="@($"staff/details?staffid={staff.StaffId}")">Details</a>
     </TemplateColumn>
 </QuickGrid>
 

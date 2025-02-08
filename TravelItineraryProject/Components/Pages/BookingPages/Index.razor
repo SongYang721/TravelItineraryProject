@@ -1,16 +1,18 @@
 ﻿@page "/bookings"
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
-@using System.Diagnostics
 @using TravelItineraryProject.Domain
 @using TravelItineraryProject.Data
 @implements IAsyncDisposable
-@inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
+@rendermode InteractiveServer
+@inject IDbContextFactory<TravelItineraryProjectContext> DbFactory
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IJSRuntime JSRuntime
+@attribute [Authorize(Roles = "Administrator, Staff, User")]
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Bookings</PageTitle>
 
-<h1>Index</h1>
+<h1>Bookings</h1>
 
 <p>
     <a href="bookings/create">Create New</a>
@@ -21,28 +23,81 @@
     <PropertyColumn Property="booking => booking.CustomerId" />
     <PropertyColumn Property="booking => booking.ItineraryId" />
     <PropertyColumn Property="booking => booking.PaymentId" />
-    <PropertyColumn Property="booking => booking.StaffId" />
+    <PropertyColumn Property="booking => booking.StaffId" title="CheckedByStaffId" />
+    <PropertyColumn Property="booking => booking.BookingStatus" Title="ApprovalStatus" />
 
     <TemplateColumn Context="booking">
         <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
         <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
-        <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
-
-
-
+        <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a> |
+        <AuthorizeView Roles="Administrator, Staff">
+            <button class="btn @(booking.BookingStatus ? "btn-danger" : "btn-success")"
+                    @onclick="() => ToggleBookingStatus(booking.BookingId)">
+                @(booking.BookingStatus ? "Decline" : "Approve")
+            </button>
+        </AuthorizeView>
     </TemplateColumn>
 </QuickGrid>
 
 @code {
-    // private List<Booking> userBookings = new();
     private TravelItineraryProjectContext context = default!;
+    private bool contextInitialized = false;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        // Initialize the DbContext
+        context = await DbFactory.CreateDbContextAsync();
+        contextInitialized = true;
     }
 
+    private async Task ToggleBookingStatus(int bookingId)
+    {
+        // Use a new DbContext instance for any updates to avoid concurrency issues
+        using var updateContext = await DbFactory.CreateDbContextAsync();
+        var booking = await updateContext.Booking.FindAsync(bookingId);
 
+        if (booking != null)
+        {
+            // Toggle the booking status
+            booking.BookingStatus = !booking.BookingStatus;
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+            // Get the currently logged-in user's staff ID
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var userEmail = authState.User.Identity?.Name;
+
+            if (userEmail != null)
+            {
+                // Look up the staff member in the database by their email
+                var staff = await updateContext.Staff.FirstOrDefaultAsync(s => s.Email == userEmail);
+
+                if (staff != null)
+                {
+                    // Update the StaffId field with the logged-in staff member's ID
+                    booking.StaffId = staff.StaffId;
+                }
+            }
+
+            // Save changes to the database
+            await updateContext.SaveChangesAsync();
+        }
+
+        // Refresh the bookings list
+        await RefreshBookings();
+    }
+
+    private async Task RefreshBookings()
+    {
+        if (!contextInitialized) return;
+
+        // Reload data for context.Booking
+        await context.Entry(context.Booking).ReloadAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (context != null)
+        {
+            await context.DisposeAsync();
+        }
+    }
 }
