@@ -1,0 +1,40 @@
+﻿@page "/supportrequests"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using TravelItineraryProject.Domain
+@using TravelItineraryProject.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="supportrequests/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.SupportRequest">
+    <PropertyColumn Property="supportrequest => supportrequest.Assisted" />
+    <PropertyColumn Property="supportrequest => supportrequest.Comments" />
+    <PropertyColumn Property="supportrequest => supportrequest.TypeofSupport" />
+    <PropertyColumn Property="supportrequest => supportrequest.CustomerId" />
+    <PropertyColumn Property="supportrequest => supportrequest.StaffId" />
+
+    <TemplateColumn Context="supportrequest">
+        <a href="@($"supportrequests/edit?supportrequestid={supportrequest.SupportRequestId}")">Edit</a> |
+        <a href="@($"supportrequests/details?supportrequestid={supportrequest.SupportRequestId}")">Details</a> |
+        <a href="@($"supportrequests/delete?supportrequestid={supportrequest.SupportRequestId}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private TravelItineraryProjectContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

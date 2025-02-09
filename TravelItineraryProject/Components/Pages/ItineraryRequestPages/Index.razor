@@ -1,0 +1,41 @@
+﻿@page "/itineraryrequests"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using TravelItineraryProject.Domain
+@using TravelItineraryProject.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="itineraryrequests/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.ItineraryRequest">
+    <PropertyColumn Property="itineraryrequest => itineraryrequest.RequestApproval" />
+    <PropertyColumn Property="itineraryrequest => itineraryrequest.RequestTravelMonthYear" />
+    <PropertyColumn Property="itineraryrequest => itineraryrequest.Destination" />
+    <PropertyColumn Property="itineraryrequest => itineraryrequest.TypeOfTrip" />
+    <PropertyColumn Property="itineraryrequest => itineraryrequest.CustomerId" />
+    <PropertyColumn Property="itineraryrequest => itineraryrequest.StaffId" />
+
+    <TemplateColumn Context="itineraryrequest">
+        <a href="@($"itineraryrequests/edit?itineraryrequestid={itineraryrequest.ItineraryRequestId}")">Edit</a> |
+        <a href="@($"itineraryrequests/details?itineraryrequestid={itineraryrequest.ItineraryRequestId}")">Details</a> |
+        <a href="@($"itineraryrequests/delete?itineraryrequestid={itineraryrequest.ItineraryRequestId}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private TravelItineraryProjectContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

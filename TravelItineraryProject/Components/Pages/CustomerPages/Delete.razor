@@ -18,10 +18,6 @@
     }
     else {
         <dl class="row">
-            <dt class="col-sm-2">Password</dt>
-            <dd class="col-sm-10">@customer.Password</dd>
-        </dl>
-        <dl class="row">
             <dt class="col-sm-2">FirstName</dt>
             <dd class="col-sm-10">@customer.FirstName</dd>
         </dl>
@@ -32,10 +28,6 @@
         <dl class="row">
             <dt class="col-sm-2">EmailAddress</dt>
             <dd class="col-sm-10">@customer.EmailAddress</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">RequestID</dt>
-            <dd class="col-sm-10">@customer.RequestID</dd>
         </dl>
         <EditForm method="post" Model="customer" OnValidSubmit="DeleteCustomer" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(customer is null)">Delete</button> |

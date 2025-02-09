@@ -18,7 +18,6 @@
     <PropertyColumn Property="customer => customer.FirstName" />
     <PropertyColumn Property="customer => customer.LastName" />
     <PropertyColumn Property="customer => customer.EmailAddress" />
-    <PropertyColumn Property="customer => customer.RequestID" />
 
     <TemplateColumn Context="customer">
         <a href="@($"customers/edit?customerid={customer.CustomerId}")">Edit</a> |

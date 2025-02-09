@@ -1,0 +1,109 @@
+﻿@page "/supportrequests/edit"
+@using Microsoft.EntityFrameworkCore
+@using TravelItineraryProject.Domain
+@inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>SupportRequest</h2>
+<hr />
+@if (SupportRequest is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="SupportRequest" OnValidSubmit="UpdateSupportRequest" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="SupportRequest.SupportRequestId" value="@SupportRequest.SupportRequestId" />
+                <div class="mb-3">
+                    <label for="assisted" class="form-label">Assisted:</label>
+                    <InputCheckbox id="assisted" @bind-Value="SupportRequest.Assisted" class="form-check-input" />
+                    <ValidationMessage For="() => SupportRequest.Assisted" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="comments" class="form-label">Comments:</label>
+                    <InputText id="comments" @bind-Value="SupportRequest.Comments" class="form-control" />
+                    <ValidationMessage For="() => SupportRequest.Comments" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="typeofsupport" class="form-label">TypeofSupport:</label>
+                    <InputText id="typeofsupport" @bind-Value="SupportRequest.TypeofSupport" class="form-control" />
+                    <ValidationMessage For="() => SupportRequest.TypeofSupport" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="customerid" class="form-label">CustomerId:</label>
+                    <InputNumber id="customerid" @bind-Value="SupportRequest.CustomerId" class="form-control" />
+                    <ValidationMessage For="() => SupportRequest.CustomerId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="staffid" class="form-label">StaffId:</label>
+                    <InputNumber id="staffid" @bind-Value="SupportRequest.StaffId" class="form-control" />
+                    <ValidationMessage For="() => SupportRequest.StaffId" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/supportrequests">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int SupportRequestId { get; set; }
+
+    [SupplyParameterFromForm]
+    private SupportRequest? SupportRequest { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        SupportRequest ??= await context.SupportRequest.FirstOrDefaultAsync(m => m.SupportRequestId == SupportRequestId);
+
+        if (SupportRequest is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateSupportRequest()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(SupportRequest!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!SupportRequestExists(SupportRequest!.SupportRequestId))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/supportrequests");
+    }
+
+    private bool SupportRequestExists(int supportrequestid)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.SupportRequest.Any(e => e.SupportRequestId == supportrequestid);
+    }
+}

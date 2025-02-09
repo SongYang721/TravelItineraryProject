@@ -1,9 +1,10 @@
 ﻿@page "/reviews/create"
 @using Microsoft.EntityFrameworkCore
+@using TravelItineraryProject.Data
 @using TravelItineraryProject.Domain
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 @inject NavigationManager NavigationManager
-
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize(Roles = "Administrator,User")]
 
 <PageTitle>Create</PageTitle>
@@ -16,42 +17,49 @@
     <div class="col-md-4">
         <EditForm method="post" Model="Review" OnValidSubmit="AddReview" FormName="create" Enhance>
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
-            <div class="mb-3">
-                <label for="rating" class="form-label">Rating:</label> 
-                <InputNumber id="rating" @bind-Value="Review.Rating" class="form-control" /> 
-                <ValidationMessage For="() => Review.Rating" class="text-danger" /> 
-            </div>        
+            <ValidationSummary class="text-danger" role="alert" />
             <div class="mb-3">
                 <label for="reviewdate" class="form-label">ReviewDate:</label> 
                 <InputDate id="reviewdate" @bind-Value="Review.ReviewDate" class="form-control" /> 
                 <ValidationMessage For="() => Review.ReviewDate" class="text-danger" /> 
             </div>        
+            <!-- Rating with number radio buttons -->
             <div class="mb-3">
-                <label for="comment" class="form-label">Comment:</label> 
-                <InputText id="comment" @bind-Value="Review.Comment" class="form-control" /> 
-                <ValidationMessage For="() => Review.Comment" class="text-danger" /> 
-            </div>        
+                <label class="form-label">Rating:</label>
+                <InputRadioGroup @bind-Value="Review.Rating">
+                    <div class="rating-container">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <label class="rating-option">
+                                <!-- Radio button for each rating option -->
+                                <InputRadio class="rating-input" value="@i" />
+                                <span>@i</span>
+                            </label>
+                        }
+                    </div>
+                </InputRadioGroup>
+                <ValidationMessage For="() => Review.Rating" class="text-danger" />
+            </div>
             <div class="mb-3">
-                <label for="approvedbystaff" class="form-label">ApprovedByStaff:</label> 
-                <InputCheckbox id="approvedbystaff" @bind-Value="Review.ApprovedByStaff" class="form-check-input" /> 
-                <ValidationMessage For="() => Review.ApprovedByStaff" class="text-danger" /> 
-            </div>        
+                <label for="comment" class="form-label">Comment:</label>
+                <InputText id="comment" @bind-Value="Review.Comment" class="form-control" />
+                <ValidationMessage For="() => Review.Comment" class="text-danger" />
+            </div>
             <div class="mb-3">
-                <label for="itineraryid" class="form-label">ItineraryId:</label> 
-                <InputNumber id="itineraryid" @bind-Value="Review.ItineraryId" class="form-control" /> 
-                <ValidationMessage For="() => Review.ItineraryId" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="userid" class="form-label">UserId:</label> 
-                <InputNumber id="userid" @bind-Value="Review.UserId" class="form-control" /> 
-                <ValidationMessage For="() => Review.UserId" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="staffid" class="form-label">StaffId:</label> 
-                <InputNumber id="staffid" @bind-Value="Review.StaffId" class="form-control" /> 
-                <ValidationMessage For="() => Review.StaffId" class="text-danger" /> 
-            </div>        
+                <label for="itineraryid" class="form-label">Itinerary:</label>
+                <InputSelect id="itineraryid" @bind-Value="Review.ItineraryId" class="form-control">
+                    <option value="">-- Select Itinerary --</option>
+                    @if (Itineraries != null)
+                    {
+                        foreach (var itinerary in Itineraries)
+                        {
+                            <option value="@itinerary.ItineraryId">@itinerary.Title - @itinerary.TypeofTrip
+                            </option>
+                        }
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => Review.ItineraryId" class="text-danger" />
+            </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -63,14 +71,57 @@
 
 @code {
     [SupplyParameterFromForm]
-    private Review Review { get; set; } = new();
+    private Review Review { get; set; } = new() {
+            ReviewDate = DateTime.Today
+        };
+    private TravelItineraryProjectContext context = default!;
+
+    private IList<Itinerary> Itineraries;
+
+    protected override async void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+        Itineraries = context.Itinerary.ToList();
+    }
 
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddReview()
     {
         using var context = DbFactory.CreateDbContext();
+
+        // Get the logged-in user's information
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userEmail = authState.User.Identity?.Name;
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+
+        // Set UserId to the logged-in user's ID
+        // Assuming the UserId is stored in the claim or can be retrieved from a service
+        Review.CustomerId = user.CustomerId.Value;
+
         context.Review.Add(Review);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/reviews");
     }
 }
+
+<style>
+    /* CSS for Rating Radio Buttons */
+    .rating-container {
+        display: flex;
+        gap: 10px;
+    }
+
+    .rating-option {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .rating-input {
+        margin-right: 5px; /* Space between radio button and label */
+    }
+
+        .rating-input + span {
+            cursor: pointer;
+            font-size: 20px;
+        }
+</style>
