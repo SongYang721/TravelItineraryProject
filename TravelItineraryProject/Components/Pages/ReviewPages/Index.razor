@@ -8,7 +8,6 @@
 @inject IDbContextFactory<TravelItineraryProjectContext> DbFactory
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IJSRuntime JSRuntime
-@attribute [Authorize(Roles = "Administrator, Staff")]
 
 <PageTitle>Reviews</PageTitle>
 
@@ -23,16 +22,20 @@
     <PropertyColumn Property="review => review.ReviewDate" />
     <PropertyColumn Property="review => review.Comment" />
     <PropertyColumn Property="review => review.ItineraryId" />
-    <PropertyColumn Property="review => review.UserId" />
-    <PropertyColumn Property="review => review.StaffId" Title="CheckedByStaffId" />
-    <PropertyColumn Property="review => review.ApprovedByStaff" Title="ApprovalStatus" />
+    <AuthorizeView Roles="Administrator, Staff">
+        <PropertyColumn Property="review => review.CustomerId" />
+        <PropertyColumn Property="review => review.StaffId" Title="CheckedByStaffId" />
+        <PropertyColumn Property="review => review.ApprovedByStaff" Title="ApprovalStatus" />
+    </AuthorizeView>
 
     <TemplateColumn Context="review">
-        <a href="@($"reviews/edit?reviewid={review.ReviewId}")">Edit</a> |
-        <a href="@($"reviews/details?reviewid={review.ReviewId}")">Details</a> |
-        <a href="@($"reviews/delete?reviewid={review.ReviewId}")">Delete</a> |
+        <AuthorizeView Roles="Administrator, User">
+            <a href="@($"reviews/edit?reviewid={review.ReviewId}")">Edit</a> |
+            <a href="@($"reviews/delete?reviewid={review.ReviewId}")">Delete</a> |
+        </AuthorizeView>
+        <a href="@($"reviews/details?reviewid={review.ReviewId}")">Details</a>
         <AuthorizeView Roles="Administrator, Staff">
-            <button class="btn @(review.ApprovedByStaff ? "btn-danger" : "btn-success")"
+            | <button class="btn @(review.ApprovedByStaff ? "btn-danger" : "btn-success")"
                     @onclick="() => ToggleReviewApproval(review.ReviewId)">
                 @(review.ApprovedByStaff ? "Unapprove" : "Approve")
             </button>

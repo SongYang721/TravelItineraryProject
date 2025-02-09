@@ -13,10 +13,11 @@
 <PageTitle>Bookings</PageTitle>
 
 <h1>Bookings</h1>
-
-<p>
-    <a href="bookings/create">Create New</a>
-</p>
+<AuthorizeView Roles="Administrator, Staff">
+    <p>
+        <a href="bookings/create">Create New</a>
+    </p>
+</AuthorizeView>
 
 <QuickGrid Class="table" Items="context.Booking">
     <PropertyColumn Property="booking => booking.BookingDate" />
@@ -27,9 +28,11 @@
     <PropertyColumn Property="booking => booking.BookingStatus" Title="ApprovalStatus" />
 
     <TemplateColumn Context="booking">
-        <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
-        <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
-        <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a> |
+        <AuthorizeView Roles="Administrator, User">
+            <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
+            <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
+            <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
+        </AuthorizeView>
         <AuthorizeView Roles="Administrator, Staff">
             <button class="btn @(booking.BookingStatus ? "btn-danger" : "btn-success")"
                     @onclick="() => ToggleBookingStatus(booking.BookingId)">

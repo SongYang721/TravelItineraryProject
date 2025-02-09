@@ -18,7 +18,7 @@ namespace TravelItineraryProject.Configurations.Entities
                     Comment = "Excellent experience!",
                     ApprovedByStaff = true,
                     ItineraryId = 1,  // Assuming you have an Itinerary with ID 1
-                    UserId = 1,       // Assuming you have a User with ID 1
+                    CustomerId = 1,       // Assuming you have a User with ID 1
                     StaffId = 1,
                 },
                 new Review
@@ -29,7 +29,7 @@ namespace TravelItineraryProject.Configurations.Entities
                     Comment = "Great service, but could improve the food quality.",
                     ApprovedByStaff = false,
                     ItineraryId = 2,  // Assuming you have an Itinerary with ID 2
-                    UserId = 2,       // Assuming you have a User with ID 2
+                    CustomerId = 2,       // Assuming you have a User with ID 2
                     StaffId = 2
                 }
             );

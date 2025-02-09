@@ -16,16 +16,16 @@
         <EditForm method="post" Model="ItineraryRequest" OnValidSubmit="AddItineraryRequest" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert" />
-            <div class="mb-3"> 
-              <label for="destination" class="form-label">Destination:</label>
-              <InputSelect id="destination" @bind-Value="ItineraryRequest.Destination" class="form-control"> 
-                  <option value="">-- Select Destination --</option> 
-                          <option value="">-- Select Destination --</option>
-                          <option value="China">China</option>
-                          <option value="India">India</option>
-                          <option value="Japan">Japan</option>
-              </InputSelect>  
-               
+            <div class="mb-3">
+                <label for="destination" class="form-label">Destination:</label>
+                <InputSelect id="destination" @bind-Value="ItineraryRequest.Destination" class="form-control">
+                    <option value="">-- Select Destination --</option>
+                    <option value="">-- Select Destination --</option>
+                    <option value="China">China</option>
+                    <option value="India">India</option>
+                    <option value="Japan">Japan</option>
+                </InputSelect>
+
                 <ValidationMessage For="() => ItineraryRequest.Destination" class="text-danger" />
             </div>
 
@@ -60,7 +60,7 @@
 
     private async Task AddItineraryRequest()
     {
-        
+
         try
         {
             using var context = DbFactory.CreateDbContext();
@@ -87,7 +87,7 @@
             ItineraryRequest.CustomerId = customer.CustomerId;
             ItineraryRequest.RequestApproval = false;
             ItineraryRequest.NumberOfRequests = 1;
-           
+
 
             // Save to the database
             context.ItineraryRequest.Add(ItineraryRequest);

@@ -4,8 +4,6 @@
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 @inject NavigationManager NavigationManager
 
-@attribute [Authorize(Roles = "Administrator, Staff")]
-
 <PageTitle>Details</PageTitle>
 
 <h1>Details</h1>
@@ -25,17 +23,21 @@
             <dd class="col-sm-10">@review.ReviewDate</dd>
             <dt class="col-sm-2">Comment</dt>
             <dd class="col-sm-10">@review.Comment</dd>
-            <dt class="col-sm-2">ApprovedByStaff</dt>
-            <dd class="col-sm-10">@review.ApprovedByStaff</dd>
             <dt class="col-sm-2">ItineraryId</dt>
             <dd class="col-sm-10">@review.ItineraryId</dd>
-            <dt class="col-sm-2">UserId</dt>
-            <dd class="col-sm-10">@review.UserId</dd>
-            <dt class="col-sm-2">StaffId</dt>
-            <dd class="col-sm-10">@review.StaffId</dd>
+            <AuthorizeView Roles="Administrator, Staff">
+                <dt class="col-sm-2">ApprovedByStaff</dt>
+                <dd class="col-sm-10">@review.ApprovedByStaff</dd>
+                <dt class="col-sm-2">UserId</dt>
+                <dd class="col-sm-10">@review.CustomerId</dd>
+                <dt class="col-sm-2">StaffId</dt>
+                <dd class="col-sm-10">@review.StaffId</dd>
+            </AuthorizeView>
         </dl>
         <div>
+            <AuthorizeView Roles="Administrator, User">
             <a href="@($"/reviews/edit?reviewid={review.ReviewId}")">Edit</a> |
+            </AuthorizeView>
             <a href="@($"/reviews")">Back to List</a>
         </div>
     }
