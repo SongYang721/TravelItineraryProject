@@ -20,7 +20,7 @@
               <label for="destination" class="form-label">Destination:</label>
               <InputSelect id="destination" @bind-Value="ItineraryRequest.Destination" class="form-control"> 
                   <option value="">-- Select Destination --</option> 
-                          <option value="SelectDestination">-- Select Destination --</option>
+                          <option value="">-- Select Destination --</option>
                           <option value="China">China</option>
                           <option value="India">India</option>
                           <option value="Japan">Japan</option>
@@ -34,7 +34,7 @@
             <div class="mb-3">
                 <label for="typeoftrip" class="form-label">Type of Trip:</label>
                 <InputSelect id="typeoftrip" @bind-Value="ItineraryRequest.TypeOfTrip" class="form-control">
-                    <option value="SelectType">-- Select Type --</option>
+                    <option value="">-- Select Type --</option>
                     <option value="Pleasure">Pleasure</option>
                     <option value="Business">Business</option>
                     <option value="Historical">Historical</option>
@@ -55,8 +55,8 @@
 
     private ItineraryRequest ItineraryRequest { get; set; } = new();
 
-    private  List<string> AvailableDestinations = new() { "Tokyo", "New York", "Paris", "Sydney", "Rome" };
-    private  List<string> AvailableTripTypes = new() { "Vacation", "Business", "Adventure", "Cultural", "Relaxation" };
+    // private  List<string> AvailableDestinations = new() { "Tokyo", "New York", "Paris", "Sydney", "Rome" };
+    // private  List<string> AvailableTripTypes = new() { "Vacation", "Business", "Adventure", "Cultural", "Relaxation" };
 
     private async Task AddItineraryRequest()
     {
