@@ -14,6 +14,7 @@ namespace TravelItineraryProject.Configurations.Entities
                 new Booking
                 {
                     BookingId = 1,
+                    BookingStatus = false,
                     BookingDate = new DateOnly(2024,1,3),
                     CustomerId = 1,
                     ItineraryId = 1,
@@ -23,6 +24,7 @@ namespace TravelItineraryProject.Configurations.Entities
                 new Booking
                 {
                     BookingId = 2,
+                    BookingStatus = false,
                     BookingDate = new DateOnly(2025,8, 2),
                     CustomerId = 2,
                     ItineraryId = 2,

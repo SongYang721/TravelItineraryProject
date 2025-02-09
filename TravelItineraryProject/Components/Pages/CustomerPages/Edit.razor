@@ -23,11 +23,6 @@ else
                 <ValidationSummary role="alert"/>
                 <input type="hidden" name="Customer.CustomerId" value="@Customer.CustomerId" />
                 <div class="mb-3">
-                    <label for="password" class="form-label">Password:</label>
-                    <InputText id="password" @bind-Value="Customer.Password" class="form-control" />
-                    <ValidationMessage For="() => Customer.Password" class="text-danger" />
-                </div>
-                <div class="mb-3">
                     <label for="firstname" class="form-label">FirstName:</label>
                     <InputText id="firstname" @bind-Value="Customer.FirstName" class="form-control" />
                     <ValidationMessage For="() => Customer.FirstName" class="text-danger" />
@@ -41,11 +36,6 @@ else
                     <label for="emailaddress" class="form-label">EmailAddress:</label>
                     <InputText id="emailaddress" @bind-Value="Customer.EmailAddress" class="form-control" />
                     <ValidationMessage For="() => Customer.EmailAddress" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="requestid" class="form-label">RequestID:</label>
-                    <InputText id="requestid" @bind-Value="Customer.RequestID" class="form-control" />
-                    <ValidationMessage For="() => Customer.RequestID" class="text-danger" />
                 </div>
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>

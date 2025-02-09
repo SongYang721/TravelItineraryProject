@@ -1,0 +1,71 @@
+﻿@page "/supportrequests/delete"
+@using Microsoft.EntityFrameworkCore
+@using TravelItineraryProject.Domain
+@inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Delete</PageTitle>
+
+<h1>Delete</h1>
+
+<p>Are you sure you want to delete this?</p>
+<div>
+    <h2>SupportRequest</h2>
+    <hr />
+    @if (supportrequest is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Assisted</dt>
+            <dd class="col-sm-10">@supportrequest.Assisted</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Comments</dt>
+            <dd class="col-sm-10">@supportrequest.Comments</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">TypeofSupport</dt>
+            <dd class="col-sm-10">@supportrequest.TypeofSupport</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">CustomerId</dt>
+            <dd class="col-sm-10">@supportrequest.CustomerId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">StaffId</dt>
+            <dd class="col-sm-10">@supportrequest.StaffId</dd>
+        </dl>
+        <EditForm method="post" Model="supportrequest" OnValidSubmit="DeleteSupportRequest" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(supportrequest is null)">Delete</button> |
+            <a href="/supportrequests">Back to List</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+    private SupportRequest? supportrequest;
+
+    [SupplyParameterFromQuery]
+    private int SupportRequestId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        supportrequest = await context.SupportRequest.FirstOrDefaultAsync(m => m.SupportRequestId == SupportRequestId);
+
+        if (supportrequest is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task DeleteSupportRequest()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.SupportRequest.Remove(supportrequest!);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/supportrequests");
+    }
+}

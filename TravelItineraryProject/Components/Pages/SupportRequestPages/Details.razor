@@ -1,0 +1,54 @@
+﻿@page "/supportrequests/details"
+@using Microsoft.EntityFrameworkCore
+@using TravelItineraryProject.Domain
+@inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>SupportRequest</h2>
+    <hr />
+    @if (supportrequest is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Assisted</dt>
+            <dd class="col-sm-10">@supportrequest.Assisted</dd>
+            <dt class="col-sm-2">Comments</dt>
+            <dd class="col-sm-10">@supportrequest.Comments</dd>
+            <dt class="col-sm-2">TypeofSupport</dt>
+            <dd class="col-sm-10">@supportrequest.TypeofSupport</dd>
+            <dt class="col-sm-2">CustomerId</dt>
+            <dd class="col-sm-10">@supportrequest.CustomerId</dd>
+            <dt class="col-sm-2">StaffId</dt>
+            <dd class="col-sm-10">@supportrequest.StaffId</dd>
+        </dl>
+        <div>
+            <a href="@($"/supportrequests/edit?supportrequestid={supportrequest.SupportRequestId}")">Edit</a> |
+            <a href="@($"/supportrequests")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private SupportRequest? supportrequest;
+
+    [SupplyParameterFromQuery]
+    private int SupportRequestId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        supportrequest = await context.SupportRequest.FirstOrDefaultAsync(m => m.SupportRequestId == SupportRequestId);
+
+        if (supportrequest is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

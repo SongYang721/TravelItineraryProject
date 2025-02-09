@@ -13,6 +13,8 @@ namespace TravelItineraryProject.Data
         public DbSet<TravelItineraryProject.Domain.Itinerary> Itinerary { get; set; } = default!;
         public DbSet<TravelItineraryProject.Domain.Booking> Booking { get; set; } = default!;
         public DbSet<TravelItineraryProject.Domain.Customer> Customer { get; set; } = default!;
+        public DbSet<TravelItineraryProject.Domain.ItineraryRequest> ItineraryRequest { get; set; } = default!;
+        public DbSet<TravelItineraryProject.Domain.SupportRequest> SupportRequest { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -27,6 +29,7 @@ namespace TravelItineraryProject.Data
             builder.ApplyConfiguration(new UserSeed());
             builder.ApplyConfiguration(new RoleSeed());
             builder.ApplyConfiguration(new UserRoleSeed());
+            builder.ApplyConfiguration(new ItineraryRequestSeed());
         }
     }
 }

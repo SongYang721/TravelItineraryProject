@@ -24,11 +24,6 @@ else
                 <ValidationSummary role="alert"/>
                 <input type="hidden" name="Staff.StaffId" value="@Staff.StaffId" />
                 <div class="mb-3">
-                    <label for="password" class="form-label">Password:</label>
-                    <InputText id="password" @bind-Value="Staff.Password" class="form-control" />
-                    <ValidationMessage For="() => Staff.Password" class="text-danger" />
-                </div>
-                <div class="mb-3">
                     <label for="name" class="form-label">Name:</label>
                     <InputText id="name" @bind-Value="Staff.Name" class="form-control" />
                     <ValidationMessage For="() => Staff.Name" class="text-danger" />

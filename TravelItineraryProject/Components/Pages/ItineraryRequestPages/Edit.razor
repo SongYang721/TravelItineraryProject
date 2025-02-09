@@ -1,0 +1,121 @@
+﻿@page "/itineraryrequests/edit"
+@using Microsoft.EntityFrameworkCore
+@using TravelItineraryProject.Domain
+@inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Itinerary Request</h2>
+@* <hr /> *@
+@* @if (ItineraryRequest is null) *@
+@* { *@
+@*     <p><em>Loading...</em></p> *@
+@* } *@
+@* else *@
+@* { *@
+@*     <div class="row"> *@
+@*         <div class="col-md-4"> *@
+@*             <EditForm method="post" Model="ItineraryRequest" OnValidSubmit="UpdateItineraryRequest" FormName="edit"> *@
+@*                 <DataAnnotationsValidator /> *@
+@*                 <ValidationSummary role="alert" /> *@
+@*                 <input type="hidden" name="ItineraryRequest.ItineraryRequestId" value="@ItineraryRequest.ItineraryRequestId" /> *@
+
+@*                 <div class="mb-3"> *@
+@*                     <label for="requestapproval" class="form-label">Request Approval:</label> *@
+@*                     <InputCheckbox id="requestapproval" @bind-Value="ItineraryRequest.RequestApproval" class="form-check-input" /> *@
+@*                     <ValidationMessage For="() => ItineraryRequest.RequestApproval" class="text-danger" /> *@
+@*                 </div> *@
+
+@*                 <div class="mb-3"> *@
+@*                     <label for="requesttravelmonthyear" class="form-label">Request Travel Month & Year:</label> *@
+@*                     <InputText id="requesttravelmonthyear" @bind-Value="ItineraryRequest.RequestTravelMonthYear" class="form-control" /> *@
+@*                     <ValidationMessage For="() => ItineraryRequest.RequestTravelMonthYear" class="text-danger" /> *@
+@*                 </div> *@
+
+@*                 <div class="mb-3"> *@
+@*                     <label for="destination" class="form-label">Destination:</label> *@
+@*                     <InputText id="destination" @bind-Value="ItineraryRequest.Destination" class="form-control" /> *@
+@*                     <ValidationMessage For="() => ItineraryRequest.Destination" class="text-danger" /> *@
+@*                 </div> *@
+
+@*                 <div class="mb-3"> *@
+@*                     <label for="typeoftrip" class="form-label">Type of Trip:</label> *@
+@*                     <InputText id="typeoftrip" @bind-Value="ItineraryRequest.TypeOfTrip" class="form-control" /> *@
+@*                     <ValidationMessage For="() => ItineraryRequest.TypeOfTrip" class="text-danger" /> *@
+@*                 </div> *@
+
+@*                 <div class="mb-3"> *@
+@*                     <label for="customerid" class="form-label">Customer ID:</label> *@
+@*                     <InputNumber id="customerid" @bind-Value="ItineraryRequest.CustomerId" class="form-control" /> *@
+@*                     <ValidationMessage For="() => ItineraryRequest.CustomerId" class="text-danger" /> *@
+@*                 </div> *@
+
+@*                 <div class="mb-3"> *@
+@*                     <label for="staffid" class="form-label">Staff ID:</label> *@
+@*                     <InputNumber id="staffid" @bind-Value="ItineraryRequest.StaffId" class="form-control" /> *@
+@*                     <ValidationMessage For="() => ItineraryRequest.StaffId" class="text-danger" /> *@
+@*                 </div> *@
+
+@*                 <button type="submit" class="btn btn-primary">Save</button> *@
+@*             </EditForm> *@
+@*         </div> *@
+@*     </div> *@
+@* } *@
+
+@* <div> *@
+@*     <a href="/itineraryrequests">Back to List</a> *@
+@* </div> *@
+
+@code {
+    // [SupplyParameterFromQuery]
+    // private int ItineraryRequestId { get; set; }
+
+    // [SupplyParameterFromForm]
+    // private ItineraryRequest? ItineraryRequest { get; set; }
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     using var context = DbFactory.CreateDbContext();
+    //     ItineraryRequest ??= await context.ItineraryRequest.FirstOrDefaultAsync(m => m.ItineraryRequestId == ItineraryRequestId);
+
+    //     if (ItineraryRequest is null)
+    //     {
+    //         NavigationManager.NavigateTo("notfound");
+    //     }
+    // }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https:learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    // private async Task UpdateItineraryRequest()
+    // {
+    //     using var context = DbFactory.CreateDbContext();
+    //     context.Attach(ItineraryRequest!).State = EntityState.Modified;
+
+    //     try
+    //     {
+    //         await context.SaveChangesAsync();
+    //     }
+    //     catch (DbUpdateConcurrencyException)
+    //     {
+    //         if (!ItineraryRequestExists(ItineraryRequest!.ItineraryRequestId))
+    //         {
+    //             NavigationManager.NavigateTo("notfound");
+    //         }
+    //         else
+    //         {
+    //             throw;
+    //         }
+    //     }
+
+    //     NavigationManager.NavigateTo("/itineraryrequests");
+    // }
+
+    // private bool ItineraryRequestExists(int itineraryrequestid)
+    // {
+    //     using var context = DbFactory.CreateDbContext();
+    //     return context.ItineraryRequest.Any(e => e.ItineraryRequestId == itineraryrequestid);
+    // }
+}

@@ -14,12 +14,7 @@
     <div class="col-md-4">
         <EditForm method="post" Model="Customer" OnValidSubmit="AddCustomer" FormName="create" Enhance>
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password:</label> 
-                <InputText id="password" @bind-Value="Customer.Password" class="form-control" /> 
-                <ValidationMessage For="() => Customer.Password" class="text-danger" /> 
-            </div>        
+            <ValidationSummary class="text-danger" role="alert"/> 
             <div class="mb-3">
                 <label for="firstname" class="form-label">FirstName:</label> 
                 <InputText id="firstname" @bind-Value="Customer.FirstName" class="form-control" /> 
@@ -34,11 +29,6 @@
                 <label for="emailaddress" class="form-label">EmailAddress:</label> 
                 <InputText id="emailaddress" @bind-Value="Customer.EmailAddress" class="form-control" /> 
                 <ValidationMessage For="() => Customer.EmailAddress" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="requestid" class="form-label">RequestID:</label> 
-                <InputText id="requestid" @bind-Value="Customer.RequestID" class="form-control" /> 
-                <ValidationMessage For="() => Customer.RequestID" class="text-danger" /> 
             </div>        
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>

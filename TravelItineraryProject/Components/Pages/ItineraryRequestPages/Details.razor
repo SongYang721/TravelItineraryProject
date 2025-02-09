@@ -1,0 +1,62 @@
+﻿@page "/itineraryrequests/details"
+@using Microsoft.EntityFrameworkCore
+@using TravelItineraryProject.Domain
+@inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Itinerary Request</h2>
+    <hr />
+    @if (itineraryrequest is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <dl class="row">
+            <dt class="col-sm-2">Request Approval</dt>
+            <dd class="col-sm-10">@itineraryrequest.RequestApproval</dd>
+
+            @* <dt class="col-sm-2">Request Travel Month & Year</dt> *@
+           
+
+            <dt class="col-sm-2">Destination</dt>
+            <dd class="col-sm-10">@itineraryrequest.Destination</dd>
+
+            <dt class="col-sm-2">Type of Trip</dt>
+            <dd class="col-sm-10">@itineraryrequest.TypeOfTrip</dd>
+
+            <dt class="col-sm-2">Customer ID</dt>
+            <dd class="col-sm-10">@itineraryrequest.CustomerId</dd>
+
+            <dt class="col-sm-2">Staff ID</dt>
+            <dd class="col-sm-10">@itineraryrequest.StaffId</dd>
+        </dl>
+        <div>
+            <a href="@($"/itineraryrequests/edit?itineraryrequestid={itineraryrequest.ItineraryRequestId}")">Edit</a> |
+            <a href="/itineraryrequests">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private ItineraryRequest? itineraryrequest;
+
+    [SupplyParameterFromQuery]
+    private int ItineraryRequestId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        itineraryrequest = await context.ItineraryRequest.FirstOrDefaultAsync(m => m.ItineraryRequestId == ItineraryRequestId);
+
+        if (itineraryrequest is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
