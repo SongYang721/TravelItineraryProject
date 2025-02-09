@@ -9,12 +9,37 @@
 <h1>Details</h1>
 
 <div>
+<<<<<<< HEAD
+    <h2>Itinerary Request</h2>
+=======
     <h2>ItineraryRequest</h2>
+>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30
     <hr />
     @if (itineraryrequest is null)
     {
         <p><em>Loading...</em></p>
     }
+<<<<<<< HEAD
+    else
+    {
+        <dl class="row">
+            <dt class="col-sm-2">Request Approval</dt>
+            <dd class="col-sm-10">@itineraryrequest.RequestApproval</dd>
+
+            @* <dt class="col-sm-2">Request Travel Month & Year</dt> *@
+           
+
+            <dt class="col-sm-2">Destination</dt>
+            <dd class="col-sm-10">@itineraryrequest.Destination</dd>
+
+            <dt class="col-sm-2">Type of Trip</dt>
+            <dd class="col-sm-10">@itineraryrequest.TypeOfTrip</dd>
+
+            <dt class="col-sm-2">Customer ID</dt>
+            <dd class="col-sm-10">@itineraryrequest.CustomerId</dd>
+
+            <dt class="col-sm-2">Staff ID</dt>
+=======
     else {
         <dl class="row">
             <dt class="col-sm-2">RequestApproval</dt>
@@ -28,11 +53,16 @@
             <dt class="col-sm-2">CustomerId</dt>
             <dd class="col-sm-10">@itineraryrequest.CustomerId</dd>
             <dt class="col-sm-2">StaffId</dt>
+>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30
             <dd class="col-sm-10">@itineraryrequest.StaffId</dd>
         </dl>
         <div>
             <a href="@($"/itineraryrequests/edit?itineraryrequestid={itineraryrequest.ItineraryRequestId}")">Edit</a> |
+<<<<<<< HEAD
+            <a href="/itineraryrequests">Back to List</a>
+=======
             <a href="@($"/itineraryrequests")">Back to List</a>
+>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30
         </div>
     }
 </div>

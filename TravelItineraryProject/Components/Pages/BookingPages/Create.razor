@@ -19,7 +19,7 @@
             <div class="mb-3">
                 <label for="bookingdate" class="form-label">BookingDate:</label> 
                 <InputDate id="bookingdate" @bind-Value="Booking.BookingDate" class="form-control" /> 
-                <ValidationMe   ssage For="() => Booking.BookingDate" class="text-danger" /> 
+                <ValidationMessage For="() => Booking.BookingDate" class="text-danger" /> 
             </div>        
             <div class="mb-3">
                 <label for="customerid" class="form-label">CustomerId:</label> 
@@ -51,6 +51,8 @@
 </div>
 
 @code {
+<<<<<<< HEAD
+=======
     // // Create a string to store the CustomerId, default value is "System".
     // private string CustomerId = "System";
 
@@ -70,6 +72,7 @@
         //     CustomerId = CustomerIdClaim.Value;
         // }
     // }
+>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30
 
     [SupplyParameterFromForm]
     private Booking Booking { get; set; } = new()
@@ -84,17 +87,6 @@
     private async Task AddBooking()
     {
         using var context = DbFactory.CreateDbContext();
-
-        // // Set the CustomerId on the Booking object
-        // if (int.TryParse(CustomerId, out var parsedCustomerId))
-        // {
-        //     Booking.CustomerId = parsedCustomerId;
-        // }
-        // else
-        // {
-        //     throw new InvalidOperationException("Invalid CustomerId format.");
-        // }
-
         context.Booking.Add(Booking);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/bookings");

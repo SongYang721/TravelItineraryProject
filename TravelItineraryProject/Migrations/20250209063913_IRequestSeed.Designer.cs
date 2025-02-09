@@ -12,13 +12,8 @@ using TravelItineraryProject.Data;
 namespace TravelItineraryProject.Migrations
 {
     [DbContext(typeof(TravelItineraryProjectContext))]
-<<<<<<<< HEAD:TravelItineraryProject/Migrations/20250209062854_ItineraryRequestSeeding.Designer.cs
-    [Migration("20250209062854_ItineraryRequestSeeding")]
-    partial class ItineraryRequestSeeding
-========
-    [Migration("20250209101347_fixreview")]
-    partial class fixreview
->>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30:TravelItineraryProject/Migrations/20250209101347_fixreview.Designer.cs
+    [Migration("20250209063913_IRequestSeed")]
+    partial class IRequestSeed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -291,11 +286,7 @@ namespace TravelItineraryProject.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-<<<<<<<< HEAD:TravelItineraryProject/Migrations/20250209062854_ItineraryRequestSeeding.Designer.cs
-                            ConcurrencyStamp = "1bbb1183-5d7d-4787-b4a8-fa7d5057cdc9",
-========
-                            ConcurrencyStamp = "2c3e0dd4-ffb6-4ea3-96d8-768182bdaad4",
->>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30:TravelItineraryProject/Migrations/20250209101347_fixreview.Designer.cs
+                            ConcurrencyStamp = "0988890f-8c10-44b8-8695-9268517fc30e",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -303,15 +294,9 @@ namespace TravelItineraryProject.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-<<<<<<<< HEAD:TravelItineraryProject/Migrations/20250209062854_ItineraryRequestSeeding.Designer.cs
-                            PasswordHash = "AQAAAAIAAYagAAAAEEvcvOd1V1YWHwhiwhk3+t1iYfxWxf5sKPWHKO95tJFgQJJpQCElNtTqF4Eeya5T+w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEN8TmspPoauml8QJZ0v/+l8Dc2yCGcWE3bLoCw2vphfhSU4lsW0VFBW4Qi+01rJhgw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cd690fba-5a14-4317-b2b8-ec28a827c9c3",
-========
-                            PasswordHash = "AQAAAAIAAYagAAAAEAFY5zSZhfciUA9uBL/Zz5CtkcUVqtobH0S4+l6RDzypBLKoWN5fceedNSGViQFQAQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "cd139159-2df0-471c-ba0a-fe4d1e32da17",
->>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30:TravelItineraryProject/Migrations/20250209101347_fixreview.Designer.cs
+                            SecurityStamp = "694a5a9a-b940-40d1-abc5-654d89e5e4ce",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -319,11 +304,7 @@ namespace TravelItineraryProject.Migrations
                         {
                             Id = "10e93995-24eb-48b5-805b-824adeb6fb96",
                             AccessFailedCount = 0,
-<<<<<<<< HEAD:TravelItineraryProject/Migrations/20250209062854_ItineraryRequestSeeding.Designer.cs
-                            ConcurrencyStamp = "af2e2f7b-1fbc-43cb-8f50-401d0f877636",
-========
-                            ConcurrencyStamp = "aa342958-570c-4d28-a291-02a3b4c43f85",
->>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30:TravelItineraryProject/Migrations/20250209101347_fixreview.Designer.cs
+                            ConcurrencyStamp = "0051178f-1515-41f6-bc28-e7cc94cf0036",
                             Email = "alicejohnson@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Alice",
@@ -331,15 +312,9 @@ namespace TravelItineraryProject.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "alicejohnson@gmail.com",
                             NormalizedUserName = "ALICEJOHNSON@GMAIL.COM",
-<<<<<<<< HEAD:TravelItineraryProject/Migrations/20250209062854_ItineraryRequestSeeding.Designer.cs
-                            PasswordHash = "AQAAAAIAAYagAAAAEKtVAKr8Os8wfcKgxxLfIH3pCR8Al57glB7AmhMCEjT561Y6miY82Fe2aulpe9ygsA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBM1UcKye417NlMyUIwQRqgH7cMlN1HJY97GcXkquRQV6TrSM/Z/YCNnSnj8Fq+b8Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7a98ad72-6225-4085-b6f2-e02318bc2899",
-========
-                            PasswordHash = "AQAAAAIAAYagAAAAEBRGrraChmYE7ovSkJQF+iUqV9BcV9ReTm0k/1vo951nOM7oADrnG8zKTdsyVgHiqA==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "6fe08b50-937f-42aa-b5fa-e0c7d3fe31a2",
->>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30:TravelItineraryProject/Migrations/20250209101347_fixreview.Designer.cs
+                            SecurityStamp = "04b6074f-0a81-4d45-a5ab-722d9c0952df",
                             StaffId = 1,
                             TwoFactorEnabled = false,
                             UserName = "alicejohnson@gmail.com"
@@ -348,11 +323,7 @@ namespace TravelItineraryProject.Migrations
                         {
                             Id = "f272bf94-a1ab-451a-b55a-0e68638d6bb4",
                             AccessFailedCount = 0,
-<<<<<<<< HEAD:TravelItineraryProject/Migrations/20250209062854_ItineraryRequestSeeding.Designer.cs
-                            ConcurrencyStamp = "5105cd0e-9314-44ad-bf9c-4c28cc7eee0e",
-========
-                            ConcurrencyStamp = "56ee87e0-d335-40aa-b602-bdd13a4e0ca7",
->>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30:TravelItineraryProject/Migrations/20250209101347_fixreview.Designer.cs
+                            ConcurrencyStamp = "2600068a-934e-45db-8cc1-ae3bb500e88b",
                             Email = "bobsmith@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Bob",
@@ -360,15 +331,9 @@ namespace TravelItineraryProject.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "bobsmith@gmail.com",
                             NormalizedUserName = "BOBSMITH@GMAIL.COM",
-<<<<<<<< HEAD:TravelItineraryProject/Migrations/20250209062854_ItineraryRequestSeeding.Designer.cs
-                            PasswordHash = "AQAAAAIAAYagAAAAEKuuPxTW7uBl1VQO2GLpP0Oyi3fwkkAP7pl1aUSHs+jI/mngbJGNqOjdzwDNsNuO9Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOQHQvtXBBdqJI92qYWXwPXRZzKU4tfmgvqgUv6Fvgou4Zis/w8EvzsjlFJHYFHN1A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c2c500d0-f246-461f-a095-65fe378a5668",
-========
-                            PasswordHash = "AQAAAAIAAYagAAAAEFnnhtsY4dVdlD/XA9ktxdMwmYtzWrtOhTa4hwsYheYSQrudTYw2aQXJX+ekAmTqZA==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "fdb1c595-8152-4630-b258-f9292536d86b",
->>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30:TravelItineraryProject/Migrations/20250209101347_fixreview.Designer.cs
+                            SecurityStamp = "9857ddbd-5803-4b4a-a1fc-6da19b9a1d4d",
                             StaffId = 2,
                             TwoFactorEnabled = false,
                             UserName = "bobsmith@gmail.com"
@@ -377,11 +342,7 @@ namespace TravelItineraryProject.Migrations
                         {
                             Id = "4fd66d43-0660-4dc0-a96e-f83b593e4175",
                             AccessFailedCount = 0,
-<<<<<<<< HEAD:TravelItineraryProject/Migrations/20250209062854_ItineraryRequestSeeding.Designer.cs
-                            ConcurrencyStamp = "671d3e59-e668-45c3-a52a-4700e4eb62dc",
-========
-                            ConcurrencyStamp = "941f4af7-58a7-4190-8bbf-17c3581379ba",
->>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30:TravelItineraryProject/Migrations/20250209101347_fixreview.Designer.cs
+                            ConcurrencyStamp = "7682d618-c582-44df-8188-814ce1a1393a",
                             CustomerId = 1,
                             Email = "johndoe@example.com",
                             EmailConfirmed = true,
@@ -390,15 +351,9 @@ namespace TravelItineraryProject.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "johndoe@example.com",
                             NormalizedUserName = "JOHNDOE@EXAMPLE.COM",
-<<<<<<<< HEAD:TravelItineraryProject/Migrations/20250209062854_ItineraryRequestSeeding.Designer.cs
-                            PasswordHash = "AQAAAAIAAYagAAAAEHlkKzxFIPZQc8L/0x/q5ky9sHKZJfxCf1auILU360KpGoiADCqKDYO3iaHCYjLPLA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHBkNi2oZ82W/dhDkOQzht6qk7tcZGCeQ702DuOC+C80y4/x5suwjYxHHe+eEiXlZA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "634231f9-e584-46d3-9905-2ae5cbba874e",
-========
-                            PasswordHash = "AQAAAAIAAYagAAAAEDVOyWTbbCbaL10s2bThKYBHgqowJ4liqlDkAQBXPhO9SqfJnzQUyjysR/uCs0801Q==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "eefdac85-4dba-4b86-be55-19df35816fe7",
->>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30:TravelItineraryProject/Migrations/20250209101347_fixreview.Designer.cs
+                            SecurityStamp = "e9875f26-3450-4dac-b3d7-7d87871b64e2",
                             TwoFactorEnabled = false,
                             UserName = "johndoe@example.com"
                         },
@@ -406,11 +361,7 @@ namespace TravelItineraryProject.Migrations
                         {
                             Id = "f8b82324-d7ce-4578-9b88-2b6d693b72de",
                             AccessFailedCount = 0,
-<<<<<<<< HEAD:TravelItineraryProject/Migrations/20250209062854_ItineraryRequestSeeding.Designer.cs
-                            ConcurrencyStamp = "7edf7c58-18f1-4426-b1df-3c26e7a4a52e",
-========
-                            ConcurrencyStamp = "dc4af4ee-5698-4030-a852-0227824b7bf2",
->>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30:TravelItineraryProject/Migrations/20250209101347_fixreview.Designer.cs
+                            ConcurrencyStamp = "7c2e89ef-e465-4d91-8d0c-721d1a6862b1",
                             CustomerId = 2,
                             Email = "janesmith@example.com",
                             EmailConfirmed = true,
@@ -419,15 +370,9 @@ namespace TravelItineraryProject.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "janesmith@example.com",
                             NormalizedUserName = "JANESMITH@EXAMPLE.COM",
-<<<<<<<< HEAD:TravelItineraryProject/Migrations/20250209062854_ItineraryRequestSeeding.Designer.cs
-                            PasswordHash = "AQAAAAIAAYagAAAAEJx3rx6SviI8j1rRiqXROOW6E72xAaJVjNvZhiA2xxQ5dT7UBeL7HchZMyf+iygk7Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPBtABQ3+cUAFweUKmZLNeOaBEdEjfQsIt4RzzXOF5gvuVwcJ1kIgzSS5gMW5p0bJw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1a5395fd-278c-4185-b4bc-67885de5e16b",
-========
-                            PasswordHash = "AQAAAAIAAYagAAAAEI4n6YRh5MoOIevcAl94MwLi/ERd39XtjOYrkHRLY6DsHq1SH3J4pZUoeqpWPOedKw==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "25495b4b-edf3-4bca-b7a0-cb9a46fdebb0",
->>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30:TravelItineraryProject/Migrations/20250209101347_fixreview.Designer.cs
+                            SecurityStamp = "90aa2b0c-a619-4dd7-b46b-9dadb974aea3",
                             TwoFactorEnabled = false,
                             UserName = "janesmith@example.com"
                         });
@@ -601,12 +546,9 @@ namespace TravelItineraryProject.Migrations
                     b.Property<string>("Destination")
                         .HasColumnType("nvarchar(max)");
 
-<<<<<<<< HEAD:TravelItineraryProject/Migrations/20250209062854_ItineraryRequestSeeding.Designer.cs
                     b.Property<int?>("NumberOfRequests")
                         .HasColumnType("int");
 
-========
->>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30:TravelItineraryProject/Migrations/20250209101347_fixreview.Designer.cs
                     b.Property<bool>("RequestApproval")
                         .HasColumnType("bit");
 
@@ -626,6 +568,30 @@ namespace TravelItineraryProject.Migrations
                     b.HasIndex("StaffId");
 
                     b.ToTable("ItineraryRequest");
+
+                    b.HasData(
+                        new
+                        {
+                            ItineraryRequestId = 1,
+                            CustomerId = 1,
+                            Destination = "Paris, France",
+                            NumberOfRequests = 1,
+                            RequestApproval = false,
+                            RequestTravelMonthYear = "January 2024",
+                            StaffId = 1,
+                            TypeOfTrip = "History"
+                        },
+                        new
+                        {
+                            ItineraryRequestId = 2,
+                            CustomerId = 2,
+                            Destination = "Tokyo, Japan",
+                            NumberOfRequests = 20,
+                            RequestApproval = false,
+                            RequestTravelMonthYear = "August 2025",
+                            StaffId = 2,
+                            TypeOfTrip = "Vacation"
+                        });
                 });
 
             modelBuilder.Entity("TravelItineraryProject.Domain.Payment", b =>
@@ -690,9 +656,6 @@ namespace TravelItineraryProject.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ItineraryId")
                         .HasColumnType("int");
 
@@ -705,13 +668,16 @@ namespace TravelItineraryProject.Migrations
                     b.Property<int>("StaffId")
                         .HasColumnType("int");
 
-                    b.HasKey("ReviewId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("CustomerId");
+                    b.HasKey("ReviewId");
 
                     b.HasIndex("ItineraryId");
 
                     b.HasIndex("StaffId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Review");
 
@@ -721,22 +687,22 @@ namespace TravelItineraryProject.Migrations
                             ReviewId = 1,
                             ApprovedByStaff = true,
                             Comment = "Excellent experience!",
-                            CustomerId = 1,
                             ItineraryId = 1,
                             Rating = 5,
                             ReviewDate = new DateTime(2025, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            StaffId = 1
+                            StaffId = 1,
+                            UserId = 1
                         },
                         new
                         {
                             ReviewId = 2,
                             ApprovedByStaff = false,
                             Comment = "Great service, but could improve the food quality.",
-                            CustomerId = 2,
                             ItineraryId = 2,
                             Rating = 4,
                             ReviewDate = new DateTime(2025, 1, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            StaffId = 2
+                            StaffId = 2,
+                            UserId = 2
                         });
                 });
 
@@ -790,12 +756,6 @@ namespace TravelItineraryProject.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-<<<<<<<< HEAD:TravelItineraryProject/Migrations/20250209062854_ItineraryRequestSeeding.Designer.cs
-========
-                    b.Property<string>("Responds")
-                        .HasColumnType("nvarchar(max)");
-
->>>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30:TravelItineraryProject/Migrations/20250209101347_fixreview.Designer.cs
                     b.Property<int?>("StaffId")
                         .HasColumnType("int");
 
@@ -924,12 +884,6 @@ namespace TravelItineraryProject.Migrations
 
             modelBuilder.Entity("TravelItineraryProject.Domain.Review", b =>
                 {
-                    b.HasOne("TravelItineraryProject.Domain.Customer", "Customer")
-                        .WithMany("Reviews")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("TravelItineraryProject.Domain.Itinerary", "Itinerary")
                         .WithMany()
                         .HasForeignKey("ItineraryId")
@@ -942,28 +896,17 @@ namespace TravelItineraryProject.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.HasOne("TravelItineraryProject.Domain.Customer", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Itinerary");
 
                     b.Navigation("Staff");
-                });
 
-            modelBuilder.Entity("TravelItineraryProject.Domain.SupportRequest", b =>
-                {
-                    b.HasOne("TravelItineraryProject.Domain.Customer", "Customer")
-                        .WithMany("SupportRequests")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TravelItineraryProject.Domain.Staff", "Staff")
-                        .WithMany("SupportRequests")
-                        .HasForeignKey("StaffId");
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Staff");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TravelItineraryProject.Domain.SupportRequest", b =>

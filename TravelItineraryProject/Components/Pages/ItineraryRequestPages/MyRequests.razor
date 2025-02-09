@@ -1,0 +1,134 @@
+﻿@page "/itineraryMyrequests"
+@using Microsoft.EntityFrameworkCore
+@using TravelItineraryProject.Data 
+@using TravelItineraryProject.Domain 
+@rendermode InteractiveServer   
+@implements IAsyncDisposable   
+@inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory 
+@inject AuthenticationStateProvider AuthenticationStateProvider 
+
+<PageTitle>My Custom Itinerary Requests</PageTitle>
+
+<h1>My Customised Itinerary Requests</h1>
+
+@if (ItineraryRequests == null || !ItineraryRequests.Any()){
+    <p class="text-gray-600 mt-4">You have not created any custom itinerary requests.</p>
+}
+
+else
+{
+<div class="container mt-4">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Your Itinerary Requests</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach (var itinerary in ItineraryRequests)
+        {
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+               
+                <div class="p-4">
+                    <h3 class="text-xl font-bold text-gray-900">@itinerary.Destination</h3>
+                    <p class="text-gray-700 mt-2">@itinerary.TypeOfTrip</p>
+                    <p class="text-green-600 font-semibold mt-4">Status: @(itinerary.RequestApproval ? "Approved" : "Pending")</p>
+                    <button class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 mt-4"
+                            @onclick="() => CancelRequestAsync(itinerary)">
+
+                        Cancel Request 
+                      </button>
+                  </div> 
+               </div> 
+         } 
+      </div> 
+   </div> 
+} 
+
+@code { 
+       private TravelItineraryProjectContext context = default!; 
+       private List<ItineraryDisplay> ItineraryRequests = new(); 
+       private int? LoggedInCustomerId; 
+
+       protected override async Task OnInitializedAsync() 
+       {
+
+        context = DbFactory.CreateDbContext();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync(); 
+        var userEmail = authState.User.Identity?.Name; 
+
+        if (userEmail != null) 
+         { 
+           var customer = await context.Customer.FirstOrDefaultAsync(c => c.EmailAddress == userEmail); 
+            if (customer != null) 
+            { 
+                LoggedInCustomerId = customer.CustomerId; 
+                
+                ItineraryRequests = await context.ItineraryRequest 
+                    .Where(i => i.CustomerId == LoggedInCustomerId) 
+                     .Select(i => new ItineraryDisplay 
+                         { 
+                            Id = i.ItineraryRequestId, 
+                            Destination = i.Destination, 
+                            TypeOfTrip = i.TypeOfTrip, 
+                            RequestApproval = i.RequestApproval, 
+
+                         }) 
+                     .ToListAsync(); 
+             } 
+        } 
+
+
+       }
+    
+
+    private async Task CancelRequestAsync(ItineraryDisplay itinerary)
+    {
+        if (LoggedInCustomerId == null)
+        {
+            return;
+        }
+
+        // Find and delete the user's request for this itinerary
+        var requestToDelete = await context.ItineraryRequest
+            .Where(r => r.CustomerId == LoggedInCustomerId && r.ItineraryRequestId == itinerary.Id)
+            .FirstOrDefaultAsync();
+
+        if (requestToDelete != null)
+        {
+            context.ItineraryRequest.Remove(requestToDelete);
+            await context.SaveChangesAsync();
+
+            // Remove from UI dynamically
+            ItineraryRequests.Remove(itinerary);
+            StateHasChanged();
+        }
+    }
+
+
+@*     // private string GetImageUrl(string? destination) *@
+@*     // { *@
+@*     //     return destination?.ToLower() switch *@
+@*     //     { *@
+@*     //         "paris" => "https:upload.wikimedia.org/wikipedia/commons/a/a8/Tour_Eiffel_Wikimedia_Commons.jpg", *@
+@*     //         "new york" => "https:upload.wikimedia.org/wikipedia/commons/a/a1/Statue_of_Liberty_7.jpg", *@
+@*     //         "sydney" => "https:upload.wikimedia.org/wikipedia/commons/4/40/Sydney_Opera_House_Sails.jpg", *@
+@*     //         "agra" => "https:upload.wikimedia.org/wikipedia/commons/d/da/Taj-Mahal.jpg", *@
+@*     //         "rome" => "https:upload.wikimedia.org/wikipedia/commons/5/5a/Colosseum_in_Rome%2C_Italy_-_April_2007.jpg", *@
+@*     //         "machu picchu" => "https:upload.wikimedia.org/wikipedia/commons/0/0e/Machu_Picchu_%28pixinn.net%29.jpg", *@
+@*     //         "rio de janeiro" => "https:upload.wikimedia.org/wikipedia/commons/9/9d/Cristo_Redentor_-_Rio.jpg", *@
+@*     //         "london" => "https:upload.wikimedia.org/wikipedia/commons/f/fd/Big_Ben_London_Feb_2006.jpg", *@
+@*     //         "cairo" => "https:upload.wikimedia.org/wikipedia/commons/e/e3/Kheops-Pyramid.jpg", *@
+@*     //         _ => "https:via.placeholder.com/400" *@
+@*     //     }; *@
+@*     // } *@
+
+     public async ValueTask DisposeAsync() => await context.DisposeAsync(); 
+
+     private class ItineraryDisplay 
+
+    {     
+
+
+       public int Id { get; set; } 
+       public string? Destination { get; set; }   public string? TypeOfTrip { get; set; } 
+       public bool RequestApproval { get; set; } 
+       // public string ImageUrl { get; set; }
+    } 
+@* } *@
+}

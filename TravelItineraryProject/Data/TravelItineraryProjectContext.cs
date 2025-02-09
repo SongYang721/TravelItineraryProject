@@ -29,7 +29,7 @@ namespace TravelItineraryProject.Data
             builder.ApplyConfiguration(new UserSeed());
             builder.ApplyConfiguration(new RoleSeed());
             builder.ApplyConfiguration(new UserRoleSeed());
-            builder.ApplyConfiguration(new SupportRequestSeed());
+            builder.ApplyConfiguration(new ItineraryRequestSeed());
         }
     }
 }
