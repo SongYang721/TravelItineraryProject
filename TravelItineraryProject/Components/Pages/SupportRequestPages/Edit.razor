@@ -1,8 +1,10 @@
-﻿@page "/supportrequests/edit"
+﻿@page "/supportrequests/respond"
 @using Microsoft.EntityFrameworkCore
 @using TravelItineraryProject.Domain
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize(Roles = "Administrator,Staff")]
 
 <PageTitle>Edit</PageTitle>
 
@@ -23,11 +25,6 @@ else
                 <ValidationSummary role="alert"/>
                 <input type="hidden" name="SupportRequest.SupportRequestId" value="@SupportRequest.SupportRequestId" />
                 <div class="mb-3">
-                    <label for="assisted" class="form-label">Assisted:</label>
-                    <InputCheckbox id="assisted" @bind-Value="SupportRequest.Assisted" class="form-check-input" />
-                    <ValidationMessage For="() => SupportRequest.Assisted" class="text-danger" />
-                </div>
-                <div class="mb-3">
                     <label for="comments" class="form-label">Comments:</label>
                     <InputText id="comments" @bind-Value="SupportRequest.Comments" class="form-control" />
                     <ValidationMessage For="() => SupportRequest.Comments" class="text-danger" />
@@ -43,9 +40,9 @@ else
                     <ValidationMessage For="() => SupportRequest.CustomerId" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="staffid" class="form-label">StaffId:</label>
-                    <InputNumber id="staffid" @bind-Value="SupportRequest.StaffId" class="form-control" />
-                    <ValidationMessage For="() => SupportRequest.StaffId" class="text-danger" />
+                    <label for="responds" class="form-label">Responds:</label>
+                    <InputText id="responds" @bind-Value="SupportRequest.Responds" class="form-control" />
+                    <ValidationMessage For="() => SupportRequest.Responds" class="text-danger" />
                 </div>
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
@@ -80,6 +77,17 @@ else
     private async Task UpdateSupportRequest()
     {
         using var context = DbFactory.CreateDbContext();
+
+        // Get the logged-in user's information
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userEmail = authState.User.Identity?.Name;
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+
+        // Set UserId to the logged-in user's ID
+        // Assuming the UserId is stored in the claim or can be retrieved from a service
+        SupportRequest.StaffId = user.StaffId.Value;
+        SupportRequest.Assisted = true;
+
         context.Attach(SupportRequest!).State = EntityState.Modified;
 
         try

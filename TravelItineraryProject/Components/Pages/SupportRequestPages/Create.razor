@@ -1,8 +1,10 @@
-﻿@page "/supportrequests/create"
+﻿@page "/support/request"
 @using Microsoft.EntityFrameworkCore
 @using TravelItineraryProject.Domain
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize(Roles = "Administrator,User")]
 
 <PageTitle>Create</PageTitle>
 
@@ -16,11 +18,6 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert"/>
             <div class="mb-3">
-                <label for="assisted" class="form-label">Assisted:</label> 
-                <InputCheckbox id="assisted" @bind-Value="SupportRequest.Assisted" class="form-check-input" /> 
-                <ValidationMessage For="() => SupportRequest.Assisted" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
                 <label for="comments" class="form-label">Comments:</label> 
                 <InputText id="comments" @bind-Value="SupportRequest.Comments" class="form-control" /> 
                 <ValidationMessage For="() => SupportRequest.Comments" class="text-danger" /> 
@@ -29,17 +26,7 @@
                 <label for="typeofsupport" class="form-label">TypeofSupport:</label> 
                 <InputText id="typeofsupport" @bind-Value="SupportRequest.TypeofSupport" class="form-control" /> 
                 <ValidationMessage For="() => SupportRequest.TypeofSupport" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="customerid" class="form-label">CustomerId:</label> 
-                <InputNumber id="customerid" @bind-Value="SupportRequest.CustomerId" class="form-control" /> 
-                <ValidationMessage For="() => SupportRequest.CustomerId" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="staffid" class="form-label">StaffId:</label> 
-                <InputNumber id="staffid" @bind-Value="SupportRequest.StaffId" class="form-control" /> 
-                <ValidationMessage For="() => SupportRequest.StaffId" class="text-danger" /> 
-            </div>        
+            </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -57,6 +44,18 @@
     private async Task AddSupportRequest()
     {
         using var context = DbFactory.CreateDbContext();
+
+        // Get the logged-in user's information
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userEmail = authState.User.Identity?.Name;
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+
+        // Set UserId to the logged-in user's ID
+        // Assuming the UserId is stored in the claim or can be retrieved from a service
+        SupportRequest.CustomerId = user.CustomerId.Value;
+        SupportRequest.Assisted = false;
+        SupportRequest.StaffId = null;
+
         context.SupportRequest.Add(SupportRequest);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/supportrequests");

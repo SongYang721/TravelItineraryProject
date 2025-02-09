@@ -10,21 +10,30 @@
 
 <h1>Index</h1>
 
-<p>
-    <a href="supportrequests/create">Create New</a>
-</p>
+<AuthorizeView Roles="Administrator, User">
+    <p>
+        <a href="support/request">Create New</a>
+    </p>
+</AuthorizeView>
 
 <QuickGrid Class="table" Items="context.SupportRequest">
-    <PropertyColumn Property="supportrequest => supportrequest.Assisted" />
     <PropertyColumn Property="supportrequest => supportrequest.Comments" />
     <PropertyColumn Property="supportrequest => supportrequest.TypeofSupport" />
-    <PropertyColumn Property="supportrequest => supportrequest.CustomerId" />
-    <PropertyColumn Property="supportrequest => supportrequest.StaffId" />
+    <PropertyColumn Property="supportrequest => supportrequest.Responds" />
+    <AuthorizeView Roles="Administrator, Staff">
+        <PropertyColumn Property="supportrequest => supportrequest.CustomerId" />
+        <PropertyColumn Property="supportrequest => supportrequest.StaffId" />
+        <PropertyColumn Property="supportrequest => supportrequest.Assisted" />
+    </AuthorizeView>
 
     <TemplateColumn Context="supportrequest">
-        <a href="@($"supportrequests/edit?supportrequestid={supportrequest.SupportRequestId}")">Edit</a> |
-        <a href="@($"supportrequests/details?supportrequestid={supportrequest.SupportRequestId}")">Details</a> |
-        <a href="@($"supportrequests/delete?supportrequestid={supportrequest.SupportRequestId}")">Delete</a>
+        <AuthorizeView Roles="Administrator, Staff">
+            <a href="@($"supportrequests/respond?supportrequestid={supportrequest.SupportRequestId}")">Respond</a> |
+        </AuthorizeView>
+        <a href="@($"supportrequests/details?supportrequestid={supportrequest.SupportRequestId}")">Details</a>
+        <AuthorizeView Roles="Administrator">
+            | <a href="@($"supportrequests/delete?supportrequestid={supportrequest.SupportRequestId}")">Delete</a>
+        </AuthorizeView>
     </TemplateColumn>
 </QuickGrid>
 

@@ -97,6 +97,7 @@
         // Set UserId to the logged-in user's ID
         // Assuming the UserId is stored in the claim or can be retrieved from a service
         Review.CustomerId = user.CustomerId.Value;
+        Review.ApprovedByStaff = false;
 
         context.Review.Add(Review);
         await context.SaveChangesAsync();

@@ -10,10 +10,6 @@
 
 <h1>Index</h1>
 
-<p>
-    <a href="payments/create">Create New</a>
-</p>
-
 <QuickGrid Class="table" Items="context.Payment">
     <PropertyColumn Property="payment => payment.NameOnCard" />
     <PropertyColumn Property="payment => payment.CardNumber" />
@@ -22,9 +18,13 @@
     <PropertyColumn Property="payment => payment.PaymentStatus" />
 
     <TemplateColumn Context="payment">
-        <a href="@($"payments/edit?paymentid={payment.PaymentId}")">Edit</a> |
-        <a href="@($"payments/details?paymentid={payment.PaymentId}")">Details</a> |
-        <a href="@($"payments/delete?paymentid={payment.PaymentId}")">Delete</a>
+        <AuthorizeView Roles="Administrator, User">
+            <a href="@($"payments/edit?paymentid={payment.PaymentId}")">Edit</a> |
+        </AuthorizeView>
+        <a href="@($"payments/details?paymentid={payment.PaymentId}")">Details</a>
+        <AuthorizeView Roles="Administrator, User">
+            | <a href="@($"payments/delete?paymentid={payment.PaymentId}")">Delete</a>
+        </AuthorizeView>
     </TemplateColumn>
 </QuickGrid>
 

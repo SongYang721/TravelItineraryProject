@@ -17,19 +17,25 @@
     }
     else {
         <dl class="row">
-            <dt class="col-sm-2">Assisted</dt>
-            <dd class="col-sm-10">@supportrequest.Assisted</dd>
             <dt class="col-sm-2">Comments</dt>
             <dd class="col-sm-10">@supportrequest.Comments</dd>
             <dt class="col-sm-2">TypeofSupport</dt>
             <dd class="col-sm-10">@supportrequest.TypeofSupport</dd>
-            <dt class="col-sm-2">CustomerId</dt>
-            <dd class="col-sm-10">@supportrequest.CustomerId</dd>
-            <dt class="col-sm-2">StaffId</dt>
-            <dd class="col-sm-10">@supportrequest.StaffId</dd>
+            <AuthorizeView Roles="Administrator, Staff">
+                <dt class="col-sm-2">CustomerId</dt>
+                <dd class="col-sm-10">@supportrequest.CustomerId</dd>
+                <dt class="col-sm-2">StaffId</dt>
+                <dd class="col-sm-10">@supportrequest.StaffId</dd>
+            </AuthorizeView>
+            <dt class="col-sm-2">Responds</dt>
+            <dd class="col-sm-10">@supportrequest.Responds</dd>
+            <dt class="col-sm-2">Assisted</dt>
+            <dd class="col-sm-10">@supportrequest.Assisted</dd>
         </dl>
         <div>
-            <a href="@($"/supportrequests/edit?supportrequestid={supportrequest.SupportRequestId}")">Edit</a> |
+            <AuthorizeView Roles="Administrator, Staff">
+                <a href="@($"/supportrequests/respond?supportrequestid={supportrequest.SupportRequestId}")">Respond</a> |
+            </AuthorizeView>
             <a href="@($"/supportrequests")">Back to List</a>
         </div>
     }
