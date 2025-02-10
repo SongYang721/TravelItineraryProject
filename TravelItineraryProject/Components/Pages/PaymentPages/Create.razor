@@ -5,76 +5,137 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<PageTitle>Create Payment</PageTitle>
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: #374151;
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-<h1>Create Payment</h1>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <EditForm method = "post" Model="Payment" OnValidSubmit="ProcessPayment" FormName="create">
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert" />
-            <div class="mb-3">
-                <label for="nameoncard" class="form-label">Name on Card:</label>
-                <InputText id="nameoncard" @bind-Value="Payment.NameOnCard" class="form-control" />
-                <ValidationMessage For="() => Payment.NameOnCard" class= "text-danger"/>
-            </div>
-            <div class="mb-3">
-                <label for="cardnumber" class="form-label">Card Number:</label>
-                <InputText id="cardnumber" @bind-Value="Payment.CardNumber" class="form-control" />
-                <ValidationMessage For="() => Payment.CardNumber" />
-            </div>
-            <div class="mb-3">
-                <label for="expirydateofcard" class="form-label">Expiry Date Of Card:</label>
-                <InputText id="expirydateofcard" @bind-Value="Payment.ExpiryDateOfCard" class="form-control" />
-                <ValidationMessage For="() => Payment.ExpiryDateOfCard" />
-            </div>
-            <div class="mb-3">
-                <label for="securitycode" class="form-label">Security Code:</label>
-                <InputText id="securitycode" @bind-Value="Payment.SecurityCode" class="form-control" />
-                <ValidationMessage For="() => Payment.SecurityCode" class="text-danger"/>
-            </div>
-            @* <div class="mb-3"> *@
-            @*     <label for="paymentstatus" class="form-label">Payment Status:</label> *@
-            @*     <InputCheckbox id="paymentstatus" @bind-Value="Payment.PaymentStatus" class="form-check-input" /> *@
-            @*     <ValidationMessage For="() => Payment.PaymentStatus" /> *@
-            @* </div> *@
-            <button type="submit" class="btn btn-primary">Create</button>
-        </EditForm>
+    .payment-container {
+        max-width: 500px;
+        width: 100%;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px 25px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #1e3c72;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        padding: 10px;
+        font-size: 14px;
+        width: 100%;
+    }
+
+    .btn-primary {
+        background-color: #4CAF50;
+        border: none;
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 8px;
+        color: #ffffff;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #388E3C;
+        }
+
+    .footer {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+        .footer a {
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+            .footer a:hover {
+                text-decoration: underline;
+            }
+</style>
+
+<div class="payment-container">
+    <h1>💳 Make Payment</h1>
+    <EditForm method="post" Model="Payment" OnValidSubmit="ProcessPayment" FormName="create">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-danger" role="alert" />
+
+        <div class="form-group">
+            <label for="nameoncard" class="form-label">Name on Card:</label>
+            <InputText id="nameoncard" @bind-Value="Payment.NameOnCard" class="form-control" placeholder="Enter name on card" />
+            <ValidationMessage For="() => Payment.NameOnCard" class="text-danger" />
+        </div>
+
+        <div class="form-group">
+            <label for="cardnumber" class="form-label">Card Number:</label>
+            <InputText id="cardnumber" @bind-Value="Payment.CardNumber" class="form-control" placeholder="1234 5678 9012 3456" />
+            <ValidationMessage For="() => Payment.CardNumber" class="text-danger" />
+        </div>
+
+        <div class="form-group">
+            <label for="expirydateofcard" class="form-label">Expiry Date (MM/YY):</label>
+            <InputText id="expirydateofcard" @bind-Value="Payment.ExpiryDateOfCard" class="form-control" placeholder="MM/YY" />
+            <ValidationMessage For="() => Payment.ExpiryDateOfCard" class="text-danger" />
+        </div>
+
+        <div class="form-group">
+            <label for="securitycode" class="form-label">Security Code:</label>
+            <InputText id="securitycode" @bind-Value="Payment.SecurityCode" class="form-control" placeholder="123" />
+            <ValidationMessage For="() => Payment.SecurityCode" class="text-danger" />
+        </div>
+
+        <button type="submit" class="btn-primary">Pay Now</button>
+    </EditForm>
+
+    <div class="footer">
+        <a href="/itineraries">Back to Itineraries</a>
     </div>
-</div>
-
-<div>
-    <a href="/itineraries">Back to Itineraries</a>
 </div>
 
 @code {
     [SupplyParameterFromQuery]
     public int ItineraryId { get; set; }
 
-
     [SupplyParameterFromForm]
     private Payment Payment { get; set; } = new();
-
 
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-
-        // Get the current logged-in user
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var userEmail = authState.User.Identity?.Name;
 
         if (userEmail != null)
         {
-            // Find the user in the database
             var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
-
             if (user != null && !string.IsNullOrEmpty(user.FirstName) && !string.IsNullOrEmpty(user.LastName))
             {
-                // Prepopulate the NameOnCard field
                 Payment.NameOnCard = $"{user.FirstName} {user.LastName}";
-				Payment.PaymentStatus = false; // Initially unpaid
+                Payment.PaymentStatus = false;
             }
         }
     }
@@ -82,8 +143,6 @@
     private async Task ProcessPayment()
     {
         using var context = DbFactory.CreateDbContext();
-
-        // Get the current logged-in user
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var userEmail = authState.User.Identity?.Name;
 
@@ -93,8 +152,6 @@
             return;
         }
 
-
-        // Find the user in the database
         var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
         if (user == null || user.CustomerId == null)
         {
@@ -102,41 +159,21 @@
             return;
         }
 
-		Payment.PaymentStatus = true; //Mark as paid
-
-        // Check if Payment already exists for this ItineraryId
-        // var existingPayment = await context.Payment
-        //     .FirstOrDefaultAsync(p => p.ItineraryId == ItineraryId && p.CustomerId == user.CustomerId);
-
-        // if (existingPayment != null)
-        // {
-        //     Console.WriteLine("Payment already exists for this itinerary and customer.");
-        //     NavigationManager.NavigateTo("/bookings");
-        //     return;
-        // }
-
-        // Populate additional data for Payment
-        // Payment.ItineraryId = ItineraryId;
-        // Payment.CustomerId = user.CustomerId.Value;
-
-        // Save Payment
+        Payment.PaymentStatus = true;
         context.Payment.Add(Payment);
         await context.SaveChangesAsync();
 
-        // Populate and Save Booking Entity
         var booking = new Booking
             {
                 ItineraryId = ItineraryId,
                 PaymentId = Payment.PaymentId,
                 CustomerId = user.CustomerId.Value,
                 BookingDate = DateOnly.FromDateTime(DateTime.Now),
-                BookingStatus = true //Mark as confirmed
+                BookingStatus = true
             };
 
         context.Booking.Add(booking);
         await context.SaveChangesAsync();
-
-        // Redirect to Bookings Page
         NavigationManager.NavigateTo("/bookings");
     }
 }

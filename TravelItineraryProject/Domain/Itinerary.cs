@@ -13,6 +13,10 @@ namespace TravelItineraryProject.Domain
         public string? TypeofTrip { get; set; }
         public int StaffId { get; set; }    // FK
         public Staff Staff { get; set; }  // Nav
+
+        public string? Description { get; set; }
+
+        public string? ImageUrl { get; set; }
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>(); // Nav
     }
 }

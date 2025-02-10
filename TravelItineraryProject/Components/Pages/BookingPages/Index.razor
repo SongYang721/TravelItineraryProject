@@ -21,31 +21,31 @@
 
 <QuickGrid TItem ="Booking" Class="table" Items="@bookings">
     <PropertyColumn Property="booking => booking.BookingDate" />
-    <PropertyColumn Property="booking => booking.CustomerId" />
-    <PropertyColumn Property="booking => booking.ItineraryId" />
-    <PropertyColumn Property="booking => booking.PaymentId" />
+    <PropertyColumn Property="booking => booking.Itinerary.Title" />
+    <PropertyColumn Property="booking => booking.Itinerary.Duration" />
+    <PropertyColumn Property="booking => booking.PaymentDisplayStatus" />
     @* <PropertyColumn Property="booking => booking.StaffId" title="CheckedByStaffId" /> *@
     @* <PropertyColumn Property="booking => booking.BookingStatus" Title="ApprovalStatus" /> *@
 
     <TemplateColumn Context="booking">
         <AuthorizeView Roles="Administrator, User">
-            <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
+            <a href="@($"/bookings/edit/{booking.BookingId}")">Edit</a>
             <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
             <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
         </AuthorizeView>
-        <AuthorizeView Roles="Administrator, Staff">
-            <button class="btn @(booking.BookingStatus ? "btn-danger" : "btn-success")"
-                    @onclick="() => ToggleBookingStatus(booking.BookingId)">
-                @(booking.BookingStatus ? "Decline" : "Approve")
-            </button>
-        </AuthorizeView>
+        @* <AuthorizeView Roles="Administrator, Staff"> *@
+        @*     <button class="btn @(booking.BookingStatus ? "btn-danger" : "btn-success")" *@
+        @*             @onclick="() => ToggleBookingStatus(booking.BookingId)"> *@
+        @*         @(booking.BookingStatus ? "Decline" : "Approve") *@
+        @*     </button> *@
+        @* </AuthorizeView> *@
     </TemplateColumn>
 </QuickGrid>
 
 @code {
     private TravelItineraryProjectContext context = default!;
     private bool contextInitialized = false;
-	private IList<Booking> userBookings = new List<Booking>();
+    private IList<Booking> userBookings = new List<Booking>();
     IQueryable<Booking> bookings => userBookings.AsQueryable();
 
     protected override async Task OnInitializedAsync()
@@ -59,21 +59,30 @@
 
     }
 
-	private async Task LoadUserBookings()
-	{
-		// Get the currently logged-in user's email
-		var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-		var userEmail = authState.User.Identity?.Name;
-		if (userEmail != null)
-		{
-			// Look up the user in the database by their email
-			var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+    private async Task LoadUserBookings()
+    {
+        // Get the currently logged-in user's email
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userEmail = authState.User.Identity?.Name;
+        if (userEmail != null)
+        {
+            // Look up the user in the database by their email
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
             var customer = await context.Customer.FirstOrDefaultAsync(c => c.EmailAddress == userEmail);
-			if (customer!= null)
-			{
-				// Filter bookings for the current user
-				userBookings  = await context.Booking
+            if (customer!= null)
+            {
+                // Filter bookings for the current user
+                userBookings  = await context.Booking
+                .Include(b => b.Itinerary)
+                .Include(b => b.Payment)
                 .Where(b => b.CustomerId == customer.CustomerId).ToListAsync();
+
+                foreach (var booking in userBookings)
+                {
+                    booking.Itinerary.Title ??= "N/A"; // Default if null
+                    booking.Itinerary.Duration ??= 0; // Default if null
+                    booking.PaymentDisplayStatus = booking.Payment?.PaymentStatus == true ? "Paid" : "Pending";
+                }
 			}
 		}
 	}
