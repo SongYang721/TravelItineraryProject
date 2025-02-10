@@ -19,13 +19,13 @@
     </p>
 </AuthorizeView>
 
-<QuickGrid Class="table" Items="context.Booking">
+<QuickGrid TItem ="Booking" Class="table" Items="@bookings">
     <PropertyColumn Property="booking => booking.BookingDate" />
     <PropertyColumn Property="booking => booking.CustomerId" />
     <PropertyColumn Property="booking => booking.ItineraryId" />
     <PropertyColumn Property="booking => booking.PaymentId" />
-    <PropertyColumn Property="booking => booking.StaffId" title="CheckedByStaffId" />
-    <PropertyColumn Property="booking => booking.BookingStatus" Title="ApprovalStatus" />
+    @* <PropertyColumn Property="booking => booking.StaffId" title="CheckedByStaffId" /> *@
+    @* <PropertyColumn Property="booking => booking.BookingStatus" Title="ApprovalStatus" /> *@
 
     <TemplateColumn Context="booking">
         <AuthorizeView Roles="Administrator, User">
@@ -45,13 +45,38 @@
 @code {
     private TravelItineraryProjectContext context = default!;
     private bool contextInitialized = false;
+	private IList<Booking> userBookings = new List<Booking>();
+    IQueryable<Booking> bookings => userBookings.AsQueryable();
 
     protected override async Task OnInitializedAsync()
     {
         // Initialize the DbContext
         context = await DbFactory.CreateDbContextAsync();
         contextInitialized = true;
+
+        // Filter bookings for the current user
+        await LoadUserBookings();
+
     }
+
+	private async Task LoadUserBookings()
+	{
+		// Get the currently logged-in user's email
+		var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+		var userEmail = authState.User.Identity?.Name;
+		if (userEmail != null)
+		{
+			// Look up the user in the database by their email
+			var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+            var customer = await context.Customer.FirstOrDefaultAsync(c => c.EmailAddress == userEmail);
+			if (customer!= null)
+			{
+				// Filter bookings for the current user
+				userBookings  = await context.Booking
+                .Where(b => b.CustomerId == customer.CustomerId).ToListAsync();
+			}
+		}
+	}
 
     private async Task ToggleBookingStatus(int bookingId)
     {

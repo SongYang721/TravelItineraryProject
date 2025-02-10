@@ -34,11 +34,11 @@
                 <InputText id="securitycode" @bind-Value="Payment.SecurityCode" class="form-control" />
                 <ValidationMessage For="() => Payment.SecurityCode" class="text-danger"/>
             </div>
-            <div class="mb-3">
-                <label for="paymentstatus" class="form-label">Payment Status:</label>
-                <InputCheckbox id="paymentstatus" @bind-Value="Payment.PaymentStatus" class="form-check-input" />
-                <ValidationMessage For="() => Payment.PaymentStatus" />
-            </div>
+            @* <div class="mb-3"> *@
+            @*     <label for="paymentstatus" class="form-label">Payment Status:</label> *@
+            @*     <InputCheckbox id="paymentstatus" @bind-Value="Payment.PaymentStatus" class="form-check-input" /> *@
+            @*     <ValidationMessage For="() => Payment.PaymentStatus" /> *@
+            @* </div> *@
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -74,6 +74,7 @@
             {
                 // Prepopulate the NameOnCard field
                 Payment.NameOnCard = $"{user.FirstName} {user.LastName}";
+				Payment.PaymentStatus = false; // Initially unpaid
             }
         }
     }

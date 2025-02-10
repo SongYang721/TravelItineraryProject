@@ -68,27 +68,29 @@
         }
 
         // Create a new booking linked to the itinerary and user
-        var payment = new Payment
-            {
+        // var payment = new Payment
+        //     {
 
-                NameOnCard = $"{user.FirstName} {user.LastName}",
-                CardNumber = "5431 2345 1234 5678", // Placeholder 
-                ExpiryDateOfCard = "12-25", // Placeholder 
-                SecurityCode = "909", // Placeholder 
-                PaymentStatus = false, // Initially unpaid
+        //         NameOnCard = $"{user.FirstName} {user.LastName}",
+        //         CardNumber = "5431 2345 1234 5678", Placeholder 
+        //         ExpiryDateOfCard = "12-25", Placeholder 
+        //         SecurityCode = "909", Placeholder 
+        //         PaymentStatus = false, Initially unpaid
 
-                // ItineraryId = itineraryId,
-                // CustomerId= user.CustomerId,
-                // BookingDate = DateOnly.FromDateTime(DateTime.Now),
-                // BookingStatus = false, Booking is created with "Pending" status
-                // StaffId = null
-            };
+        //         ItineraryId = itineraryId,
+        //         CustomerId= user.CustomerId,
+        //         BookingDate = DateOnly.FromDateTime(DateTime.Now),
+        //         BookingStatus = false, Booking is created with "Pending" status
+        //         StaffId = null
+        //     };
 
-        context.Payment.Add(payment);
+        // context.Payment.Add(payment);
         await context.SaveChangesAsync();
 
         // Redirect to payment page with the payment ID
-        NavigationManager.NavigateTo($"/payments/create?paymentId={payment.PaymentId}&itineraryId={itineraryId}");
+
+        //NavigationManager.NavigateTo($"/payments/create?paymentId={payment.PaymentId}&itineraryId={itineraryId}");
+        NavigationManager.NavigateTo($"/payments/create?itineraryId={itineraryId}");
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
