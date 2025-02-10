@@ -8,7 +8,7 @@
 
 <h1>Edit</h1>
 
-<<<<<<< HEAD
+
 <h2>Itinerary Request</h2>
 @* <hr /> *@
 @* @if (ItineraryRequest is null) *@
@@ -120,7 +120,7 @@
     //     return context.ItineraryRequest.Any(e => e.ItineraryRequestId == itineraryrequestid);
     // }
 }
-=======
+
 <h2>ItineraryRequest</h2>
 <hr />
 @if (ItineraryRequest is null)
@@ -133,18 +133,14 @@ else
         <div class="col-md-4">
             <EditForm method="post" Model="ItineraryRequest" OnValidSubmit="UpdateItineraryRequest" FormName="edit" Enhance>
                 <DataAnnotationsValidator />
-                <ValidationSummary role="alert"/>
+                <ValidationSummary role="alert" />
                 <input type="hidden" name="ItineraryRequest.ItineraryRequestId" value="@ItineraryRequest.ItineraryRequestId" />
                 <div class="mb-3">
                     <label for="requestapproval" class="form-label">RequestApproval:</label>
                     <InputCheckbox id="requestapproval" @bind-Value="ItineraryRequest.RequestApproval" class="form-check-input" />
                     <ValidationMessage For="() => ItineraryRequest.RequestApproval" class="text-danger" />
                 </div>
-                <div class="mb-3">
-                    <label for="requesttravelmonthyear" class="form-label">RequestTravelMonthYear:</label>
-                    <InputText id="requesttravelmonthyear" @bind-Value="ItineraryRequest.RequestTravelMonthYear" class="form-control" />
-                    <ValidationMessage For="() => ItineraryRequest.RequestTravelMonthYear" class="text-danger" />
-                </div>
+
                 <div class="mb-3">
                     <label for="destination" class="form-label">Destination:</label>
                     <InputText id="destination" @bind-Value="ItineraryRequest.Destination" class="form-control" />
@@ -225,4 +221,3 @@ else
         return context.ItineraryRequest.Any(e => e.ItineraryRequestId == itineraryrequestid);
     }
 }
->>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30

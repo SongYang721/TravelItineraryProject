@@ -16,7 +16,6 @@
     {
         <p><em>Loading...</em></p>
     }
-<<<<<<< HEAD
     else
     {
         <dl class="row">
@@ -27,50 +26,7 @@
         @*     <dt class="col-sm-2">Request Travel Month & Year</dt> *@
         @*     <dd class="col-sm-10">@itineraryrequest.RequestTravelMonthYear</dd> *@
         @* </dl> *@
-=======
-    else {
-        <dl class="row">
-            <dt class="col-sm-2">RequestApproval</dt>
-            <dd class="col-sm-10">@itineraryrequest.RequestApproval</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">RequestTravelMonthYear</dt>
-            <dd class="col-sm-10">@itineraryrequest.RequestTravelMonthYear</dd>
-        </dl>
->>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30
-        <dl class="row">
-            <dt class="col-sm-2">Destination</dt>
-            <dd class="col-sm-10">@itineraryrequest.Destination</dd>
-        </dl>
-        <dl class="row">
-<<<<<<< HEAD
-            <dt class="col-sm-2">Type of Trip</dt>
-            <dd class="col-sm-10">@itineraryrequest.TypeOfTrip</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">Customer ID</dt>
-            <dd class="col-sm-10">@itineraryrequest.CustomerId</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">Staff ID</dt>
-            <dd class="col-sm-10">@itineraryrequest.StaffId</dd>
-        </dl>
-
-        <EditForm method="post" Model="itineraryrequest" OnValidSubmit="DeleteItineraryRequest" FormName="delete">
-=======
-            <dt class="col-sm-2">TypeOfTrip</dt>
-            <dd class="col-sm-10">@itineraryrequest.TypeOfTrip</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">CustomerId</dt>
-            <dd class="col-sm-10">@itineraryrequest.CustomerId</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">StaffId</dt>
-            <dd class="col-sm-10">@itineraryrequest.StaffId</dd>
-        </dl>
         <EditForm method="post" Model="itineraryrequest" OnValidSubmit="DeleteItineraryRequest" FormName="delete" Enhance>
->>>>>>> 1d8231b5b524788a1de22553ed6e0f84b0b32d30
             <button type="submit" class="btn btn-danger" disabled="@(itineraryrequest is null)">Delete</button> |
             <a href="/itineraryrequests">Back to List</a>
         </EditForm>

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TravelItineraryProject.Migrations
 {
     /// <inheritdoc />
-    public partial class addednewentities : Migration
+    public partial class fixdb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -239,9 +239,9 @@ namespace TravelItineraryProject.Migrations
                     ItineraryRequestId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RequestApproval = table.Column<bool>(type: "bit", nullable: false),
-                    RequestTravelMonthYear = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Destination = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TypeOfTrip = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NumberOfRequests = table.Column<int>(type: "int", nullable: true),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
                     StaffId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -270,7 +270,8 @@ namespace TravelItineraryProject.Migrations
                     Assisted = table.Column<bool>(type: "bit", nullable: false),
                     Comments = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TypeofSupport = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    Responds = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CustomerId = table.Column<int>(type: "int", nullable: true),
                     StaffId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -280,8 +281,7 @@ namespace TravelItineraryProject.Migrations
                         name: "FK_SupportRequest_Customer_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customer",
-                        principalColumn: "CustomerId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "CustomerId");
                     table.ForeignKey(
                         name: "FK_SupportRequest_Staff_StaffId",
                         column: x => x.StaffId,
@@ -340,25 +340,23 @@ namespace TravelItineraryProject.Migrations
                     ReviewDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ApprovedByStaff = table.Column<bool>(type: "bit", nullable: false),
-                    ItineraryId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    StaffId = table.Column<int>(type: "int", nullable: false)
+                    ItineraryId = table.Column<int>(type: "int", nullable: true),
+                    CustomerId = table.Column<int>(type: "int", nullable: true),
+                    StaffId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Review", x => x.ReviewId);
                     table.ForeignKey(
-                        name: "FK_Review_Customer_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Review_Customer_CustomerId",
+                        column: x => x.CustomerId,
                         principalTable: "Customer",
-                        principalColumn: "CustomerId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "CustomerId");
                     table.ForeignKey(
                         name: "FK_Review_Itinerary_ItineraryId",
                         column: x => x.ItineraryId,
                         principalTable: "Itinerary",
-                        principalColumn: "ItineraryId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ItineraryId");
                     table.ForeignKey(
                         name: "FK_Review_Staff_StaffId",
                         column: x => x.StaffId,
@@ -382,11 +380,11 @@ namespace TravelItineraryProject.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CustomerId", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "StaffId", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "10e93995-24eb-48b5-805b-824adeb6fb96", 0, "41143a7d-c6fc-4e77-97d2-4520befba8c2", null, "alicejohnson@gmail.com", true, "Alice", "Johnson", false, null, "alicejohnson@gmail.com", "ALICEJOHNSON@GMAIL.COM", "AQAAAAIAAYagAAAAEHFvXVB/dzsJhyuyF93TCxKB6FrCH12Wd/Stf8c0jE9kCXyLoHAgQ1IMPOGeNz6pnw==", null, false, "8851cf81-b2be-4fe1-a905-d003ffb3503b", 1, false, "alicejohnson@gmail.com" },
-                    { "3781efa7-66dc-47f0-860f-e506d04102e4", 0, "9311b8d0-eb8a-4f95-a31e-9157be1fa8a7", null, "admin@localhost.com", true, "Admin", "User", false, null, "ADMIN@LOCALHOST.COM", "ADMIN@LOCALHOST.COM", "AQAAAAIAAYagAAAAEL8yhue5UfQA9EQj4HT42mEt/0S2C0yrsXirmF7YagnotascA55GcsTlqfNI6g/4sQ==", null, false, "8e703d94-ece8-4902-9eac-9bcc6c26fc1a", null, false, "admin@localhost.com" },
-                    { "4fd66d43-0660-4dc0-a96e-f83b593e4175", 0, "36b6ee0f-46dc-4aed-bec4-d742626b6f21", 1, "johndoe@example.com", true, "John", "Doe", false, null, "johndoe@example.com", "JOHNDOE@EXAMPLE.COM", "AQAAAAIAAYagAAAAECb+bLvz2v/E5GLIeIkYiaUL/PbPPuFTS7YpmQRDZuBHBKlZeq7DSV2rlDz2FANLvA==", null, false, "1542e119-5539-46de-81ac-85991d7fede7", null, false, "johndoe@example.com" },
-                    { "f272bf94-a1ab-451a-b55a-0e68638d6bb4", 0, "4bbb2ab3-2a15-4b69-835e-64a9badd6ed6", null, "bobsmith@gmail.com", true, "Bob", "Smith", false, null, "bobsmith@gmail.com", "BOBSMITH@GMAIL.COM", "AQAAAAIAAYagAAAAEIJLvVTa/1a2einIeT15KOF/61pmJgp5+jZOXtEYobprxurZWHUvM8Cat6XC/M0zMQ==", null, false, "b79fabe4-31e3-4d4b-8bc2-33b6e7481754", 2, false, "bobsmith@gmail.com" },
-                    { "f8b82324-d7ce-4578-9b88-2b6d693b72de", 0, "b1e0caa6-cbeb-42d5-8375-5f1ea6df1b62", 2, "janesmith@example.com", true, "Jane", "Smith", false, null, "janesmith@example.com", "JANESMITH@EXAMPLE.COM", "AQAAAAIAAYagAAAAEFoV04cTfa/0ApqqgO1Gjlhb1+bh/PJjd1WvOUT72dVwITyJRoPRzvXsW59A/++A9w==", null, false, "d31f99b9-483b-48b9-b4ac-4871c3cab572", null, false, "janesmith@example.com" }
+                    { "10e93995-24eb-48b5-805b-824adeb6fb96", 0, "c7d9d1e9-6ccc-4b0f-b9f6-217d1456a444", null, "alicejohnson@gmail.com", true, "Alice", "Johnson", false, null, "alicejohnson@gmail.com", "ALICEJOHNSON@GMAIL.COM", "AQAAAAIAAYagAAAAEJ4MZ2wpRgfdrCy3prksLhnRY+IzZBGj3AGKi1XJHJ103G/Fcgtpfl5jLlVDlSpa3A==", null, false, "3a865c1f-bb9c-45ee-b565-a926326d2493", 1, false, "alicejohnson@gmail.com" },
+                    { "3781efa7-66dc-47f0-860f-e506d04102e4", 0, "b4a98ab9-d80e-439f-b390-c7bfc14ebf8d", null, "admin@localhost.com", true, "Admin", "User", false, null, "ADMIN@LOCALHOST.COM", "ADMIN@LOCALHOST.COM", "AQAAAAIAAYagAAAAEJhFhoWUOsBKfLzr/ozVWDhmEBryzUYaj7ZQzcTgsVPjPX1MSwa2CopriGmZA5Wu8g==", null, false, "107cc06b-c695-4187-bacb-30348af14b8d", null, false, "admin@localhost.com" },
+                    { "4fd66d43-0660-4dc0-a96e-f83b593e4175", 0, "78f476a0-b3d0-491a-a9a2-17cec0d19305", 1, "johndoe@example.com", true, "John", "Doe", false, null, "johndoe@example.com", "JOHNDOE@EXAMPLE.COM", "AQAAAAIAAYagAAAAEABUeBtVSUfrSj6L9q3CJV3MJfimNHUittCavq52OpS8iLusJb7HN7jyxDkPgKKyfA==", null, false, "77641827-3963-46ed-b70a-eb230231a525", null, false, "johndoe@example.com" },
+                    { "f272bf94-a1ab-451a-b55a-0e68638d6bb4", 0, "b55a1a4d-0ed5-403b-9c43-0c84ca28b7d6", null, "bobsmith@gmail.com", true, "Bob", "Smith", false, null, "bobsmith@gmail.com", "BOBSMITH@GMAIL.COM", "AQAAAAIAAYagAAAAENw1WPK5VBmioBHoynbv6rDoZK9t9X55xuNKdr/8oMqfSs+tygkYdf492DoPUDAoOQ==", null, false, "61d1302c-b33f-44b5-af9b-0850b8d72da9", 2, false, "bobsmith@gmail.com" },
+                    { "f8b82324-d7ce-4578-9b88-2b6d693b72de", 0, "674047a1-0852-4a63-9772-50fc8cc6d1e7", 2, "janesmith@example.com", true, "Jane", "Smith", false, null, "janesmith@example.com", "JANESMITH@EXAMPLE.COM", "AQAAAAIAAYagAAAAEB3jZw2WODIHvaW8jDkwxxksBu4GMpaMBgmMR3UivR2h0WOkiKgWJiXdZrDVmu9LEA==", null, false, "579f9d59-cbee-44fe-8ed0-120eba02a1e6", null, false, "janesmith@example.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -438,6 +436,24 @@ namespace TravelItineraryProject.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "ItineraryRequest",
+                columns: new[] { "ItineraryRequestId", "CustomerId", "Destination", "NumberOfRequests", "RequestApproval", "StaffId", "TypeOfTrip" },
+                values: new object[,]
+                {
+                    { 1, 1, "Paris, France", 1, false, 1, "History" },
+                    { 2, 2, "Tokyo, Japan", 20, false, 2, "Vacation" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "SupportRequest",
+                columns: new[] { "SupportRequestId", "Assisted", "Comments", "CustomerId", "Responds", "StaffId", "TypeofSupport" },
+                values: new object[,]
+                {
+                    { 1, false, "My booking was denied even though payment went through", 2, null, null, "Payment Issues" },
+                    { 2, false, "I would like to cancel my booking as i can't make it anymore on that date.", 1, null, null, "Cancel of Booking" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Booking",
                 columns: new[] { "BookingId", "BookingDate", "BookingStatus", "CustomerId", "ItineraryId", "PaymentId", "StaffId" },
                 values: new object[,]
@@ -448,11 +464,11 @@ namespace TravelItineraryProject.Migrations
 
             migrationBuilder.InsertData(
                 table: "Review",
-                columns: new[] { "ReviewId", "ApprovedByStaff", "Comment", "ItineraryId", "Rating", "ReviewDate", "StaffId", "UserId" },
+                columns: new[] { "ReviewId", "ApprovedByStaff", "Comment", "CustomerId", "ItineraryId", "Rating", "ReviewDate", "StaffId" },
                 values: new object[,]
                 {
-                    { 1, true, "Excellent experience!", 1, 5, new DateTime(2025, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 1 },
-                    { 2, false, "Great service, but could improve the food quality.", 2, 4, new DateTime(2025, 1, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 2 }
+                    { 1, true, "Excellent experience!", 1, 1, 5, new DateTime(2025, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
+                    { 2, false, "Great service, but could improve the food quality.", 2, 2, 4, new DateTime(2025, 1, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -530,6 +546,11 @@ namespace TravelItineraryProject.Migrations
                 column: "StaffId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Review_CustomerId",
+                table: "Review",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Review_ItineraryId",
                 table: "Review",
                 column: "ItineraryId");
@@ -538,11 +559,6 @@ namespace TravelItineraryProject.Migrations
                 name: "IX_Review_StaffId",
                 table: "Review",
                 column: "StaffId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Review_UserId",
-                table: "Review",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SupportRequest_CustomerId",
