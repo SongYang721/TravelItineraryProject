@@ -15,7 +15,7 @@ namespace TravelItineraryProject.Configurations.Entities
                 {
                     BookingId = 1,
                     BookingStatus = false,
-                    BookingDate = new DateOnly(2024,1,3),
+                    SelectedDateRange = "14-16 February",
                     CustomerId = 1,
                     ItineraryId = 1,
                     PaymentId = 1,
@@ -25,7 +25,7 @@ namespace TravelItineraryProject.Configurations.Entities
                 {
                     BookingId = 2,
                     BookingStatus = false,
-                    BookingDate = new DateOnly(2025,8, 2),
+                    SelectedDateRange = "16-18 February",
                     CustomerId = 2,
                     ItineraryId = 2,
                     PaymentId = 2,

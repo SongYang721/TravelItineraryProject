@@ -8,14 +8,9 @@ namespace TravelItineraryProject.Domain
         public int BookingId { get; set; } //PK
 
         public bool BookingStatus { get; set; }
-        public DateOnly BookingDate { get; set; }
 
-        [NotMapped]
-        public DateTime BookingDateAsDateTime
-        {
-            get => BookingDate.ToDateTime(TimeOnly.MinValue); // Convert DateOnly to DateTime
-            set => BookingDate = DateOnly.FromDateTime(value); // Convert DateTime back to DateOnly
-        }
+        [Column(TypeName = "nvarchar(255)")]
+        public string? SelectedDateRange { get; set; }
 
         public int? CustomerId { get; set; } //Fk
         public Customer? Customer { get; set; } // Nav

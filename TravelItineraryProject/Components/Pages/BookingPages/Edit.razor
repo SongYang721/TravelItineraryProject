@@ -62,7 +62,7 @@ else
         {
             <p><strong>Itinerary image not available.</strong></p>
         }
-       
+
         <div style="flex: 1;">
             <h3>@(Booking?.Itinerary?.Title ?? "No Title Available")</h3>
             <p><strong>Description:</strong> @(Booking?.Itinerary?.Description ?? "No Description Available")</p>
@@ -75,8 +75,16 @@ else
 
                 <div class="form-group">
                     <label for="bookingdate"><strong>Edit Booking Date:</strong></label>
-                    <InputDate id="bookingdate" @bind-Value="Booking.BookingDateAsDateTime" class="form-control" @onchange="UpdateState" />
-                    <ValidationMessage For="() => Booking.BookingDate" />
+                    <select id="bookingdate" class="form-control" @bind="Booking.SelectedDateRange">
+                        @if (Booking?.Itinerary != null)
+                        {
+                            @foreach (var dateRange in Booking.Itinerary.GetAvailableDateRanges() ?? new List<string>())
+                            {
+                                <option value="@dateRange">@dateRange</option>
+                            }
+                        }
+                    </select>
+                    <ValidationMessage For="() => Booking.SelectedDateRange" />
                 </div>
 
                 <button type="submit" class="btn btn-primary">Save</button>
@@ -94,7 +102,6 @@ else
 <div>
     <a href="/bookings">Back to List</a>
 </div>
-
 @code {
     [Parameter] public int BookingId { get; set; }
     private Booking? Booking { get; set; }
@@ -140,18 +147,18 @@ else
             return;
         }
 
-        Console.WriteLine($"Before saving: BookingId {Booking.BookingId}, Selected BookingDate: {Booking.BookingDate}");
+        Console.WriteLine($"Before saving: BookingId {Booking.BookingId}, Selected BookingDate: {Booking.SelectedDateRange}");
 
         using var context = DbFactory.CreateDbContext();
         context.Attach(Booking);
 
         // Explicitly mark the BookingDate as modified
-        context.Entry(Booking).Property(b => b.BookingDate).IsModified = true;
+        context.Entry(Booking).Property(b => b.SelectedDateRange).IsModified = true;
 
         try
         {
             await context.SaveChangesAsync();
-            Console.WriteLine($"After saving: BookingId {Booking.BookingId}, Saved BookingDate: {Booking.BookingDate}");
+            Console.WriteLine($"After saving: BookingId {Booking.BookingId}, Saved BookingDate: {Booking.SelectedDateRange}");
             NavigationManager.NavigateTo("/bookings");
         }
         catch (Exception ex)
@@ -165,13 +172,5 @@ else
         NavigationManager.NavigateTo("/bookings");
     }
 
-    private void UpdateState(ChangeEventArgs e)
-    {
-        if (DateTime.TryParse(e.Value?.ToString(), out DateTime newDate))
-        {
-            Booking.BookingDateAsDateTime = newDate;
-            StateHasChanged(); // Force UI Refresh
-            Console.WriteLine($"Date changed: {Booking.BookingDate}");
-        }
-    }
+    
 }

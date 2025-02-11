@@ -20,7 +20,7 @@
 </AuthorizeView>
 
 <QuickGrid TItem ="Booking" Class="table" Items="@bookings">
-    <PropertyColumn Property="booking => booking.BookingDate" />
+    <PropertyColumn Property="booking => booking.SelectedDateRange" />
     <PropertyColumn Property="booking => booking.Itinerary.Title" />
     <PropertyColumn Property="booking => booking.Itinerary.Duration" />
     <PropertyColumn Property="booking => booking.PaymentDisplayStatus" />

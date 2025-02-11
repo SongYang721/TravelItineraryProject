@@ -8,8 +8,8 @@
 <style>
     body {
         font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #1e3c72, #2a5298);
-        color: #374151;
+        background: linear-gradient(135deg, #27146f, #7458b0);
+        color: #d1d5db;
         min-height: 100vh;
         margin: 0;
         display: flex;
@@ -18,58 +18,61 @@
     }
 
     .payment-container {
-        max-width: 500px;
+        max-width: 600px;
         width: 100%;
-        background: #ffffff;
+        background: #2d1781;
         border-radius: 12px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        padding: 20px 25px;
+        padding: 30px;
+        color: #ffffff;
     }
 
     h1 {
-        font-size: 1.8rem;
+        font-size: 2rem;
         font-weight: bold;
-        color: #1e3c72;
+        color: #b6c3e3;
         text-align: center;
         margin-bottom: 20px;
     }
 
     .form-group {
-        margin-bottom: 15px;
+        margin-bottom: 20px;
     }
 
     .form-control {
-        border-radius: 8px;
-        border: 1px solid #d1d5db;
-        padding: 10px;
-        font-size: 14px;
+        border-radius: 10px;
+        border: 1px solid #4c5aac;
+        padding: 12px;
+        font-size: 16px;
         width: 100%;
+        background: #5a6ca3;
+        color: #ffffff;
     }
 
     .btn-primary {
-        background-color: #4CAF50;
+        background-color: #27146f;
         border: none;
         width: 100%;
-        padding: 12px;
-        font-size: 16px;
+        padding: 15px;
+        font-size: 18px;
         font-weight: bold;
-        border-radius: 8px;
+        border-radius: 10px;
         color: #ffffff;
         transition: background-color 0.3s ease;
     }
 
         .btn-primary:hover {
-            background-color: #388E3C;
+            background-color: #4c5aac;
         }
 
     .footer {
         text-align: center;
-        margin-top: 15px;
+        margin-top: 20px;
     }
 
         .footer a {
             text-decoration: none;
-            color: #4CAF50;
+            color: #b6c3e3;
             font-weight: bold;
         }
 
@@ -119,6 +122,10 @@
 @code {
     [SupplyParameterFromQuery]
     public int ItineraryId { get; set; }
+    [SupplyParameterFromQuery]
+    public string SelectedDateRange { get; set; } = string.Empty;
+
+
 
     [SupplyParameterFromForm]
     private Payment Payment { get; set; } = new();
@@ -168,8 +175,9 @@
                 ItineraryId = ItineraryId,
                 PaymentId = Payment.PaymentId,
                 CustomerId = user.CustomerId.Value,
-                BookingDate = DateOnly.FromDateTime(DateTime.Now),
+                SelectedDateRange = SelectedDateRange,
                 BookingStatus = true
+
             };
 
         context.Booking.Add(booking);
