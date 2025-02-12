@@ -94,7 +94,8 @@
         //add the user to the user role
         await UserManager.AddToRoleAsync(user, "Staff");
 
-        if (assignedRole == "Staff"){
+        if (assignedRole == "Staff")
+        {
             using var context = DbFactory.CreateDbContext();
             var newStaff = new Staff
                 {
