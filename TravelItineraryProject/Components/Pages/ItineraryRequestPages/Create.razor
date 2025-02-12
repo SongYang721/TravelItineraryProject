@@ -1,10 +1,10 @@
 ﻿@page "/itineraryrequests/create"
 @using Microsoft.EntityFrameworkCore
 @using TravelItineraryProject.Domain
-
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@rendermode InteractiveServer
 
 <PageTitle>Create Itinerary</PageTitle>
 
@@ -13,34 +13,34 @@
 
 <div class="row">
     <div class="col-md-4">
-        <EditForm method="post" Model="ItineraryRequest" OnValidSubmit="AddItineraryRequest" FormName="create" Enhance>
+        <EditForm Model="ItineraryRequest" OnValidSubmit="AddItineraryRequest" FormName="create">
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert" />
+
             <div class="mb-3">
                 <label for="destination" class="form-label">Destination:</label>
-                <InputSelect id="destination" @bind-Value="ItineraryRequest.Destination" class="form-control">
+                <select id="destination" @bind="ItineraryRequest.Destination" class="form-select">
                     <option value="">-- Select Destination --</option>
-                    <option value="">-- Select Destination --</option>
-                    <option value="China">China</option>
-                    <option value="India">India</option>
-                    <option value="Japan">Japan</option>
-                </InputSelect>
-
+                    @foreach (var destination in AvailableDestinations)
+                    {
+                        <option value="@destination">@destination</option>
+                    }
+                </select>
                 <ValidationMessage For="() => ItineraryRequest.Destination" class="text-danger" />
             </div>
 
-
-
             <div class="mb-3">
                 <label for="typeoftrip" class="form-label">Type of Trip:</label>
-                <InputSelect id="typeoftrip" @bind-Value="ItineraryRequest.TypeOfTrip" class="form-control">
-                    <option value="">-- Select Type --</option>
-                    <option value="Pleasure">Pleasure</option>
-                    <option value="Business">Business</option>
-                    <option value="Historical">Historical</option>
-                </InputSelect>
+                <select id="typeoftrip" @bind="ItineraryRequest.TypeOfTrip" class="form-select">
+                    <option value="">-- Select Trip Type --</option>
+                    @foreach (var type in AvailableTripTypes)
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </select>
                 <ValidationMessage For="() => ItineraryRequest.TypeOfTrip" class="text-danger" />
             </div>
+
 
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
@@ -52,20 +52,20 @@
 </div>
 
 @code {
+    private ItineraryRequest ItineraryRequest { get; set; } = new(); // ✅ Ensure ItineraryRequest is initialized
 
-    private ItineraryRequest ItineraryRequest { get; set; } = new();
+    private DateTime? TravelMonthYear { get; set; } // ✅ Temporary DateTime property for binding
 
-    // private  List<string> AvailableDestinations = new() { "Tokyo", "New York", "Paris", "Sydney", "Rome" };
-    // private  List<string> AvailableTripTypes = new() { "Vacation", "Business", "Adventure", "Cultural", "Relaxation" };
+    private List<string> AvailableDestinations = new() { "Tokyo", "New York", "Paris", "Sydney", "Rome" };
+    private List<string> AvailableTripTypes = new() { "Vacation", "Business", "Adventure", "Cultural", "Relaxation" };
 
     private async Task AddItineraryRequest()
     {
-
         try
         {
             using var context = DbFactory.CreateDbContext();
 
-            // Get logged-in user's email
+            //  Get logged-in user's email
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var userEmail = authState.User.Identity?.Name;
 
@@ -75,7 +75,7 @@
                 return;
             }
 
-            // Find the customer
+            //  Find the customer based on email
             var customer = await context.Customer.FirstOrDefaultAsync(c => c.EmailAddress == userEmail);
             if (customer == null)
             {
@@ -83,18 +83,19 @@
                 return;
             }
 
-            // Set CustomerId and default values
+            // Assign values to ItineraryRequest
             ItineraryRequest.CustomerId = customer.CustomerId;
             ItineraryRequest.RequestApproval = false;
             ItineraryRequest.NumberOfRequests = 1;
 
+            
 
-            // Save to the database
+            //  Save the itinerary
             context.ItineraryRequest.Add(ItineraryRequest);
             await context.SaveChangesAsync();
 
-            Console.WriteLine($"Itinerary created successfully with ID: {ItineraryRequest.ItineraryRequestId}");
-            // NavigationManager.NavigateTo("/itineraryrequests");
+            Console.WriteLine("Itinerary created successfully.");
+            NavigationManager.NavigateTo("/itineraryrequests");
         }
         catch (Exception ex)
         {

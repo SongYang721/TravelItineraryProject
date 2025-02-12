@@ -1,164 +1,33 @@
-﻿@page "/itineraries"
+﻿@page "/itinerary"
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using TravelItineraryProject.Domain
 @using TravelItineraryProject.Data
-@rendermode InteractiveServer
 @implements IAsyncDisposable
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
-@inject NavigationManager NavigationManager
-@inject AuthenticationStateProvider AuthenticationStateProvider
-
 <PageTitle>Index</PageTitle>
-
 <h1>Index</h1>
-
 <p>
     <a href="itineraries/create">Create New</a>
 </p>
-
-@if (Itineraries == null || !Itineraries.Any())
-{
-    <p>Loading itineraries...</p>
-}
-else
-{
-    <QuickGrid Items = "@Itineraries.AsQueryable()">
-        <PropertyColumn Property="itinerary => itinerary.Price" Title="Price" />
-        <PropertyColumn Property="itinerary => itinerary.Duration" Title="Duration" />
-        <PropertyColumn Property="itinerary => itinerary.Title" Title="Title" />
-        <PropertyColumn Property="itinerary => itinerary.PromotionAvailable" Title="Promotion Available" />
-        <PropertyColumn Property="itinerary => itinerary.TypeofTrip" Title="Type of Trip" />
-
-        <AuthorizeView Roles="Administrator, Staff">
-            <PropertyColumn Property="itinerary => itinerary.StaffId" Title="Staff ID" />
-        </AuthorizeView>
-
-        <TemplateColumn Context="itinerary">
-            <div>
-                <label>Select Date:</label>
-                <select class="form-control" @bind="SelectedDateRange[itinerary.ItineraryId]">
-                    @foreach (var dateRange in itinerary.GetAvailableDateRanges())
-                    {
-                        <option value="@dateRange">@dateRange</option>
-                    }
-                </select>
-            </div>
-            <button class="btn btn-primary"
-                    @onclick="() => ProceedToPayment(itinerary.ItineraryId)"
-                    disabled="@IsBookingDisabled(itinerary.ItineraryId)">
-                Book
-            </button>
-        </TemplateColumn>
-
-        <TemplateColumn Context="itinerary">
-            <AuthorizeView Roles="Administrator, Staff">
-                <a href="@($"itineraries/edit?itineraryid={itinerary.ItineraryId}")">Edit</a> |
-                <a href="@($"itineraries/details?itineraryid={itinerary.ItineraryId}")">Details</a> |
-                <a href="@($"itineraries/delete?itineraryid={itinerary.ItineraryId}")">Delete</a>
-            </AuthorizeView>
-        </TemplateColumn>
-    </QuickGrid>
-}
-
+<QuickGrid Class="table" Items="context.Itinerary">
+    <PropertyColumn Property="itinerary => itinerary.Price" />
+    <PropertyColumn Property="itinerary => itinerary.Duration" />
+    <PropertyColumn Property="itinerary => itinerary.Title" />
+    <PropertyColumn Property="itinerary => itinerary.PromotionAvailable" />
+    <PropertyColumn Property="itinerary => itinerary.TypeofTrip" />
+    <PropertyColumn Property="itinerary => itinerary.StaffId" />
+    <TemplateColumn Context="itinerary">
+        <a href="@($"itineraries/edit?itineraryid={itinerary.ItineraryId}")">Edit</a> |
+        <a href="@($"itineraries/details?itineraryid={itinerary.ItineraryId}")">Details</a> |
+        <a href="@($"itineraries/delete?itineraryid={itinerary.ItineraryId}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
 @code {
     private TravelItineraryProjectContext context = default!;
-    private List<Itinerary> Itineraries = new();
-    private Dictionary<int, string> SelectedDateRange = new();
-    private HashSet<string> ExistingBookings = new();
-
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        using var dbContext = DbFactory.CreateDbContext();
-
-        // Ensure Itineraries is populated
-        Itineraries = await dbContext.Itinerary.AsQueryable().ToListAsync();
-
-        if (!Itineraries.Any())
-        {
-            Console.WriteLine("No itineraries found.");
-            return;
-        }
-
-        // Get logged-in user
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var userEmail = authState.User.Identity?.Name;
-
-        if (string.IsNullOrEmpty(userEmail))
-        {
-            Console.WriteLine("User is not logged in. Clearing booking data.");
-            ExistingBookings.Clear();
-            SelectedDateRange.Clear();
-            Itineraries.Clear();  // Ensure UI refresh properly
-            StateHasChanged();
-            return;
-        }
-        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
-        if (user == null)
-        {
-            Console.WriteLine("User not found.");
-            return;
-        }
-
-        if (user.CustomerId == null)
-        {
-            Console.WriteLine("CustomerId is null. Clearing booking data.");
-            ExistingBookings.Clear();
-            return;
-        }
-
-        // Fetch user's existing bookings
-        var userBookings = await dbContext.Booking
-            .Where(b => b.CustomerId == user.CustomerId && b.SelectedDateRange != null)
-            .Select(b => $"{b.ItineraryId}-{b.SelectedDateRange}")
-            .ToListAsync();
-
-        ExistingBookings = new HashSet<string>(userBookings);
-
-        // Initialize dropdown values
-        foreach (var itinerary in Itineraries)
-        {
-            if (!SelectedDateRange.ContainsKey(itinerary.ItineraryId) || string.IsNullOrEmpty(SelectedDateRange[itinerary.ItineraryId]))
-            {
-                var firstAvailableDate = itinerary.GetAvailableDateRanges().FirstOrDefault();
-                SelectedDateRange[itinerary.ItineraryId] = !string.IsNullOrEmpty(firstAvailableDate) ? firstAvailableDate : "No Available Dates";
-            }
-        }
-        StateHasChanged();// Refresh UI dynamically
+        context = DbFactory.CreateDbContext();
     }
-    private bool IsBookingDisabled(int itineraryId)
-    {
-        if (!SelectedDateRange.ContainsKey(itineraryId))
-        {
-            return true; // Disable booking if key doesn't exist
-        }
-
-        var selectedDate = SelectedDateRange[itineraryId];
-        return ExistingBookings.Contains($"{itineraryId}-{selectedDate}");
-    }   
-
-    private async Task ProceedToPayment(int itineraryId)
-    {
-        if (!SelectedDateRange.TryGetValue(itineraryId, out var selectedFullRange) || string.IsNullOrEmpty(selectedFullRange))
-        {
-            Console.WriteLine("Please select a valid date before booking.");
-            return;
-        }
-
-        // 🔹 Ensure UI is refreshed before navigating
-        StateHasChanged();
-
-        // 🔹 Navigate to the payment page with selected date
-        NavigationManager.NavigateTo($"/payments/create?itineraryId={itineraryId}&selectedDateRange={Uri.EscapeDataString(selectedFullRange)}");
-    }
-
-    // 🔹 Ensure database context is disposed properly
-    public async ValueTask DisposeAsync()
-    {
-        if (context != null)
-        {
-            await context.DisposeAsync();
-        }
-    }
-
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }

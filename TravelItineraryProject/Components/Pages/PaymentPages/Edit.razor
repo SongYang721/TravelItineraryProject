@@ -3,7 +3,7 @@
 @using TravelItineraryProject.Domain
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 @inject NavigationManager NavigationManager
-@attribute [Authorize(Roles = "Administrator,User")]
+@attribute [Authorize(Roles = "Administrator")]
 
 <PageTitle>Edit</PageTitle>
 

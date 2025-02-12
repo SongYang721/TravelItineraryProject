@@ -4,7 +4,7 @@
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 @inject NavigationManager NavigationManager
 
-@attribute [Authorize(Roles = "Administrator,User")]
+
 
 <PageTitle>Edit</PageTitle>
 
@@ -61,7 +61,7 @@ else
 }
 
 <div>
-    <a href="/itineraries">Back to List</a>
+    <a href="/itinerary">Back to List</a>
 </div>
 
 @code {

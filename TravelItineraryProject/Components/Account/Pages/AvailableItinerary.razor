@@ -1,0 +1,30 @@
+﻿@page "/AvailableItinerary"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Microsoft.EntityFrameworkCore
+@using TravelItineraryProject.Domain
+@using TravelItineraryProject.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<TravelItineraryProjectContext> DbFactory
+
+<h3>Available Itineraries</h3>
+
+    <QuickGrid Class = "table" Items="context.Itinerary">
+        <PropertyColumn Property="itinerary => itinerary.Title" Title="Title" />
+        <PropertyColumn Property="itinerary => itinerary.Price" Title="Price" />
+        <PropertyColumn Property="itinerary => itinerary.Duration" Title="Duration (Days)" />
+        <PropertyColumn Property="itinerary => itinerary.PromotionAvailable" Title="Promotion Available" />
+        <PropertyColumn Property="itinerary => itinerary.TypeofTrip" Title="Type of Trip" />
+        <PropertyColumn Property="itinerary => itinerary.AvailableDateRanges" Title="Available Dates" />
+    </QuickGrid>
+
+
+@code {
+    private TravelItineraryProjectContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

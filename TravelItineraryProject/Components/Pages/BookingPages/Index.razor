@@ -8,7 +8,9 @@
 @inject IDbContextFactory<TravelItineraryProjectContext> DbFactory
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
 @attribute [Authorize(Roles = "Administrator, Staff, User")]
+
 
 <PageTitle>Bookings</PageTitle>
 
@@ -28,8 +30,8 @@
     @* <PropertyColumn Property="booking => booking.BookingStatus" Title="ApprovalStatus" /> *@
 
     <TemplateColumn Context="booking">
-        <AuthorizeView Roles="Administrator, User">
-            <a href="@($"/bookings/edit/{booking.BookingId}")">Edit</a>
+        <button class="btn btn-info" @onclick="() => NavigateToEdit(booking.BookingId)">Edit</button>
+            <AuthorizeView Roles="Administrator">
             <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
             <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
         </AuthorizeView>
@@ -58,6 +60,7 @@
         await LoadUserBookings();
 
     }
+    private void NavigateToEdit(int bookingId) => NavigationManager.NavigateTo($"/bookings/edit/{bookingId}");
 
     private async Task LoadUserBookings()
     {

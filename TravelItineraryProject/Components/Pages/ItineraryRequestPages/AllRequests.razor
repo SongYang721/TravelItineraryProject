@@ -6,33 +6,45 @@
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@rendermode InteractiveServer
 
 <PageTitle>Popular Itineraries</PageTitle>
 
-<h1>Popular Itineraries</h1>
+<h1 class="text-3xl font-bold text-center text-gray-800 my-6">Popular Itineraries</h1>
 
 @if (PopularItineraries == null || !PopularItineraries.Any())
 {
-    <p class="text-gray-600 mt-4">There are no popular itineraries at the moment.</p>
+    <p class="text-gray-600 mt-4 text-center">There are no popular itineraries at the moment.</p>
 }
 else
 {
-    <div class="container mt-4">
+    <div class="container mx-auto px-4 mt-4">
         <h2 class="text-2xl font-bold text-gray-800 mb-4">Most Requested Itineraries</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach (var itinerary in PopularItineraries)
             {
-                <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="bg-white shadow-lg rounded-lg overflow-hidden p-6 transition-transform transform hover:scale-105">
                     <div class="p-4">
                         <h3 class="text-xl font-bold text-gray-900">@itinerary.Destination</h3>
                         <p class="text-gray-700 mt-2">@itinerary.TypeOfTrip</p>
                         <p class="text-gray-500 text-sm mt-2">Requests: @itinerary.NumberOfRequests</p>
-                        <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600
-                                disabled:opacity-50 disabled:cursor-not-allowed"
-                                @onclick="() => CreateRequestAsync(itinerary)"
-                                disabled="@GetUserRequestStatus(itinerary.Id)">
-                            Request
-                        </button>
+
+                        <div class="flex gap-2 mt-4">
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600
+                                    disabled:opacity-50 disabled:cursor-not-allowed"
+                                    @onclick="() => CreateRequestAsync(itinerary)"
+                                    disabled="@GetUserRequestStatus(itinerary.Id)">
+                                Request
+                            </button>
+
+                            @if (LoggedInCustomerId != null && LoggedInCustomerId == itinerary.CustomerId)
+                            {
+                                <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+                                        @onclick="() => EditRequest(itinerary.Id)">
+                                    Edit
+                                </button>
+                            }
+                        </div>
                     </div>
                 </div>
             }
@@ -50,8 +62,6 @@ else
         try
         {
             context = DbFactory.CreateDbContext();
-
-            // Get logged-in user
             await LoadLoggedInCustomer();
 
             // Load only itineraries that have 3 or more requests (popular)
@@ -63,14 +73,19 @@ else
                         Destination = i.Destination ?? "Unknown Destination",
                         TypeOfTrip = i.TypeOfTrip ?? "Unknown",
                         NumberOfRequests = i.NumberOfRequests ?? 0,
+						CustomerId = i.CustomerId
                     })
                 .ToListAsync();
 
-            Console.WriteLine("Popular itineraries loaded successfully.");
+            Console.WriteLine("Loaded itineraries:");
+            foreach (var itinerary in PopularItineraries)
+            {
+                Console.WriteLine($"ID: {itinerary.Id}, Destination: {itinerary.Destination}, CustomerId: {itinerary.CustomerId}");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error in OnInitializedAsync: {ex.Message}");
+            Console.WriteLine($"Error loading itineraries: {ex.Message}");
         }
     }
 
@@ -85,20 +100,11 @@ else
             {
                 var customer = await context.Customer.FirstOrDefaultAsync(c => c.EmailAddress == userEmail);
                 LoggedInCustomerId = customer?.CustomerId;
-
-                if (LoggedInCustomerId != null)
-                {
-                    Console.WriteLine($"LoggedInCustomerId: {LoggedInCustomerId}");
-                }
-                else
-                {
-                    Console.WriteLine("No customer found for the logged-in user.");
-                }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error in LoadLoggedInCustomer: {ex.Message}");
+            Console.WriteLine($"Error loading customer: {ex.Message}");
         }
     }
 
@@ -108,34 +114,27 @@ else
         {
             if (LoggedInCustomerId == null)
             {
-                Console.WriteLine("No LoggedInCustomerId. Redirecting to login...");
+                Console.WriteLine("User not logged in.");
                 return;
             }
 
-            // Prevent duplicate requests
             bool alreadyRequested = await context.ItineraryRequest
                 .AnyAsync(r => r.CustomerId == LoggedInCustomerId && r.ItineraryRequestId == itinerary.Id);
 
-            Console.WriteLine($"Already requested status for ItineraryId {itinerary.Id}: {alreadyRequested}");
-            if (alreadyRequested)
-            {
-                return; // User already requested this itinerary
-            }
+            if (alreadyRequested) return;
 
-            // Add a new request
             var newRequest = new ItineraryRequest
                 {
                     RequestApproval = false,
-                    // RequestTravelMonthYear = DateTime.Now,
                     Destination = itinerary.Destination,
                     TypeOfTrip = itinerary.TypeOfTrip,
                     CustomerId = LoggedInCustomerId.Value,
                     StaffId = null,
+
                 };
 
             context.ItineraryRequest.Add(newRequest);
 
-            // Increment the NumberOfRequests
             var dbItinerary = await context.ItineraryRequest.FindAsync(itinerary.Id);
             if (dbItinerary != null)
             {
@@ -144,7 +143,6 @@ else
             }
 
             await context.SaveChangesAsync();
-            Console.WriteLine($"Request successfully created for ItineraryId {itinerary.Id}.");
             StateHasChanged();
         }
         catch (Exception ex)
@@ -153,41 +151,31 @@ else
         }
     }
 
+    private void EditRequest(int itineraryId)
+    {
+        NavigationManager.NavigateTo($"/itineraryrequests/edit/{itineraryId}");
+    }
+
     private bool GetUserRequestStatus(int itineraryId)
     {
         try
         {
-            if (LoggedInCustomerId == null)
-            {
-                Console.WriteLine("No LoggedInCustomerId found.");
-                return false;
-            }
+            if (LoggedInCustomerId == null) return false;
 
-            var status = context.ItineraryRequest
-                .Any(r => r.CustomerId == LoggedInCustomerId && r.ItineraryRequestId == itineraryId);
-            Console.WriteLine($"GetUserRequestStatus for ItineraryId {itineraryId}: {status}");
-            return status;
+            return context.ItineraryRequest.Any(r => r.CustomerId == LoggedInCustomerId && r.ItineraryRequestId == itineraryId);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error in GetUserRequestStatus: {ex.Message}");
+            Console.WriteLine($"Error checking request status: {ex.Message}");
             return false;
         }
     }
 
     public async ValueTask DisposeAsync()
     {
-        try
+        if (context != null)
         {
-            if (context != null)
-            {
-                await context.DisposeAsync();
-                Console.WriteLine("Context disposed successfully.");
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error in DisposeAsync: {ex.Message}");
+            await context.DisposeAsync();
         }
     }
 
@@ -197,6 +185,6 @@ else
         public string? Destination { get; set; }
         public string? TypeOfTrip { get; set; }
         public int NumberOfRequests { get; set; }
-        public string? ImageUrl { get; set; }
+        public int CustomerId { get; set; } // To check ownership
     }
 }

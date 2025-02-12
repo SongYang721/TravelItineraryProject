@@ -6,6 +6,8 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 
+@attribute [Authorize(Roles = "Administrator,Staff")]
+
 <PageTitle>Index</PageTitle>
 
 <h1>Index</h1>

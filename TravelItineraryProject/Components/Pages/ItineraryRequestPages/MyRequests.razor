@@ -6,6 +6,7 @@
 @implements IAsyncDisposable   
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory 
 @inject AuthenticationStateProvider AuthenticationStateProvider 
+@inject NavigationManager NavigationManager
 
 <PageTitle>My Custom Itinerary Requests</PageTitle>
 
@@ -20,22 +21,33 @@ else
 <div class="container mt-4">
     <h2 class="text-2xl font-bold text-gray-800 mb-4">Your Itinerary Requests</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @foreach (var itinerary in ItineraryRequests)
-        {
-            <div class="bg-white shadow-md rounded-lg overflow-hidden">
-               
-                <div class="p-4">
-                    <h3 class="text-xl font-bold text-gray-900">@itinerary.Destination</h3>
-                    <p class="text-gray-700 mt-2">@itinerary.TypeOfTrip</p>
-                    <p class="text-green-600 font-semibold mt-4">Status: @(itinerary.RequestApproval ? "Approved" : "Pending")</p>
-                    <button class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 mt-4"
-                            @onclick="() => CancelRequestAsync(itinerary)">
+            @foreach (var itinerary in ItineraryRequests)
+            {
+                <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <div class="p-4">
+                        <h3 class="text-xl font-bold text-gray-900">@itinerary.Destination</h3>
+                        <p class="text-gray-700 mt-2">@itinerary.TypeOfTrip</p>
+                        <p class="text-green-600 font-semibold mt-4">Status: @(itinerary.RequestApproval ? "Approved" : "Pending")</p>
 
-                        Cancel Request 
-                      </button>
-                  </div> 
-               </div> 
-         } 
+                        <div class="flex gap-2 mt-4">
+                            <button class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                                    @onclick="() => CancelRequestAsync(itinerary)">
+                                Cancel Request
+                            </button>
+
+                            @if (LoggedInCustomerId != null && LoggedInCustomerId == itinerary.CustomerId)
+                            {
+                                <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600
+            disabled:opacity-50 disabled:cursor-not-allowed"
+                                        @onclick="() => EditRequest(itinerary.Id)"
+                                        disabled="@(itinerary.NumberOfRequests >= 3)">
+                                    Edit
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
       </div> 
    </div> 
 } 
@@ -67,6 +79,8 @@ else
                             Destination = i.Destination, 
                             TypeOfTrip = i.TypeOfTrip, 
                             RequestApproval = i.RequestApproval, 
+                            NumberOfRequests = i.NumberOfRequests ?? 0,
+                            CustomerId = i.CustomerId
 
                          }) 
                      .ToListAsync(); 
@@ -99,24 +113,11 @@ else
             StateHasChanged();
         }
     }
+    private void EditRequest(int itineraryId)
+    {
+        NavigationManager.NavigateTo($"/itineraryrequests/edit/{itineraryId}");
+    }
 
-
-@*     // private string GetImageUrl(string? destination) *@
-@*     // { *@
-@*     //     return destination?.ToLower() switch *@
-@*     //     { *@
-@*     //         "paris" => "https:upload.wikimedia.org/wikipedia/commons/a/a8/Tour_Eiffel_Wikimedia_Commons.jpg", *@
-@*     //         "new york" => "https:upload.wikimedia.org/wikipedia/commons/a/a1/Statue_of_Liberty_7.jpg", *@
-@*     //         "sydney" => "https:upload.wikimedia.org/wikipedia/commons/4/40/Sydney_Opera_House_Sails.jpg", *@
-@*     //         "agra" => "https:upload.wikimedia.org/wikipedia/commons/d/da/Taj-Mahal.jpg", *@
-@*     //         "rome" => "https:upload.wikimedia.org/wikipedia/commons/5/5a/Colosseum_in_Rome%2C_Italy_-_April_2007.jpg", *@
-@*     //         "machu picchu" => "https:upload.wikimedia.org/wikipedia/commons/0/0e/Machu_Picchu_%28pixinn.net%29.jpg", *@
-@*     //         "rio de janeiro" => "https:upload.wikimedia.org/wikipedia/commons/9/9d/Cristo_Redentor_-_Rio.jpg", *@
-@*     //         "london" => "https:upload.wikimedia.org/wikipedia/commons/f/fd/Big_Ben_London_Feb_2006.jpg", *@
-@*     //         "cairo" => "https:upload.wikimedia.org/wikipedia/commons/e/e3/Kheops-Pyramid.jpg", *@
-@*     //         _ => "https:via.placeholder.com/400" *@
-@*     //     }; *@
-@*     // } *@
 
      public async ValueTask DisposeAsync() => await context.DisposeAsync(); 
 
@@ -127,7 +128,9 @@ else
 
        public int Id { get; set; } 
        public string? Destination { get; set; }   public string? TypeOfTrip { get; set; } 
-       public bool RequestApproval { get; set; } 
+       public bool RequestApproval { get; set; }
+	   public int? CustomerId { get; set; }
+        public int NumberOfRequests { get; set; }
        // public string ImageUrl { get; set; }
     } 
 @* } *@

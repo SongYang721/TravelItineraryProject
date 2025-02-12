@@ -3,6 +3,7 @@
 @using TravelItineraryProject.Domain
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Create</PageTitle>
 
@@ -40,11 +41,18 @@
                 <InputText id="typeoftrip" @bind-Value="Itinerary.TypeofTrip" class="form-control" /> 
                 <ValidationMessage For="() => Itinerary.TypeofTrip" class="text-danger" /> 
             </div>        
+          
             <div class="mb-3">
-                <label for="staffid" class="form-label">StaffId:</label> 
-                <InputNumber id="staffid" @bind-Value="Itinerary.StaffId" class="form-control" /> 
-                <ValidationMessage For="() => Itinerary.StaffId" class="text-danger" /> 
-            </div>        
+                <label for="dateRange" class="form-label">Available Date Ranges:</label>
+                <select id="dateRange" class="form-control" @bind="SelectedDateRange">
+                    @foreach (var dateRange in AvailableDateRanges)
+                    {
+                        <option value="@dateRange">@dateRange</option>
+                    }
+                </select>
+                <ValidationMessage For="() => SelectedDateRange" class="text-danger" />
+            </div>
+            
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -58,10 +66,34 @@
     [SupplyParameterFromForm]
     private Itinerary Itinerary { get; set; } = new();
 
+
+
+    private List<string> AvailableDateRanges = new() { "14-16 February", "16-18 February" , "20 - 22 Febr"};
+    private string SelectedDateRange = "14-16 February"; // Default selection
+
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddItinerary()
     {
+        
         using var context = DbFactory.CreateDbContext();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userEmail = authState.User.Identity?.Name;
+
+        if (!string.IsNullOrEmpty(userEmail))
+        {
+            var staff = await context.Staff.FirstOrDefaultAsync(s => s.Email == userEmail);
+            if (staff != null)
+            {
+                Itinerary.StaffId = staff.StaffId; // Automatically assign Staff ID
+            }
+        }
+
+        // 🔹 Ensure selected date range is stored
+        Itinerary.AvailableDateRanges = SelectedDateRange;
+
+        context.Itinerary.Add(Itinerary);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/itineraries");
         context.Itinerary.Add(Itinerary);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/itineraries");
