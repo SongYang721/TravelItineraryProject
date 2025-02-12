@@ -1,152 +1,152 @@
-﻿@* @page "/reviews/edit" *@
-@* @using Microsoft.EntityFrameworkCore *@
-@* @using TravelItineraryProject.Data *@
-@* @using TravelItineraryProject.Domain *@
-@* @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory *@
-@* @inject NavigationManager NavigationManager *@
-@* @attribute [Authorize(Roles = "Administrator, User")] *@
+﻿@page "/reviews/edit"
+@using Microsoft.EntityFrameworkCore
+@using TravelItineraryProject.Data
+@using TravelItineraryProject.Domain
+@inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
+@inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = "Administrator, User")]
 
-@* <PageTitle>Edit</PageTitle> *@
+<PageTitle>Edit</PageTitle>
 
-@* <h1>Edit</h1> *@
+<h1>Edit</h1>
 
-@* <h2>Review</h2> *@
-@* <hr /> *@
-@* @if (Review is null) *@
-@* { *@
-@*     <p><em>Loading...</em></p> *@
-@* } *@
-@* else *@
-@* { *@
-@*     <div class="row"> *@
-@*         <div class="col-md-4"> *@
-@*             <EditForm method="post" Model="Review" OnValidSubmit="UpdateReview" FormName="edit" Enhance> *@
-@*                 <DataAnnotationsValidator /> *@
-@*                 <ValidationSummary role="alert"/> *@
-@*                 <input type="hidden" name="Review.ReviewId" value="@Review.ReviewId" /> *@
-@*                 <!-- Rating with star radio buttons --> *@
-@*                 <!-- Rating with number radio buttons --> *@
-@*                 <div class="mb-3"> *@
-@*                     <label class="form-label">Rating:</label> *@
-@*                     <InputRadioGroup @bind-Value="Review.Rating"> *@
-@*                         <div class="rating-container"> *@
-@*                             @for (int i = 1; i <= 5; i++) *@
-@*                             { *@
-@*                                 <label class="rating-option"> *@
-@*                                     <!-- Radio button for each rating option --> *@
-@*                                     <InputRadio class="rating-input" value="@i" /> *@
-@*                                     <span>@i</span> *@
-@*                                 </label> *@
-@*                             } *@
-@*                         </div> *@
-@*                     </InputRadioGroup> *@
-@*                     <ValidationMessage For="() => Review.Rating" class="text-danger" /> *@
-@*                 </div> *@
-@*                 <div class="mb-3"> *@
-@*                     <label for="comment" class="form-label">Comment:</label> *@
-@*                     <InputText id="comment" @bind-Value="Review.Comment" class="form-control" /> *@
-@*                     <ValidationMessage For="() => Review.Comment" class="text-danger" /> *@
-@*                 </div> *@
-@*                 <div class="mb-3"> *@
-@*                     <label for="itineraryid" class="form-label">Itinerary:</label> *@
-@*                     <InputSelect id="itineraryid" @bind-Value="Review.ItineraryId" class="form-control"> *@
-@*                         <option value="">-- Select Itinerary --</option> *@
-@*                         @if (Itineraries != null) *@
-@*                         { *@
-@*                             foreach (var itinerary in Itineraries) *@
-@*                             { *@
-@*                                 <option value="@itinerary.ItineraryId"> *@
-@*                                     @itinerary.Title - @itinerary.TypeofTrip *@
-@*                                 </option> *@
-@*                             } *@
-@*                         } *@
-@*                     </InputSelect> *@
-@*                     <ValidationMessage For="() => Review.ItineraryId" class="text-danger" /> *@
-@*                 </div> *@
-@*                 <button type="submit" class="btn btn-primary">Save</button> *@
-@*             </EditForm> *@
-@*         </div> *@
-@*     </div> *@
-@* } *@
+<h2>Review</h2>
+<hr />
+@if (Review is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Review" OnValidSubmit="UpdateReview" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert" />
+                <input type="hidden" name="Review.ReviewId" value="@Review.ReviewId" />
+                <!-- Rating with star radio buttons -->
+                <!-- Rating with number radio buttons -->
+                <div class="mb-3">
+                    <label class="form-label">Rating:</label>
+                    <InputRadioGroup @bind-Value="Review.Rating">
+                        <div class="rating-container">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <label class="rating-option">
+                                    <!-- Radio button for each rating option -->
+                                    <InputRadio class="rating-input" value="@i" />
+                                    <span>@i</span>
+                                </label>
+                            }
+                        </div>
+                    </InputRadioGroup>
+                    <ValidationMessage For="() => Review.Rating" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="comment" class="form-label">Comment:</label>
+                    <InputText id="comment" @bind-Value="Review.Comment" class="form-control" />
+                    <ValidationMessage For="() => Review.Comment" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="itineraryid" class="form-label">Itinerary:</label>
+                    <InputSelect id="itineraryid" @bind-Value="Review.ItineraryId" class="form-control">
+                        <option value="">-- Select Itinerary --</option>
+                        @if (Itineraries != null)
+                        {
+                            foreach (var itinerary in Itineraries)
+                            {
+                                <option value="@itinerary.ItineraryId">
+                                    @itinerary.Title - @itinerary.TypeofTrip
+                                </option>
+                            }
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => Review.ItineraryId" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
 
-@* <div> *@
-@*     <a href="/reviews">Back to List</a> *@
-@* </div> *@
+<div>
+    <a href="/reviews">Back to List</a>
+</div>
 
-@* @code { *@
-@*     [SupplyParameterFromQuery] *@
-@*     private int ReviewId { get; set; } *@
+@code {
+    [SupplyParameterFromQuery]
+    private int ReviewId { get; set; }
 
-@*     [SupplyParameterFromForm] *@
-@*     private Review? Review { get; set; } *@
+    [SupplyParameterFromForm]
+    private Review? Review { get; set; }
 
-@*     private TravelItineraryProjectContext context = default!; *@
+    private TravelItineraryProjectContext context = default!;
 
-@*     private IList<Itinerary> Itineraries; *@
+    private IList<Itinerary> Itineraries;
 
-@*     protected override async Task OnInitializedAsync() *@
-@*     { *@
-@*         using var context = DbFactory.CreateDbContext(); *@
-@*         Itineraries = context.Itinerary.ToList(); *@
-@*         Review ??= await context.Review.FirstOrDefaultAsync(m => m.ReviewId == ReviewId); *@
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Itineraries = context.Itinerary.ToList();
+        Review ??= await context.Review.FirstOrDefaultAsync(m => m.ReviewId == ReviewId);
 
-@*         if (Review is null) *@
-@*         { *@
-@*             NavigationManager.NavigateTo("notfound"); *@
-@*         } *@
-@*     } *@
+        if (Review is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
 
-@*     // To protect from overposting attacks, enable the specific properties you want to bind to. *@
-@*     // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks. *@
-@*     private async Task UpdateReview() *@
-@*     { *@
-@*         using var context = DbFactory.CreateDbContext(); *@
-@*         context.Attach(Review!).State = EntityState.Modified; *@
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateReview()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Review!).State = EntityState.Modified;
 
-@*         try *@
-@*         { *@
-@*             await context.SaveChangesAsync(); *@
-@*         } *@
-@*         catch (DbUpdateConcurrencyException) *@
-@*         { *@
-@*             if (!ReviewExists(Review!.ReviewId)) *@
-@*             { *@
-@*                 NavigationManager.NavigateTo("notfound"); *@
-@*             } *@
-@*             else *@
-@*             { *@
-@*                 throw; *@
-@*             } *@
-@*         } *@
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ReviewExists(Review!.ReviewId))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
 
-@*         NavigationManager.NavigateTo("/reviews"); *@
-@*     } *@
+        NavigationManager.NavigateTo("/reviews");
+    }
 
-@*     private bool ReviewExists(int reviewid) *@
-@*     { *@
-@*         using var context = DbFactory.CreateDbContext(); *@
-@*         return context.Review.Any(e => e.ReviewId == reviewid); *@
-@*     } *@
-@* } *@
+    private bool ReviewExists(int reviewid)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Review.Any(e => e.ReviewId == reviewid);
+    }
+}
 
-@* <style> *@
-@*     /* CSS for Rating Radio Buttons */ *@
-@*     .rating-container { *@
-@*         display: flex; *@
-@*         gap: 10px; *@
-@*     } *@
+<style>
+    /* CSS for Rating Radio Buttons */
+    .rating-container {
+        display: flex;
+        gap: 10px;
+    }
 
-@*     .rating-option { *@
-@*         display: inline-flex; *@
-@*         align-items: center; *@
-@*     } *@
+    .rating-option {
+        display: inline-flex;
+        align-items: center;
+    }
 
-@*     .rating-input { *@
-@*         margin-right: 5px; /* Space between radio button and label */ *@
-@*     } *@
+    .rating-input {
+        margin-right: 5px; /* Space between radio button and label */
+    }
 
-@*         .rating-input + span { *@
-@*             cursor: pointer; *@
-@*             font-size: 20px; *@
-@*         } *@
-@* </style> *@
+        .rating-input + span {
+            cursor: pointer;
+            font-size: 20px;
+        }
+</style>

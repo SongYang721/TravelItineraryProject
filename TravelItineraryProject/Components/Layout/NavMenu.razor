@@ -22,16 +22,6 @@
 
         <AuthorizeView>
             <Authorized>
-                @if (userRoles != null && userRoles.Any())
-                {
-                    <p style="color: white;"><strong>Your Role:</strong></p>
-                    <ul>
-                        @foreach (var role in userRoles)
-                        {
-                            <li style="color: white;">@role</li>
-                        }
-                    </ul>
-                }
 
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Manage">
@@ -48,49 +38,30 @@
 
                     <div class="nav-item px-3">
                          <NavLink class="nav-link" href="itineraries/create">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Create Travel Itinerary
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Create Itinerary
                         </NavLink>
                     </div>
 
                     <div class="nav-item px-3">
                         <NavLink class="nav-link" href="itinerary">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> View and Edit Itinerary
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Itinerary
                         </NavLink>
                     </div>
-
-                   
-                    
                     </AuthorizeView>
 
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="itineraries">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Available Itinerary
-                    </NavLink>
-                </div>
-
-
-               
-
-
+                <AuthorizeView Roles="Administrator, user" Context="innerContext">
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="itineraries">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Available Itinerary
+                        </NavLink>
+                    </div>
+                </AuthorizeView>
 
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="bookings">
                         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Booking
                     </NavLink>
                 </div>
-                
-                @* 
-               Show "Review" ONLY if user is "User" or "Administrator" 
-                @if (userRoles.Contains("User") || userRoles.Contains("Administrator"))
-                {
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="reviews/create">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Review
-                        </NavLink>
-                    </div>
-                } *@ 
-
-
 
                  <AuthorizeView Roles="Administrator" Context="innerContext">
                 <div class="nav-item px-3">
@@ -126,14 +97,15 @@
                 <AuthorizeView Roles="User" Context="innerContext">
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="itineraryrequests/create">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Create Itinerary Request
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Request Itinerary
                     </NavLink>
                 </div>
 				</AuthorizeView>
 
+
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="itineraryrequests">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Most Popular Requests
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Popular Requests
                     </NavLink>
                 </div>
 
@@ -143,12 +115,13 @@
                     </NavLink>
                 </div>
 
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="itineraryMyrequests">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> My Requested Itineraries
-                    </NavLink>
-                </div>
-
+                <AuthorizeView Roles="Administrator, User" Context="innerContext">
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="itineraryMyrequests">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> My Request
+                        </NavLink>
+                    </div>
+                </AuthorizeView>
 
                 <AuthorizeView Roles="Administrator, Staff" Context="innerContext">
                 <div class="nav-item px-3">

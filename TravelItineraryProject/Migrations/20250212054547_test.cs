@@ -5,7 +5,7 @@
 namespace TravelItineraryProject.Migrations
 {
     /// <inheritdoc />
-    public partial class ReAddedDateRange : Migration
+    public partial class test : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,35 +21,35 @@ namespace TravelItineraryProject.Migrations
                 keyColumn: "Id",
                 keyValue: "10e93995-24eb-48b5-805b-824adeb6fb96",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "8c78d885-bd30-4c9a-9d66-0f521f934628", "AQAAAAIAAYagAAAAEEaphRFb2Z8kps8iTTa3wAPdoHEjnlbaOk9JtWghRO1FKNybAWkEENUvr6vXOVDKng==", "8ff522aa-4baf-4cda-86b7-050eaa299d86" });
+                values: new object[] { "d78b7a01-c3f2-486e-85fa-be01530d1855", "AQAAAAIAAYagAAAAEH5CCxo4BoBQalj3EXfyA3fxWXUTutJofAaLjQiAZo1lira1iuVnRmg2aOxdptA1Gg==", "1199c18b-a896-452e-ac1d-347664f06109" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "3781efa7-66dc-47f0-860f-e506d04102e4",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "85a3b71e-a7f2-4570-b6fe-04dcafeb3482", "AQAAAAIAAYagAAAAEIXBeYfzC7UyOXpwfTxk4//cNov3DW8EigKvmJ8rR3kJeu+BPwpXzGedjuIkiOZuPg==", "7de84b5d-cc5b-4405-837f-70551bf3fcc8" });
+                values: new object[] { "5f1114e5-9364-46ff-9424-d0f4faa0b877", "AQAAAAIAAYagAAAAEC2q4gQOpo3Ui826fzg6eUF+iLxlXHWAjxzb4l6QC0kkThN2pylGHCdvGNPR0PtS5w==", "1d090486-43ed-403c-b0fc-262e6fef98e9" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "4fd66d43-0660-4dc0-a96e-f83b593e4175",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "70dd506f-77b5-4e58-b6ac-8e5ba77c6f0b", "AQAAAAIAAYagAAAAEO4U6r6ClymMj7IY+eb12hAe1Wu/nRfFwYUni3Qp6THTWi+9upFSf2a/k1joxfylAA==", "265ab935-4e45-47f4-a4ae-5c65b6910fe3" });
+                values: new object[] { "521916d3-1599-4976-97a3-31c948d1f7ac", "AQAAAAIAAYagAAAAEMJ7jucjL/MT7VDAJQHVMs7UBAib7TsG7gOnSqHJOxFHjzV2sZX/3zbLCs1jLgG92A==", "3029d9d5-f19a-4d94-8032-738fa9721a62" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "f272bf94-a1ab-451a-b55a-0e68638d6bb4",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "17545fef-ed5d-45d9-a189-be682bc42252", "AQAAAAIAAYagAAAAEMO72RsJyOcFpq5KSia18ekZecZBSmtDSpkOk9X1I0mfgb2m2arAnj9urKhIQQT6IQ==", "d2d4f0c6-e2f6-465d-9329-27d0cc596967" });
+                values: new object[] { "f54f97df-ff2e-453c-aef7-a679a5ed5371", "AQAAAAIAAYagAAAAEMWx34UJdlDngpT84T61aXZIrtfeU3jMNzc3URkY+GnQTTzFRrzDPdkJTPW3VdLqiA==", "9a43d395-5f9a-4c96-ac3e-e765ad680cd5" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "f8b82324-d7ce-4578-9b88-2b6d693b72de",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "8ce9011b-9403-4bbc-b332-131760d5ebaa", "AQAAAAIAAYagAAAAEP/GLf4hoL+T5xFRoETtc8mihEozx75LN5KL+ISDY/NahlvCFHsD8+/hAKVL3Wz6oQ==", "35725589-edb8-47f6-8190-d9e50747ec77" });
+                values: new object[] { "63275c45-1441-4e89-a880-db76c6831489", "AQAAAAIAAYagAAAAEJq1tHqGxWUBAFuvQs2qWZoEodIgQ+vRd3G4ohYhJpLiI276exDVFO0AaL7eluXEpg==", "b55d60e6-1924-4524-9547-34422bdcff17" });
 
             migrationBuilder.UpdateData(
                 table: "Booking",

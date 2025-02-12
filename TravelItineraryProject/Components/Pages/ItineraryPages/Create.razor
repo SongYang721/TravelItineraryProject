@@ -4,6 +4,7 @@
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize(Roles = "Administrator, Staff")]
 
 <PageTitle>Create</PageTitle>
 
@@ -93,9 +94,6 @@
 
         context.Itinerary.Add(Itinerary);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/itineraries");
-        context.Itinerary.Add(Itinerary);
-        await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/itineraries");
+        NavigationManager.NavigateTo("/itinerary");
     }
 }

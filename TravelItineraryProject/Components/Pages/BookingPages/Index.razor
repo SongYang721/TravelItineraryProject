@@ -11,38 +11,123 @@
 @inject NavigationManager NavigationManager
 @attribute [Authorize(Roles = "Administrator, Staff, User")]
 
-
 <PageTitle>Bookings</PageTitle>
 
-<h1>Bookings</h1>
-<AuthorizeView Roles="Administrator, Staff">
-    <p>
-        <a href="bookings/create">Create New</a>
-    </p>
-</AuthorizeView>
+<style>
+    .booking-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        color: #333;
+        text-align: center;
+    }
 
-<QuickGrid TItem ="Booking" Class="table" Items="@bookings">
-    <PropertyColumn Property="booking => booking.SelectedDateRange" />
-    <PropertyColumn Property="booking => booking.Itinerary.Title" />
-    <PropertyColumn Property="booking => booking.Itinerary.Duration" />
-    <PropertyColumn Property="booking => booking.PaymentDisplayStatus" />
-    @* <PropertyColumn Property="booking => booking.StaffId" title="CheckedByStaffId" /> *@
-    @* <PropertyColumn Property="booking => booking.BookingStatus" Title="ApprovalStatus" /> *@
+    .booking-header {
+        font-size: 28px;
+        margin-bottom: 25px;
+        font-weight: bold;
+        color: #f0ad4e;
+        text-transform: uppercase;
+    }
 
-    <TemplateColumn Context="booking">
-        <button class="btn btn-info" @onclick="() => NavigateToEdit(booking.BookingId)">Edit</button>
-            <AuthorizeView Roles="Administrator">
-            <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
-            <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
-        </AuthorizeView>
-        @* <AuthorizeView Roles="Administrator, Staff"> *@
-        @*     <button class="btn @(booking.BookingStatus ? "btn-danger" : "btn-success")" *@
-        @*             @onclick="() => ToggleBookingStatus(booking.BookingId)"> *@
-        @*         @(booking.BookingStatus ? "Decline" : "Approve") *@
-        @*     </button> *@
-        @* </AuthorizeView> *@
-    </TemplateColumn>
-</QuickGrid>
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        text-align: left;
+    }
+
+        .table th, .table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        .table th {
+            background: #f0ad4e;
+            color: white;
+        }
+
+        .table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+    .action-buttons button, .action-buttons a {
+        margin: 5px;
+        padding: 8px 12px;
+        text-decoration: none;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn-info {
+        background: #5bc0de;
+        color: white;
+    }
+
+    .btn-danger {
+        background: #d9534f;
+        color: white;
+    }
+
+    .btn-success {
+        background: #5cb85c;
+        color: white;
+    }
+</style>
+
+<div class="booking-container">
+    <div class="booking-header">Bookings</div>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date Range</th>
+                    <th>Itinerary</th>
+                    <th>Duration</th>
+                    <th>Payment Status</th>
+                    <th>Booking Approval</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var booking in bookings)
+                {
+                    <tr>
+                        <td>@booking.SelectedDateRange</td>
+                        <td>@booking.Itinerary.Title</td>
+                        <td>@booking.Itinerary.Duration</td>
+                        <td>@booking.PaymentDisplayStatus</td>
+                        <td>@(booking.BookingStatus ? "Approved" : "Unapproved")</td>
+                        <td class="action-buttons">
+                            <AuthorizeView Roles="Administrator, User">
+                                <button class="btn-info" @onclick="() => NavigateToEdit(booking.BookingId)">Edit</button>
+                            </AuthorizeView>
+                            <AuthorizeView Roles="Administrator">
+                                <a class="btn-danger" href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a>
+                                <a class="btn-danger" href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
+                            </AuthorizeView>
+                            <AuthorizeView Roles="Administrator, Staff">
+                                <button class="btn @(booking.BookingStatus ? "btn-danger" : "btn-success")"
+                                        @onclick="() => ToggleBookingStatus(booking.BookingId)">
+                                    @(booking.BookingStatus ? "Decline" : "Approve")
+                                </button>
+                            </AuthorizeView>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
 @code {
     private TravelItineraryProjectContext context = default!;
@@ -52,84 +137,65 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Initialize the DbContext
         context = await DbFactory.CreateDbContextAsync();
         contextInitialized = true;
-
-        // Filter bookings for the current user
         await LoadUserBookings();
-
     }
     private void NavigateToEdit(int bookingId) => NavigationManager.NavigateTo($"/bookings/edit/{bookingId}");
 
     private async Task LoadUserBookings()
     {
-        // Get the currently logged-in user's email
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var userEmail = authState.User.Identity?.Name;
         if (userEmail != null)
         {
-            // Look up the user in the database by their email
-            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
             var customer = await context.Customer.FirstOrDefaultAsync(c => c.EmailAddress == userEmail);
-            if (customer!= null)
+            var staff = await context.Staff.FirstOrDefaultAsync(s => s.Email == userEmail);
+            if (customer != null)
             {
-                // Filter bookings for the current user
-                userBookings  = await context.Booking
-                .Include(b => b.Itinerary)
-                .Include(b => b.Payment)
-                .Where(b => b.CustomerId == customer.CustomerId).ToListAsync();
-
+                userBookings = await context.Booking.Include(b => b.Itinerary).Include(b => b.Payment)
+                    .Where(b => b.CustomerId == customer.CustomerId).ToListAsync();
                 foreach (var booking in userBookings)
                 {
-                    booking.Itinerary.Title ??= "N/A"; // Default if null
-                    booking.Itinerary.Duration ??= 0; // Default if null
                     booking.PaymentDisplayStatus = booking.Payment?.PaymentStatus == true ? "Paid" : "Pending";
                 }
-			}
-		}
-	}
+            }
+            if (staff != null)
+            {
+                userBookings = await context.Booking.Include(b => b.Itinerary).Include(b => b.Payment).ToListAsync();
+                foreach (var booking in userBookings)
+                {
+                    booking.PaymentDisplayStatus = booking.Payment?.PaymentStatus == true ? "Paid" : "Pending";
+                }
+            }
+        }
+    }
 
     private async Task ToggleBookingStatus(int bookingId)
     {
-        // Use a new DbContext instance for any updates to avoid concurrency issues
         using var updateContext = await DbFactory.CreateDbContextAsync();
         var booking = await updateContext.Booking.FindAsync(bookingId);
-
         if (booking != null)
         {
-            // Toggle the booking status
             booking.BookingStatus = !booking.BookingStatus;
-
-            // Get the currently logged-in user's staff ID
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var userEmail = authState.User.Identity?.Name;
-
             if (userEmail != null)
             {
-                // Look up the staff member in the database by their email
                 var staff = await updateContext.Staff.FirstOrDefaultAsync(s => s.Email == userEmail);
-
                 if (staff != null)
                 {
-                    // Update the StaffId field with the logged-in staff member's ID
                     booking.StaffId = staff.StaffId;
                 }
             }
-
-            // Save changes to the database
             await updateContext.SaveChangesAsync();
         }
-
-        // Refresh the bookings list
         await RefreshBookings();
     }
 
     private async Task RefreshBookings()
     {
         if (!contextInitialized) return;
-
-        // Reload data for context.Booking
         await context.Entry(context.Booking).ReloadAsync();
     }
 

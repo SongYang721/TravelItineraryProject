@@ -13,22 +13,6 @@
         overflow-x: hidden; /* Prevents horizontal scrolling */
     }
 
-    /* 🔹 Fix the Top Navbar */
-    .top-navbar {
-        background: linear-gradient(to right, #00274d, #3a007d);
-        color: white;
-        padding: 15px 20px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1000;
-    }
-
     .logo {
         font-size: 1.5rem;
         font-weight: bold;
@@ -62,20 +46,25 @@
     /* 🔹 Make Hero Section Cover Entire Screen */
     .hero {
         background: url('/images/mountain-lake.jpeg') no-repeat center center fixed;
-        background-size: cover;
+        background-size: cover; /* Ensures the image covers the hero section without stretching */
         width: 100vw; /* Full width */
         height: 100vh; /* Full height */
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
+        justify-content: center; /* Centers text vertically */
+        align-items: flex-start; /* Aligns text to the left */
+        text-align: left; /* Ensures the text is aligned to the left */
         color: white;
         position: absolute;
         top: 0;
         left: 0;
         z-index: -1; /* Ensures it stays behind content */
+        background-position: center center; /* Ensures image is centered */
+        padding-left: 50px; /* Adds more space from the left edge, adjust as needed */
     }
+
+
+
 
         /* 🔹 Dark Overlay for Readability */
         .hero::before {
@@ -105,36 +94,14 @@
             font-weight: bold;
         }
 
-    /* 🔹 Push Main Content Down */
+    /* 🔹 Fix the Main Content Position */
     .content {
         position: relative;
-        margin-top: 100vh; /* Pushes content below hero */
+        z-index: 2; /* Ensures it's above the hero section */
     }
 </style>
 
-<!-- Top Navigation Bar -->
-<div class="top-navbar">
-    <div class="logo">TravelItineraryProject</div>
-    <nav class="nav-links">
-        <a href="/">Home</a>
-        <a href="/itineraries">Travel Itineraries</a>
-        <a href="/bookings">Booking</a>
-        <a href="/payments">Payment</a>
-        <a href="/reviews">Reviews</a>
-        <a href="/supports">Support</a>
-    </nav>
-    <div class="about-link">
-        <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-    </div>
-</div>
-
-<!-- Full-Screen Hero Section -->
 <div class="hero">
     <h1>Enjoy Traveling Around With <span>Wonderous Voyages</span></h1>
     <p>Every great adventure starts with a dream. Let us turn yours into reality—book your journey today!</p>
-</div>
-
-<!-- Main Content (Starts After Hero) -->
-<div class="content">
-    <p>Other content goes here...</p>
 </div>

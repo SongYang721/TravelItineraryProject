@@ -3,7 +3,7 @@
 @using TravelItineraryProject.Domain
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 @inject NavigationManager NavigationManager
-
+@attribute [Authorize(Roles = "Administrator, Staff")]
 
 
 <PageTitle>Edit</PageTitle>
@@ -105,7 +105,7 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/itineraries");
+        NavigationManager.NavigateTo("/itinerary");
     }
 
     private bool ItineraryExists(int itineraryid)

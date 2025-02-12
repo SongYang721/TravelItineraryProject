@@ -11,7 +11,9 @@
 <h1>Index</h1>
 
 <p>
-    <a href="customers/create">Create New</a>
+    <AuthorizeView Roles="Administrator">
+        <a href="customers/create">Create New</a>
+    </AuthorizeView>
 </p>
 
 <QuickGrid Class="table" Items="context.Customer">
@@ -20,9 +22,12 @@
     <PropertyColumn Property="customer => customer.EmailAddress" />
 
     <TemplateColumn Context="customer">
-        <a href="@($"customers/edit?customerid={customer.CustomerId}")">Edit</a> |
-        <a href="@($"customers/details?customerid={customer.CustomerId}")">Details</a> |
-        <a href="@($"customers/delete?customerid={customer.CustomerId}")">Delete</a>
+        <AuthorizeView Roles="Administrator">
+            <a href="@($"customers/edit?customerid={customer.CustomerId}")">Edit</a> |
+            <a href="@($"customers/delete?customerid={customer.CustomerId}")">Delete</a> |
+        </AuthorizeView>
+        <a href="@($"customers/details?customerid={customer.CustomerId}")">Details</a> 
+
     </TemplateColumn>
 </QuickGrid>
 
