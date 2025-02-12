@@ -19,10 +19,10 @@
 @*             <DataAnnotationsValidator /> *@
 @*             <ValidationSummary class="text-danger" role="alert" /> *@
 @*             <div class="mb-3"> *@
-@*                 <label for="reviewdate" class="form-label">ReviewDate:</label>  *@
-@*                 <InputDate id="reviewdate" @bind-Value="Review.ReviewDate" class="form-control" />  *@
-@*                 <ValidationMessage For="() => Review.ReviewDate" class="text-danger" />  *@
-@*             </div>         *@
+@*                 <label for="reviewdate" class="form-label">ReviewDate:</label> *@
+@*                 <InputDate id="reviewdate" @bind-Value="Review.ReviewDate" class="form-control" /> *@
+@*                 <ValidationMessage For="() => Review.ReviewDate" class="text-danger" /> *@
+@*             </div> *@
 @*             <!-- Rating with number radio buttons --> *@
 @*             <div class="mb-3"> *@
 @*                 <label class="form-label">Rating:</label> *@
@@ -53,7 +53,8 @@
 @*                     { *@
 @*                         foreach (var itinerary in Itineraries) *@
 @*                         { *@
-@*                             <option value="@itinerary.ItineraryId">@itinerary.Title - @itinerary.TypeofTrip *@
+@*                             <option value="@itinerary.ItineraryId"> *@
+@*                                 @itinerary.Title - @itinerary.TypeofTrip *@
 @*                             </option> *@
 @*                         } *@
 @*                     } *@
@@ -71,7 +72,8 @@
 
 @* @code { *@
 @*     [SupplyParameterFromForm] *@
-@*     private Review Review { get; set; } = new() { *@
+@*     private Review Review { get; set; } = new() *@
+@*         { *@
 @*             ReviewDate = DateTime.Today *@
 @*         }; *@
 @*     private TravelItineraryProjectContext context = default!; *@

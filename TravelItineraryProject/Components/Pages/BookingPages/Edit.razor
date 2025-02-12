@@ -1,35 +1,45 @@
 ﻿<style>
     .card {
         max-width: 800px;
+        flex-direction:row !important;
         margin: auto;
         padding: 16px;
         border: 1px solid #ddd;
         border-radius: 8px;
         display: flex;
-        align-items: flex-start;
+        align-items: flex-start; /* Ensures top alignment */
+        gap: 16px; /* Adds spacing between image and text */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
-        .card img {
-            width: 250px;
-            height: auto;
-            border-radius: 8px;
-            margin-right: 16px;
-        }
+    .card img {
+        width: 250px;
+        height: 25vw;
+        border-radius: 8px;
+        object-fit: cover; /* Ensures proper image scaling */
+        flex-shrink: 0; /* Prevents image from resizing */
+    }
 
-        .card h3 {
-            margin: 0;
-            font-size: 24px;
-        }
+    .card-content {
+        flex: 1; /* Ensures text takes remaining space */
+        display: flex;
+        flex-direction: column; 
+    }
 
-        .card .form-group {
-            margin-bottom: 16px;
-        }
+    .card-content h3 {
+        margin: 0;
+        font-size: 24px;
+    }
 
-        .card button {
-            margin-right: 8px;
-        }
+    .card-content .form-group {
+        margin-bottom: 16px;
+    }
+
+    .card-content button {
+        margin-right: 8px;
+    }
 </style>
+
 
 @page "/bookings/edit/{bookingId:int}"
 @using Microsoft.EntityFrameworkCore
@@ -60,10 +70,10 @@ else
         }
         else
         {
-            <p><strong>Itinerary image not available.</strong></p>
+            <img src="/images/default-itinerary.jpg" alt="Default Itinerary Image" />
         }
 
-        <div style="flex: 1;">
+        <div class="card-content">
             <h3>@(Booking?.Itinerary?.Title ?? "No Title Available")</h3>
             <p><strong>Description:</strong> @(Booking?.Itinerary?.Description ?? "No Description Available")</p>
             <p><strong>Duration:</strong> @(Booking?.Itinerary?.Duration ?? 0) days</p>
@@ -97,11 +107,10 @@ else
             </div>
         </div>
     </div>
+
 }
 
-<div>
-    <a href="/bookings">Back to List</a>
-</div>
+
 @code {
     [Parameter] public int BookingId { get; set; }
     private Booking? Booking { get; set; }

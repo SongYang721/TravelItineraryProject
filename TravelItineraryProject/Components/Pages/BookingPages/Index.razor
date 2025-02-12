@@ -1,4 +1,5 @@
-﻿@page "/bookings"
+﻿
+@page "/bookings"
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using TravelItineraryProject.Domain
@@ -21,26 +22,28 @@
     </p>
 </AuthorizeView>
 
-<QuickGrid TItem ="Booking" Class="table" Items="@bookings">
+
+<!-- Display Bookings using QuickGrid -->
+<QuickGrid TItem="Booking" Class="table" Items="@bookings">
     <PropertyColumn Property="booking => booking.SelectedDateRange" />
     <PropertyColumn Property="booking => booking.Itinerary.Title" />
     <PropertyColumn Property="booking => booking.Itinerary.Duration" />
     <PropertyColumn Property="booking => booking.PaymentDisplayStatus" />
-    @* <PropertyColumn Property="booking => booking.StaffId" title="CheckedByStaffId" /> *@
-    @* <PropertyColumn Property="booking => booking.BookingStatus" Title="ApprovalStatus" /> *@
+
 
     <TemplateColumn Context="booking">
         <button class="btn btn-info" @onclick="() => NavigateToEdit(booking.BookingId)">Edit</button>
-            <AuthorizeView Roles="Administrator">
+        <AuthorizeView Roles="Administrator">
             <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
             <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
         </AuthorizeView>
-        @* <AuthorizeView Roles="Administrator, Staff"> *@
-        @*     <button class="btn @(booking.BookingStatus ? "btn-danger" : "btn-success")" *@
-        @*             @onclick="() => ToggleBookingStatus(booking.BookingId)"> *@
-        @*         @(booking.BookingStatus ? "Decline" : "Approve") *@
-        @*     </button> *@
-        @* </AuthorizeView> *@
+        <!-- Only Administrators and Staff can create new bookings -->
+        <AuthorizeView Roles="Administrator, Staff">
+            <button class="btn @(booking.BookingStatus ? "btn-danger" : "btn-success")"
+                    @onclick="() => ToggleBookingStatus(booking.BookingId)">
+                @(booking.BookingStatus ? "Decline" : "Approve")
+            </button>
+        </AuthorizeView>
     </TemplateColumn>
 </QuickGrid>
 
@@ -72,23 +75,24 @@
             // Look up the user in the database by their email
             var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
             var customer = await context.Customer.FirstOrDefaultAsync(c => c.EmailAddress == userEmail);
-            if (customer!= null)
+            if (customer != null)
             {
                 // Filter bookings for the current user
-                userBookings  = await context.Booking
+                userBookings = await context.Booking
                 .Include(b => b.Itinerary)
                 .Include(b => b.Payment)
                 .Where(b => b.CustomerId == customer.CustomerId).ToListAsync();
 
+                //set default values for null fields
                 foreach (var booking in userBookings)
                 {
                     booking.Itinerary.Title ??= "N/A"; // Default if null
                     booking.Itinerary.Duration ??= 0; // Default if null
                     booking.PaymentDisplayStatus = booking.Payment?.PaymentStatus == true ? "Paid" : "Pending";
                 }
-			}
-		}
-	}
+            }
+        }
+    }
 
     private async Task ToggleBookingStatus(int bookingId)
     {

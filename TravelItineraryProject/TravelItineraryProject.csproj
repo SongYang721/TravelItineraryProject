@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <None Include="wwwroot\Images\JapanItinerary.jpg" />
-    <None Include="wwwroot\Images\TaiwanItinerary.jpg" />
+    <None Include="wwwroot\Images\Taiwan.jpg" />
   </ItemGroup>
 
   <ItemGroup>

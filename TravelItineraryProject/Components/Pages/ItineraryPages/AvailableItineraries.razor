@@ -1,64 +1,60 @@
 ﻿@page "/itineraries"
 @using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components.QuickGrid
 @using TravelItineraryProject.Domain
 @using TravelItineraryProject.Data
-@rendermode InteractiveServer
-@implements IAsyncDisposable
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@implements IAsyncDisposable  
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Available Itineraries</PageTitle>
 
-<h1>Index</h1>
-
-<p>
-    <a href="itineraries/create">Create New</a>
-</p>
+<h1 class="text-center my-4">Available Itineraries</h1>
 
 @if (Itineraries == null || !Itineraries.Any())
 {
-    <p>Loading itineraries...</p>
+    <p class="text-center">Loading itineraries...</p>
 }
 else
 {
-    <QuickGrid Items="@Itineraries.AsQueryable()">
-        <PropertyColumn Property="itinerary => itinerary.Price" Title="Price" />
-        <PropertyColumn Property="itinerary => itinerary.Duration" Title="Duration" />
-        <PropertyColumn Property="itinerary => itinerary.Title" Title="Title" />
-        <PropertyColumn Property="itinerary => itinerary.PromotionAvailable" Title="Promotion Available" />
-        <PropertyColumn Property="itinerary => itinerary.TypeofTrip" Title="Type of Trip" />
-
-        <AuthorizeView Roles="Administrator, Staff">
-            <PropertyColumn Property="itinerary => itinerary.StaffId" Title="Staff ID" />
-        </AuthorizeView>
-
-        <TemplateColumn Context="itinerary">
-            <div>
-                <label>Select Date:</label>
-                <select class="form-control" @bind="SelectedDateRange[itinerary.ItineraryId]">
-                    @foreach (var dateRange in itinerary.GetAvailableDateRanges())
-                    {
-                        <option value="@dateRange">@dateRange</option>
-                    }
-                </select>
-            </div>
-            <button class="btn btn-primary"
-                    @onclick="() => ProceedToPayment(itinerary.ItineraryId)"
-                    disabled="@IsBookingDisabled(itinerary.ItineraryId)">
-                Book
-            </button>
-        </TemplateColumn>
-
-        <TemplateColumn Context="itinerary">
-            <AuthorizeView Roles="Administrator, Staff">
-                <a href="@($"itineraries/edit?itineraryid={itinerary.ItineraryId}")">Edit</a> |
-                <a href="@($"itineraries/details?itineraryid={itinerary.ItineraryId}")">Details</a> |
-                <a href="@($"itineraries/delete?itineraryid={itinerary.ItineraryId}")">Delete</a>
-            </AuthorizeView>
-        </TemplateColumn>
-    </QuickGrid>
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var itinerary in Itineraries)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow">
+                        <img src="@itinerary.ImageUrl" class="card-img-top" alt="Cabin Image" style="height:16vw;">
+                        <div class="card-body">
+                            <h5 class="card-title">@itinerary.Title</h5>
+                            <p class="card-text">
+                                <strong>Duration:</strong> @itinerary.Duration days<br>
+                                <strong>Price:</strong> $@itinerary.Price<br>
+                                <strong>Type:</strong> @itinerary.TypeofTrip<br>
+                                @((MarkupString)(itinerary.PromotionAvailable
+                                            ? "<span class='badge bg-success'>Promotion Available</span>"
+                                            : "<span class='badge bg-secondary'>No Promotion</span>"))
+                            </p>
+                        </div>
+                        <div class="card-footer bg-white">
+                            <label>Select Date:</label>
+                            <select class="form-control" @bind="SelectedDateRange[itinerary.ItineraryId]">
+                                @foreach (var dateRange in itinerary.GetAvailableDateRanges())
+                                {
+                                    <option value="@dateRange">@dateRange</option>
+                                }
+                            </select>
+                            <button class="btn btn-primary mt-2 w-100"
+                            @onclick="() => ProceedToPayment(itinerary.ItineraryId)"
+                            disabled="@IsBookingDisabled(itinerary.ItineraryId)">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 }
 
 @code {
@@ -69,9 +65,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
         using var dbContext = DbFactory.CreateDbContext();
 
-        // Ensure Itineraries is populated
+        // Load Itineraries
         Itineraries = await dbContext.Itinerary.AsQueryable().ToListAsync();
 
         if (!Itineraries.Any())
@@ -80,30 +78,18 @@ else
             return;
         }
 
-        // Get logged-in user
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var userEmail = authState.User.Identity?.Name;
 
         if (string.IsNullOrEmpty(userEmail))
         {
-            Console.WriteLine("User is not logged in. Clearing booking data.");
-            ExistingBookings.Clear();
-            SelectedDateRange.Clear();
-            Itineraries.Clear();  // Ensure UI refresh properly
-            StateHasChanged();
-            return;
-        }
-        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
-        if (user == null)
-        {
-            Console.WriteLine("User not found.");
+            Console.WriteLine("User is not logged in.");
             return;
         }
 
-        if (user.CustomerId == null)
+        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+        if (user == null || user.CustomerId == null)
         {
-            Console.WriteLine("CustomerId is null. Clearing booking data.");
-            ExistingBookings.Clear();
+            Console.WriteLine("User not found or CustomerId is null.");
             return;
         }
 
@@ -118,7 +104,7 @@ else
         // Initialize dropdown values
         foreach (var itinerary in Itineraries)
         {
-            if (!SelectedDateRange.ContainsKey(itinerary.ItineraryId) || string.IsNullOrEmpty(SelectedDateRange[itinerary.ItineraryId]))
+            if ((!SelectedDateRange.ContainsKey(itinerary.ItineraryId) ) || (string.IsNullOrEmpty(SelectedDateRange[itinerary.ItineraryId])))
             {
                 var firstAvailableDate = itinerary.GetAvailableDateRanges().FirstOrDefault();
                 SelectedDateRange[itinerary.ItineraryId] = !string.IsNullOrEmpty(firstAvailableDate) ? firstAvailableDate : "No Available Dates";
@@ -126,15 +112,14 @@ else
         }
         StateHasChanged();// Refresh UI dynamically
     }
+
     private bool IsBookingDisabled(int itineraryId)
     {
-        if (!SelectedDateRange.ContainsKey(itineraryId))
+        if (SelectedDateRange.TryGetValue(itineraryId, out var selectedDate))
         {
-            return true; // Disable booking if key doesn't exist
+            return ExistingBookings.Contains($"{itineraryId}-{selectedDate}");
         }
-
-        var selectedDate = SelectedDateRange[itineraryId];
-        return ExistingBookings.Contains($"{itineraryId}-{selectedDate}");
+        return false;
     }
 
     private async Task ProceedToPayment(int itineraryId)
@@ -145,20 +130,36 @@ else
             return;
         }
 
-        // 🔹 Ensure UI is refreshed before navigating
         StateHasChanged();
-
-        // 🔹 Navigate to the payment page with selected date
         NavigationManager.NavigateTo($"/payments/create?itineraryId={itineraryId}&selectedDateRange={Uri.EscapeDataString(selectedFullRange)}");
     }
 
-    // 🔹 Ensure database context is disposed properly
+    //    private string GetImageUrl(Itinerary itinerary)
+    // {
+    // Replace with actual image URLs or use a default image
+    //  return "/images/sample-cabin.jpg";
+    //}
+
     public async ValueTask DisposeAsync()
     {
         if (context != null)
         {
+            Itineraries.Clear(); // Prevent UI from displaying old data
+            SelectedDateRange.Clear(); // Reset dictionary to avoid stale references
+            ExistingBookings.Clear(); // Remove old booking state
+
+            NavigationManager.NavigateTo("Account/Login", forceLoad: true);
+            await Task.Delay(500);
+
             await context.DisposeAsync();
+            context = null;
         }
     }
+    
+     
+    }
 
-}
+
+
+
+

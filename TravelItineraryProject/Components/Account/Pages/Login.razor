@@ -12,57 +12,118 @@
 
 <PageTitle>Log in</PageTitle>
 
-<h1>Log in</h1>
-<div class="row">
-    <div class="col-md-4">
+<div class="login-container">
+    <div class="login-form">
         <section>
+            <h2 class="login-title">Log in</h2>
             <StatusMessage Message="@errorMessage" />
             <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator />
-                <h2>Use a local account to log in.</h2>
-                <hr />
                 <ValidationSummary class="text-danger" role="alert" />
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label for="email" class="form-label">Email</label>
-                    <ValidationMessage For="() => Input.Email" class="text-danger" />
+
+                <div class="input-group">
+                    <span class="icon">&#128231;</span>
+                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" placeholder="Email or phone number" />
                 </div>
-                <div class="form-floating mb-3">
-                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label for="password" class="form-label">Password</label>
-                    <ValidationMessage For="() => Input.Password" class="text-danger" />
+                <ValidationMessage For="() => Input.Email" class="text-danger" />
+
+                <div class="input-group">
+                    <span class="icon">&#128274;</span>
+                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" placeholder="Password" />
                 </div>
+                <ValidationMessage For="() => Input.Password" class="text-danger" />
+
                 <div class="checkbox mb-3">
-                    <label class="form-label">
-                        <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
+                    <label>
+                        <InputCheckbox @bind-Value="Input.RememberMe" class="form-check-input" />
                         Remember me
                     </label>
                 </div>
-                <div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-                </div>
-                <div>
-                    <p>
-                        <a href="Account/ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
-                    </p>
-                    <p>
-                        <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
-                    </p>
+
+                <button type="submit" class="btn-login">Login</button>
+
+                <div class="login-links">
+                    <a href="Account/ForgotPassword">Forgot your password?</a>
+                    <a href="@(NavigationManager.GetUriWithQueryParameters("User/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Sign up</a>
                 </div>
             </EditForm>
         </section>
     </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to log in.</h3>
-            <hr />
-            <ExternalLoginPicker />
-        </section>
+    <div class="login-image">
+        <img src="/images/Computer.jpg" alt="Illustration" />
     </div>
 </div>
+
+<style>
+    .login-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 100vh;
+        padding: 20px;
+        background: linear-gradient(to right, #e6f7f8, #d1eaff);
+    }
+
+    .login-form {
+        width: 40%;
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-title {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .input-group {
+        display: flex;
+        align-items: center;
+        background: #f1f5f8;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .icon {
+        margin-right: 10px;
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 10px;
+        background: #00a19c;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .login-links {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+        .login-links a {
+            display: block;
+            margin: 5px 0;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+    .login-image {
+        width: 50%;
+        display: flex;
+        justify-content: center;
+    }
+
+        .login-image img {
+            max-width: 100%;
+            height: auto;
+        }
+</style>
 
 @code {
     private string? errorMessage;
@@ -80,15 +141,12 @@
     {
         if (HttpMethods.IsGet(HttpContext.Request.Method))
         {
-            // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
         }
     }
 
     public async Task LoginUser()
     {
-        // This doesn't count login failures towards account lockout
-        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
         var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
         {
