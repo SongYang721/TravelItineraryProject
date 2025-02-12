@@ -6,44 +6,154 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Support Requests</PageTitle>
 
-<h1>Index</h1>
+<style>
+    /* Container styling for the support request page */
+    .support-container {
+        max-width: 1100px;
+        margin: 40px auto;
+        background: #f9f9f9;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        color: #333;
+        text-align: center;
+    }
 
-<AuthorizeView Roles="Administrator, User">
-    <p>
-        <a href="support/request">Create New</a>
-    </p>
-</AuthorizeView>
+    /* Header styling */
+    .support-header {
+        font-size: 28px;
+        margin-bottom: 25px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: #007bff;
+    }
 
-<QuickGrid Class="table" Items="context.SupportRequest">
-    <PropertyColumn Property="supportrequest => supportrequest.Comments" />
-    <PropertyColumn Property="supportrequest => supportrequest.TypeofSupport" />
-    <PropertyColumn Property="supportrequest => supportrequest.Responds" />
-    <AuthorizeView Roles="Administrator, Staff">
-        <PropertyColumn Property="supportrequest => supportrequest.CustomerId" />
-        <PropertyColumn Property="supportrequest => supportrequest.StaffId" />
-        <PropertyColumn Property="supportrequest => supportrequest.Assisted" />
+    /* Table container styling */
+    .table-container {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Table styling */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background: #007bff;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .table tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+
+    /* Assisted status badge */
+    .badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .badge-yes {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .badge-no {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    /* Action links styling */
+    .action-links a {
+        margin: 0 10px;
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        .action-links a:hover {
+            text-decoration: underline;
+        }
+
+    .btn-back {
+        background: #28a745;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="support-container">
+    <div class="support-header">Support Requests</div>
+
+    <!-- Back to Support Page Button -->
+    <AuthorizeView Roles="Administrator, User">
+        <a href="support/request" class="btn-back">Back to Get Support</a>
     </AuthorizeView>
 
-    <TemplateColumn Context="supportrequest">
-        <AuthorizeView Roles="Administrator, Staff">
-            <a href="@($"supportrequests/respond?supportrequestid={supportrequest.SupportRequestId}")">Respond</a> |
-        </AuthorizeView>
-        <a href="@($"supportrequests/details?supportrequestid={supportrequest.SupportRequestId}")">Details</a>
-        <AuthorizeView Roles="Administrator">
-            | <a href="@($"supportrequests/delete?supportrequestid={supportrequest.SupportRequestId}")">Delete</a>
-        </AuthorizeView>
-    </TemplateColumn>
-</QuickGrid>
+    <!-- Table displaying support requests -->
+    <div class="table-container">
+        <QuickGrid Class="table" Items="context.SupportRequest">
+            <PropertyColumn Title="Comments" Property="supportrequest => supportrequest.Comments" />
+            <PropertyColumn Title="Type of Support" Property="supportrequest => supportrequest.TypeofSupport" />
+            <PropertyColumn Title="Response" Property="supportrequest => supportrequest.Responds" />
+            <TemplateColumn Title="Assisted" Context="supportrequest">
+                <span class="badge @(supportrequest.Assisted ? "badge-yes" : "badge-no")">
+                    @(supportrequest.Assisted ? "Yes" : "No")
+                </span>
+            </TemplateColumn>
+
+            <AuthorizeView Roles="Administrator, Staff">
+                <PropertyColumn Title="Customer ID" Property="supportrequest => supportrequest.CustomerId" />
+                <PropertyColumn Title="Staff ID" Property="supportrequest => supportrequest.StaffId" />
+            </AuthorizeView>
+
+            <!-- Action buttons for managing support requests -->
+            <TemplateColumn Context="supportrequest" Title="Actions">
+                <div class="action-links">
+                    <AuthorizeView Roles="Administrator, Staff">
+                        <a href="@($"supportrequests/respond?supportrequestid={supportrequest.SupportRequestId}")">Respond</a> |
+                    </AuthorizeView>
+                    <a href="@($"supportrequests/details?supportrequestid={supportrequest.SupportRequestId}")">Details</a>
+                    <AuthorizeView Roles="Administrator">
+                        | <a href="@($"supportrequests/delete?supportrequestid={supportrequest.SupportRequestId}")">Delete</a>
+                    </AuthorizeView>
+                </div>
+            </TemplateColumn>
+        </QuickGrid>
+    </div>
+</div>
 
 @code {
     private TravelItineraryProjectContext context = default!;
 
+    // Initialize database context when the component is loaded
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
     }
 
+    // Dispose of database context when the component is no longer needed
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }

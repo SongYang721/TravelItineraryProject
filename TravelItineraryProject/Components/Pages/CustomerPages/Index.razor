@@ -6,38 +6,110 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Customer List</PageTitle>
 
-<h1>Index</h1>
+<style>
+    /* Container styling for the customer list page */
+    .customer-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        background: linear-gradient(135deg, #4b0082, #800080);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        color: white;
+        text-align: center;
+    }
 
-<p>
-    <AuthorizeView Roles="Administrator">
-        <a href="customers/create">Create New</a>
-    </AuthorizeView>
-</p>
+    /* Header styling for the customer list */
+    .customer-header {
+        font-size: 28px;
+        margin-bottom: 25px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
 
-<QuickGrid Class="table" Items="context.Customer">
-    <PropertyColumn Property="customer => customer.FirstName" />
-    <PropertyColumn Property="customer => customer.LastName" />
-    <PropertyColumn Property="customer => customer.EmailAddress" />
+    /* Table container styling */
+    .table-container {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+    }
 
-    <TemplateColumn Context="customer">
+    /* Table styling for customer records */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        color: white;
+    }
+
+        .table th, .table td {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .table th {
+            background: rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+        }
+
+        .table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+    /* Styling for action links in the customer list */
+    .action-links a {
+        margin: 0 10px;
+        color: #ffcc00;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        .action-links a:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<div class="customer-container">
+    <div class="customer-header">Customer List</div>
+
+    <!-- Only administrators can create new customers -->
+    <p>
         <AuthorizeView Roles="Administrator">
-            <a href="@($"customers/edit?customerid={customer.CustomerId}")">Edit</a> |
-            <a href="@($"customers/delete?customerid={customer.CustomerId}")">Delete</a> |
+            <a href="customers/create" class="btn btn-primary">Create New</a>
         </AuthorizeView>
-        <a href="@($"customers/details?customerid={customer.CustomerId}")">Details</a> 
+    </p>
 
-    </TemplateColumn>
-</QuickGrid>
+    <!-- Table displaying customer information -->
+    <div class="table-container">
+        <QuickGrid Class="table" Items="context.Customer">
+            <PropertyColumn Title="First Name" Property="customer => customer.FirstName" />
+            <PropertyColumn Title="Last Name" Property="customer => customer.LastName" />
+            <PropertyColumn Title="Email Address" Property="customer => customer.EmailAddress" />
+
+            <!-- Action buttons for customer management -->
+            <TemplateColumn Context="customer" Title="Actions">
+                <div class="action-links">
+                    <AuthorizeView Roles="Administrator">
+                        <a href="@($"customers/edit?customerid={customer.CustomerId}")">Edit</a> |
+                        <a href="@($"customers/delete?customerid={customer.CustomerId}")">Delete</a> |
+                    </AuthorizeView>
+                    <a href="@($"customers/details?customerid={customer.CustomerId}")">Details</a>
+                </div>
+            </TemplateColumn>
+        </QuickGrid>
+    </div>
+</div>
 
 @code {
     private TravelItineraryProjectContext context = default!;
 
+    // Initialize database context when the component is loaded
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
     }
 
+    // Dispose of database context when the component is no longer needed
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }

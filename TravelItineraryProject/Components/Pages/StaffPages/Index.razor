@@ -9,6 +9,7 @@
 <PageTitle>Staff List</PageTitle>
 
 <style>
+    /* Container styling for the staff list page */
     .staff-container {
         max-width: 1000px;
         margin: 40px auto;
@@ -20,6 +21,7 @@
         text-align: center;
     }
 
+    /* Header styling for the staff list */
     .staff-header {
         font-size: 28px;
         margin-bottom: 25px;
@@ -27,12 +29,14 @@
         text-transform: uppercase;
     }
 
+    /* Container for table styling */
     .table-container {
         background: rgba(255, 255, 255, 0.1);
         border-radius: 10px;
         padding: 20px;
     }
 
+    /* Table styling for better readability */
     .table {
         width: 100%;
         border-collapse: collapse;
@@ -53,6 +57,7 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
+    /* Styling for action links in the staff list */
     .action-links a {
         margin: 0 10px;
         color: #00c3ff;
@@ -68,17 +73,20 @@
 <div class="staff-container">
     <div class="staff-header">Staff List</div>
 
+    <!-- Only administrators can create new staff members -->
     <AuthorizeView Roles="Administrator">
         <p>
             <a href="staff/create" class="btn btn-primary">Create New</a>
         </p>
     </AuthorizeView>
 
+    <!-- Table displaying staff information -->
     <div class="table-container">
         <QuickGrid Class="table" Items="context.Staff">
             <PropertyColumn Title="Email" Property="staff => staff.Email" />
             <PropertyColumn Title="Name" Property="staff => staff.Name" />
 
+            <!-- Action buttons for staff management -->
             <TemplateColumn Context="staff" Title="Actions">
                 <div class="action-links">
                     <AuthorizeView Roles="Administrator">
@@ -95,10 +103,12 @@
 @code {
     private TravelItineraryProjectContext context = default!;
 
+    // Initialize database context when the component is loaded
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
     }
 
+    // Dispose of database context when the component is no longer needed
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }

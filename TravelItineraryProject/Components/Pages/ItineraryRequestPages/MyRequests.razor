@@ -1,95 +1,120 @@
 ﻿@page "/itineraryMyrequests"
 @using Microsoft.EntityFrameworkCore
-@using TravelItineraryProject.Data 
-@using TravelItineraryProject.Domain 
-@rendermode InteractiveServer   
-@implements IAsyncDisposable   
-@inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory 
-@inject AuthenticationStateProvider AuthenticationStateProvider 
+@using TravelItineraryProject.Data
+@using TravelItineraryProject.Domain
+@rendermode InteractiveServer
+@implements IAsyncDisposable
+@inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
 <PageTitle>My Custom Itinerary Requests</PageTitle>
 
 <h1>My Customised Itinerary Requests</h1>
 
-@if (ItineraryRequests == null || !ItineraryRequests.Any()){
+@if (ItineraryRequests == null || !ItineraryRequests.Any())
+{
     <p class="text-gray-600 mt-4">You have not created any custom itinerary requests.</p>
 }
 
 else
 {
-<div class="container mt-4">
-    <h2 class="text-2xl font-bold text-gray-800 mb-4">Your Itinerary Requests</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="container mt-4">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Your Itinerary Requests</h2>
+        <div class="grid row row-cols-1 row-cols-md-3 g-4">
             @foreach (var itinerary in ItineraryRequests)
             {
-                <div class="bg-white shadow-md rounded-lg overflow-hidden">
-                    <div class="p-4">
-                        <h3 class="text-xl font-bold text-gray-900">@itinerary.Destination</h3>
-                        <p class="text-gray-700 mt-2">@itinerary.TypeOfTrip</p>
-                        <p class="text-green-600 font-semibold mt-4">Status: @(itinerary.RequestApproval ? "Approved" : "Pending")</p>
-
-                        <div class="flex gap-2 mt-4">
-                            <button class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-                                    @onclick="() => CancelRequestAsync(itinerary)">
-                                Cancel Request
-                            </button>
-
-                            @if (LoggedInCustomerId != null && LoggedInCustomerId == itinerary.CustomerId)
+                <div class="col">
+                    <div class="card profile-card-5 mb">
+                        <div class="card-img-block">
+                            @if (@itinerary.Destination == "New York")
                             {
-                                <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600
-            disabled:opacity-50 disabled:cursor-not-allowed"
-                                        @onclick="() => EditRequest(itinerary.Id)"
-                                        disabled="@(itinerary.NumberOfRequests >= 3)">
-                                    Edit
-                                </button>
+                                <img class="card-img-top px-2 py-2" src="Images/NewYork.jpg" alt="Card image cap" style="height:16vw;">
                             }
+                            else if (@itinerary.Destination == "Paris")
+                            {
+                                <img class="card-img-top px-2 py-2" src="Images/Paris.jpg" alt="Card image cap" style="height:16vw;" />
+                            }
+                            else if (@itinerary.Destination == "Sydney")
+                            {
+                                <img class="card-img-top px-2 py-2" src="Images/Sydney.jpg" alt="Card image cap" style="height:16vw;" />
+                            }
+                            else if (@itinerary.Destination == "Rome")
+                            {
+                                <img class="card-img-top px-2 py-2" src="Images/Rome.jpg" alt="Card image cap" style="height:16vw;" />
+                            }
+                            else
+                            {
+                                <img class="card-img-top px-2 py-2" src="Images/Tokyo.jpg" alt="Card image cap" style="height:16vw;" />
+                            }
+
+                        </div>
+                        <div class="card-body pt-2">
+                            <h5 class="card-title fw-bold">@itinerary.Destination</h5>
+                            <p class="fst-italic my-2 card-text">@itinerary.TypeOfTrip</p>
+                            <p class="fw-semibold my-2 card-text">Status: @(itinerary.RequestApproval ? "Approved" : "Pending")</p>
+
+                            <div class="flex gap-2 mt-4">
+                                <button class="btn btn-danger me-2"
+                                        @onclick="() => CancelRequestAsync(itinerary)">
+                                    Cancel Request
+                                </button>
+
+                                @if (LoggedInCustomerId != null && LoggedInCustomerId == itinerary.CustomerId)
+                                {
+                                    <button class="btn btn-warning"
+                                            @onclick="() => EditRequest(itinerary.Id)"
+                                            disabled="@(itinerary.NumberOfRequests >= 3)">
+                                        Edit
+                                    </button>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
             }
-      </div> 
-   </div> 
-} 
+        </div>
+    </div>
+}
 
-@code { 
-       private TravelItineraryProjectContext context = default!; 
-       private List<ItineraryDisplay> ItineraryRequests = new(); 
-       private int? LoggedInCustomerId; 
+@code {
+    private TravelItineraryProjectContext context = default!;
+    private List<ItineraryDisplay> ItineraryRequests = new();
+    private int? LoggedInCustomerId;
 
-       protected override async Task OnInitializedAsync() 
-       {
+    protected override async Task OnInitializedAsync()
+    {
 
         context = DbFactory.CreateDbContext();
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync(); 
-        var userEmail = authState.User.Identity?.Name; 
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userEmail = authState.User.Identity?.Name;
 
-        if (userEmail != null) 
-         { 
-           var customer = await context.Customer.FirstOrDefaultAsync(c => c.EmailAddress == userEmail); 
-            if (customer != null) 
-            { 
-                LoggedInCustomerId = customer.CustomerId; 
-                
-                ItineraryRequests = await context.ItineraryRequest 
-                    .Where(i => i.CustomerId == LoggedInCustomerId) 
-                     .Select(i => new ItineraryDisplay 
-                         { 
-                            Id = i.ItineraryRequestId, 
-                            Destination = i.Destination, 
-                            TypeOfTrip = i.TypeOfTrip, 
-                            RequestApproval = i.RequestApproval, 
-                            NumberOfRequests = i.NumberOfRequests ?? 0,
-                            CustomerId = i.CustomerId
+        if (userEmail != null)
+        {
+            var customer = await context.Customer.FirstOrDefaultAsync(c => c.EmailAddress == userEmail);
+            if (customer != null)
+            {
+                LoggedInCustomerId = customer.CustomerId;
 
-                         }) 
-                     .ToListAsync(); 
-             } 
-        } 
+                ItineraryRequests = await context.ItineraryRequest
+                    .Where(i => i.CustomerId == LoggedInCustomerId)
+                     .Select(i => new ItineraryDisplay
+                         {
+                             Id = i.ItineraryRequestId,
+                             Destination = i.Destination,
+                             TypeOfTrip = i.TypeOfTrip,
+                             RequestApproval = i.RequestApproval,
+                             NumberOfRequests = i.NumberOfRequests ?? 0,
+                             CustomerId = i.CustomerId
+
+                         })
+                     .ToListAsync();
+            }
+        }
 
 
-       }
-    
+    }
+
 
     private async Task CancelRequestAsync(ItineraryDisplay itinerary)
     {
@@ -119,19 +144,20 @@ else
     }
 
 
-     public async ValueTask DisposeAsync() => await context.DisposeAsync(); 
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
 
-     private class ItineraryDisplay 
+    private class ItineraryDisplay
 
-    {     
+    {
 
 
-       public int Id { get; set; } 
-       public string? Destination { get; set; }   public string? TypeOfTrip { get; set; } 
-       public bool RequestApproval { get; set; }
-	   public int? CustomerId { get; set; }
+        public int Id { get; set; }
+        public string? Destination { get; set; }
+        public string? TypeOfTrip { get; set; }
+        public bool RequestApproval { get; set; }
+        public int? CustomerId { get; set; }
         public int NumberOfRequests { get; set; }
-       // public string ImageUrl { get; set; }
-    } 
-@* } *@
+        // public string ImageUrl { get; set; }
+    }
+    @* } *@
 }

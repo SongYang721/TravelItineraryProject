@@ -6,20 +6,117 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @rendermode InteractiveServer
 
-<PageTitle>Create Itinerary</PageTitle>
+<style>
 
-<h1>Create Itinerary</h1>
-<hr />
+    .page {
+        background: url('./Images/Background2.jpg');
+        height: 100%;
+        /* Center and scale the image nicely */
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
 
-<div class="row">
-    <div class="col-md-4">
-        <EditForm Model="ItineraryRequest" OnValidSubmit="AddItineraryRequest" FormName="create">
+    /* Background Styling */
+    .create-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        /* background: url('./Images/Background2.jpg'); */
+        /* height: 100%; */
+        /* /* Center and scale the image nicely */ */
+        /* background-position: center; */
+        /* background-repeat: no-repeat; */
+        /* background-size: cover; */
+    }
+
+    /* Form Card */
+    .form-card {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        width: 400px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        text-align: center;
+    }
+
+        .form-card h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+    /* Form Controls */
+    .form-group {
+        margin-bottom: 15px;
+        text-align: left;
+    }
+
+    label {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #444;
+    }
+
+    select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1rem;
+        background: #f7f7f7;
+        transition: 0.3s;
+    }
+
+        select:focus {
+            border-color: #ff6600;
+            outline: none;
+        }
+
+    /* Buttons */
+    .btn-primary {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 8px;
+        border: none;
+        background: #ff6600;
+        color: white;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        .btn-primary:hover {
+            background: #e65c00;
+        }
+
+    .back-link {
+        display: block;
+        margin-top: 15px;
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+    }
+
+        .back-link:hover {
+            color: #ff6600;
+        }
+</style>
+
+<div class="create-container">
+    <div class="form-card">
+        <h1>Create Itinerary</h1>
+        <EditForm Model="ItineraryRequest" OnValidSubmit="AddItineraryRequest">
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert" />
 
-            <div class="mb-3">
-                <label for="destination" class="form-label">Destination:</label>
-                <select id="destination" @bind="ItineraryRequest.Destination" class="form-select">
+            <!-- Destination -->
+            <div class="form-group">
+                <label for="destination">Destination:</label>
+                <select id="destination" @bind="ItineraryRequest.Destination">
                     <option value="">-- Select Destination --</option>
                     @foreach (var destination in AvailableDestinations)
                     {
@@ -29,9 +126,10 @@
                 <ValidationMessage For="() => ItineraryRequest.Destination" class="text-danger" />
             </div>
 
-            <div class="mb-3">
-                <label for="typeoftrip" class="form-label">Type of Trip:</label>
-                <select id="typeoftrip" @bind="ItineraryRequest.TypeOfTrip" class="form-select">
+            <!-- Trip Type -->
+            <div class="form-group">
+                <label for="typeoftrip">Type of Trip:</label>
+                <select id="typeoftrip" @bind="ItineraryRequest.TypeOfTrip">
                     <option value="">-- Select Trip Type --</option>
                     @foreach (var type in AvailableTripTypes)
                     {
@@ -41,21 +139,15 @@
                 <ValidationMessage For="() => ItineraryRequest.TypeOfTrip" class="text-danger" />
             </div>
 
-
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn-primary">Create Itinerary</button>
         </EditForm>
+
+        <a href="/itineraryrequests" class="back-link">← Back to List</a>
     </div>
 </div>
 
-<div>
-    <a href="/itineraryrequests">Back to List</a>
-</div>
-
 @code {
-    private ItineraryRequest ItineraryRequest { get; set; } = new(); // ✅ Ensure ItineraryRequest is initialized
-
-    private DateTime? TravelMonthYear { get; set; } // ✅ Temporary DateTime property for binding
-
+    private ItineraryRequest ItineraryRequest { get; set; } = new();
     private List<string> AvailableDestinations = new() { "Tokyo", "New York", "Paris", "Sydney", "Rome" };
     private List<string> AvailableTripTypes = new() { "Vacation", "Business", "Adventure", "Cultural", "Relaxation" };
 
@@ -64,8 +156,6 @@
         try
         {
             using var context = DbFactory.CreateDbContext();
-
-            //  Get logged-in user's email
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var userEmail = authState.User.Identity?.Name;
 
@@ -75,7 +165,6 @@
                 return;
             }
 
-            //  Find the customer based on email
             var customer = await context.Customer.FirstOrDefaultAsync(c => c.EmailAddress == userEmail);
             if (customer == null)
             {
@@ -83,19 +172,15 @@
                 return;
             }
 
-            // Assign values to ItineraryRequest
             ItineraryRequest.CustomerId = customer.CustomerId;
             ItineraryRequest.RequestApproval = false;
             ItineraryRequest.NumberOfRequests = 1;
 
-            
-
-            //  Save the itinerary
             context.ItineraryRequest.Add(ItineraryRequest);
             await context.SaveChangesAsync();
 
             Console.WriteLine("Itinerary created successfully.");
-            NavigationManager.NavigateTo("/itineraryrequests");
+            NavigationManager.NavigateTo("/itineraryMyrequests");
         }
         catch (Exception ex)
         {

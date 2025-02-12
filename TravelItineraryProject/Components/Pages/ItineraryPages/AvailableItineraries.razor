@@ -58,10 +58,10 @@ else
 }
 
 @code {
-    private TravelItineraryProjectContext context = default!;
-    private List<Itinerary> Itineraries = new();
-    private Dictionary<int, string> SelectedDateRange = new();
-    private HashSet<string> ExistingBookings = new();
+    private TravelItineraryProjectContext context = default!; // Database context
+    private List<Itinerary> Itineraries = new(); // List to store itineraries
+    private Dictionary<int, string> SelectedDateRange = new(); // Stores selected date for each itinerary
+    private HashSet<string> ExistingBookings = new(); // Stores existing bookings to prevent duplicates
 
     protected override async Task OnInitializedAsync()
     {
@@ -69,7 +69,7 @@ else
 
         using var dbContext = DbFactory.CreateDbContext();
 
-        // Load Itineraries
+        // Load all itineraries from the database
         Itineraries = await dbContext.Itinerary.AsQueryable().ToListAsync();
 
         if (!Itineraries.Any())
@@ -86,6 +86,7 @@ else
             return;
         }
 
+        // Fetch user data
         var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
         if (user == null || user.CustomerId == null)
         {
@@ -101,18 +102,19 @@ else
 
         ExistingBookings = new HashSet<string>(userBookings);
 
-        // Initialize dropdown values
+        // Initialize dropdown values for each itinerary
         foreach (var itinerary in Itineraries)
         {
-            if ((!SelectedDateRange.ContainsKey(itinerary.ItineraryId) ) || (string.IsNullOrEmpty(SelectedDateRange[itinerary.ItineraryId])))
+            if ((!SelectedDateRange.ContainsKey(itinerary.ItineraryId)) || (string.IsNullOrEmpty(SelectedDateRange[itinerary.ItineraryId])))
             {
                 var firstAvailableDate = itinerary.GetAvailableDateRanges().FirstOrDefault();
                 SelectedDateRange[itinerary.ItineraryId] = !string.IsNullOrEmpty(firstAvailableDate) ? firstAvailableDate : "No Available Dates";
             }
         }
-        StateHasChanged();// Refresh UI dynamically
+        StateHasChanged(); // Refresh UI dynamically
     }
 
+    // Checks if booking is disabled based on existing bookings
     private bool IsBookingDisabled(int itineraryId)
     {
         if (SelectedDateRange.TryGetValue(itineraryId, out var selectedDate))
@@ -122,6 +124,7 @@ else
         return false;
     }
 
+    // Navigates to payment page with selected itinerary and date
     private async Task ProceedToPayment(int itineraryId)
     {
         if (!SelectedDateRange.TryGetValue(itineraryId, out var selectedFullRange) || string.IsNullOrEmpty(selectedFullRange))
@@ -134,12 +137,7 @@ else
         NavigationManager.NavigateTo($"/payments/create?itineraryId={itineraryId}&selectedDateRange={Uri.EscapeDataString(selectedFullRange)}");
     }
 
-    //    private string GetImageUrl(Itinerary itinerary)
-    // {
-    // Replace with actual image URLs or use a default image
-    //  return "/images/sample-cabin.jpg";
-    //}
-
+    // Cleanup method to release resources and reset UI state
     public async ValueTask DisposeAsync()
     {
         if (context != null)
@@ -156,8 +154,7 @@ else
         }
     }
     
-     
-    }
+}
 
 
 

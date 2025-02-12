@@ -1,4 +1,24 @@
-﻿
+﻿<style>
+    .card-footer:last-child {
+        border-radius: 0 !important;
+    }
+
+    .card-footer {
+        padding: 0 !important;
+        background-color: unset !important;
+        border-top: unset !important;
+    }
+
+    .card-img-overlay {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        height: 100%;
+    }
+</style>
+
+
+
 @page "/itineraryrequests"
 @using Microsoft.EntityFrameworkCore
 @using TravelItineraryProject.Data
@@ -21,30 +41,36 @@ else
 {
     <div class="container mx-auto px-4 mt-4" style="font-family:'Poppins',sans-serif">
         <h2 class="text-2xl font-bold text-gray-800 mb-4">Most Requested Itineraries</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid row row-cols-1 row-cols-md-3 g-4">
             @foreach (var itinerary in PopularItineraries)
             {
-                <div class="bg-white shadow-lg rounded-lg overflow-hidden p-6 transition-transform transform hover:scale-105">
-                    <div class="p-4">
-                        <h3 class="text-xl font-bold text-gray-900">@itinerary.Destination</h3>
-                        <p class="text-gray-700 mt-2">@itinerary.TypeOfTrip</p>
-                        <p class="text-gray-500 text-sm mt-2">Requests: @itinerary.NumberOfRequests</p>
+                <div class="col">
+                    <div class="card">
+                        <img src="/Images/Tokyo.jpg" class="card-img-top" alt="...">
+                        <div class="card-img-overlay">
+                            <h5 class="card-title"></h5>
+                            <div class="card-footer text-center text-white">
+                                <h4 class="fw-bold">
+                                    @itinerary.Destination
+                                </h4>
+                                <p>@itinerary.TypeOfTrip</p>
+                                <p>Requests: @itinerary.NumberOfRequests</p>
+                                <div class="flex gap-2 mt-4">
+                                    <button class="btn btn-outline-light"
+                                            @onclick="() => CreateRequestAsync(itinerary)"
+                                            disabled="@GetUserRequestStatus(itinerary.Id)">
+                                        Request
+                                    </button>
 
-                        <div class="flex gap-2 mt-4">
-                            <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600
-                                    disabled:opacity-50 disabled:cursor-not-allowed"
-                                    @onclick="() => CreateRequestAsync(itinerary)"
-                                    disabled="@GetUserRequestStatus(itinerary.Id)">
-                                Request
-                            </button>
-
-                            @if (LoggedInCustomerId != null && LoggedInCustomerId == itinerary.CustomerId)
-                            {
-                                <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-                                        @onclick="() => EditRequest(itinerary.Id)">
-                                    Edit
-                                </button>
-                            }
+                                    @if (LoggedInCustomerId != null && LoggedInCustomerId == itinerary.CustomerId)
+                                    {
+                                        <button class="btn btn-outline-info"
+                                                @onclick="() => EditRequest(itinerary.Id)">
+                                            Edit
+                                        </button>
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -74,7 +100,7 @@ else
                         Destination = i.Destination ?? "Unknown Destination",
                         TypeOfTrip = i.TypeOfTrip ?? "Unknown",
                         NumberOfRequests = i.NumberOfRequests ?? 0,
-						CustomerId = i.CustomerId
+                        CustomerId = i.CustomerId
                     })
                 .ToListAsync();
 

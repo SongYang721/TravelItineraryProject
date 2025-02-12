@@ -6,58 +6,124 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize(Roles = "Administrator,User")]
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Support Request</PageTitle>
 
-<h1>Create</h1>
+<style>
+    /* Container styling for the support request page */
+    .support-container {
+        max-width: 700px;
+        margin: 40px auto;
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
 
-<h2>SupportRequest</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="SupportRequest" OnValidSubmit="AddSupportRequest" FormName="create" Enhance>
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
-            <div class="mb-3">
-                <label for="comments" class="form-label">Comments:</label> 
-                <InputText id="comments" @bind-Value="SupportRequest.Comments" class="form-control" /> 
-                <ValidationMessage For="() => SupportRequest.Comments" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="typeofsupport" class="form-label">TypeofSupport:</label> 
-                <InputText id="typeofsupport" @bind-Value="SupportRequest.TypeofSupport" class="form-control" /> 
-                <ValidationMessage For="() => SupportRequest.TypeofSupport" class="text-danger" /> 
-            </div>
-            <button type="submit" class="btn btn-primary">Create</button>
-        </EditForm>
+    /* Header styling */
+    .support-header {
+        font-size: 28px;
+        margin-bottom: 25px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    /* Form styling */
+    .support-form {
+        text-align: left;
+    }
+
+        .support-form .form-label {
+            font-weight: bold;
+        }
+
+        .support-form .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+        }
+
+    /* Button styling */
+    .btn-submit {
+        background: #000;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .btn-view-responses {
+        background: #007bff;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 15px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+</style>
+
+<div class="support-container">
+    <div class="support-header">Contact Us</div>
+    <hr />
+
+    <!-- Support request form -->
+    <div class="row">
+        <div class="col-md-12">
+            <EditForm method="post" Model="SupportRequest" OnValidSubmit="AddSupportRequest" FormName="create" Enhance class="support-form">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" role="alert" />
+
+                <!-- Comments input field -->
+                <div class="mb-3">
+                    <label for="comments" class="form-label">Message:</label>
+                    <InputText id="comments" @bind-Value="SupportRequest.Comments" class="form-control" placeholder="Please enter your comments..." />
+                    <ValidationMessage For="() => SupportRequest.Comments" class="text-danger" />
+                </div>
+
+                <!-- Type of support input field -->
+                <div class="mb-3">
+                    <label for="typeofsupport" class="form-label">Type of Support:</label>
+                    <InputText id="typeofsupport" @bind-Value="SupportRequest.TypeofSupport" class="form-control" placeholder="E.g., Technical Issue, Billing Inquiry" />
+                    <ValidationMessage For="() => SupportRequest.TypeofSupport" class="text-danger" />
+                </div>
+
+                <button type="submit" class="btn-submit">Submit</button>
+            </EditForm>
+        </div>
     </div>
-</div>
 
-<div>
-    <a href="/supportrequests">Back to List</a>
+    <!-- Button to view responses -->
+    <a href="/supportrequests" class="btn-view-responses">View Responses</a>
 </div>
 
 @code {
     [SupplyParameterFromForm]
     private SupportRequest SupportRequest { get; set; } = new();
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    // Method to handle the creation of a support request
     private async Task AddSupportRequest()
     {
         using var context = DbFactory.CreateDbContext();
 
-        // Get the logged-in user's information
+        // Retrieve the logged-in user's details
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var userEmail = authState.User.Identity?.Name;
         var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
 
-        // Set UserId to the logged-in user's ID
-        // Assuming the UserId is stored in the claim or can be retrieved from a service
+        // Assign the Customer ID to the support request
         SupportRequest.CustomerId = user.CustomerId.Value;
-        SupportRequest.Assisted = false;
-        SupportRequest.StaffId = null;
+        SupportRequest.Assisted = false; // Default status of the support request
+        SupportRequest.StaffId = null; // Initially unassigned to any staff
 
         context.SupportRequest.Add(SupportRequest);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/supportrequests");
+        NavigationManager.NavigateTo("/supportrequests"); // Redirect after submission
     }
 }

@@ -1,7 +1,8 @@
-﻿<style>
+﻿edit booking
+<style>
     .card {
         max-width: 800px;
-        flex-direction:row !important;
+        flex-direction: row !important;
         margin: auto;
         padding: 16px;
         border: 1px solid #ddd;
@@ -12,32 +13,32 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .card img {
-        width: 250px;
-        height: 25vw;
-        border-radius: 8px;
-        object-fit: cover; /* Ensures proper image scaling */
-        flex-shrink: 0; /* Prevents image from resizing */
-    }
+        .card img {
+            width: 250px;
+            height: 25vw;
+            border-radius: 8px;
+            object-fit: cover; /* Ensures proper image scaling */
+            flex-shrink: 0; /* Prevents image from resizing */
+        }
 
     .card-content {
         flex: 1; /* Ensures text takes remaining space */
         display: flex;
-        flex-direction: column; 
+        flex-direction: column;
     }
 
-    .card-content h3 {
-        margin: 0;
-        font-size: 24px;
-    }
+        .card-content h3 {
+            margin: 0;
+            font-size: 24px;
+        }
 
-    .card-content .form-group {
-        margin-bottom: 16px;
-    }
+        .card-content .form-group {
+            margin-bottom: 16px;
+        }
 
-    .card-content button {
-        margin-right: 8px;
-    }
+        .card-content button {
+            margin-right: 8px;
+        }
 </style>
 
 
@@ -181,5 +182,5 @@ else
         NavigationManager.NavigateTo("/bookings");
     }
 
-    
+
 }

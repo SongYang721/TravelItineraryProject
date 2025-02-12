@@ -3,7 +3,7 @@
 @using TravelItineraryProject.Domain
 @inject IDbContextFactory<TravelItineraryProject.Data.TravelItineraryProjectContext> DbFactory
 @inject NavigationManager NavigationManager
-@attribute [Authorize(Roles = "Administrator, Staff")]
+
 
 
 <PageTitle>Edit</PageTitle>
@@ -22,7 +22,7 @@ else
         <div class="col-md-4">
             <EditForm method="post" Model="Itinerary" OnValidSubmit="UpdateItinerary" FormName="edit" Enhance>
                 <DataAnnotationsValidator />
-                <ValidationSummary role="alert"/>
+                <ValidationSummary role="alert" />
                 <input type="hidden" name="Itinerary.ItineraryId" value="@Itinerary.ItineraryId" />
                 <div class="mb-3">
                     <label for="price" class="form-label">Price:</label>
@@ -105,7 +105,7 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/itinerary");
+        NavigationManager.NavigateTo("/itineraries");
     }
 
     private bool ItineraryExists(int itineraryid)

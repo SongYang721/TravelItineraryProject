@@ -6,80 +6,136 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize(Roles = "Administrator, Staff")]
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Create Itinerary</PageTitle>
 
-<h1>Create</h1>
+<style>
+    body {
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+        font-family: Arial, sans-serif;
+    }
 
-<h2>Itinerary</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="Itinerary" OnValidSubmit="AddItinerary" FormName="create" Enhance>
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
-            <div class="mb-3">
-                <label for="price" class="form-label">Price:</label> 
-                <InputNumber id="price" @bind-Value="Itinerary.Price" class="form-control" /> 
-                <ValidationMessage For="() => Itinerary.Price" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="duration" class="form-label">Duration:</label> 
-                <InputNumber id="duration" @bind-Value="Itinerary.Duration" class="form-control" /> 
-                <ValidationMessage For="() => Itinerary.Duration" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="title" class="form-label">Title:</label> 
-                <InputText id="title" @bind-Value="Itinerary.Title" class="form-control" /> 
-                <ValidationMessage For="() => Itinerary.Title" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="promotionavailable" class="form-label">PromotionAvailable:</label> 
-                <InputCheckbox id="promotionavailable" @bind-Value="Itinerary.PromotionAvailable" class="form-check-input" /> 
-                <ValidationMessage For="() => Itinerary.PromotionAvailable" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="typeoftrip" class="form-label">TypeofTrip:</label> 
-                <InputText id="typeoftrip" @bind-Value="Itinerary.TypeofTrip" class="form-control" /> 
-                <ValidationMessage For="() => Itinerary.TypeofTrip" class="text-danger" /> 
-            </div>        
-          
-            <div class="mb-3">
-                <label for="dateRange" class="form-label">Available Date Ranges:</label>
-                <select id="dateRange" class="form-control" @bind="SelectedDateRange">
-                    @foreach (var dateRange in AvailableDateRanges)
-                    {
-                        <option value="@dateRange">@dateRange</option>
-                    }
-                </select>
-                <ValidationMessage For="() => SelectedDateRange" class="text-danger" />
-            </div>
-            
-            <button type="submit" class="btn btn-primary">Create</button>
-        </EditForm>
+    .itinerary-container {
+        max-width: 800px;
+        margin: 40px auto;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        color: #333;
+        text-align: left;
+    }
+
+    .form-label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .btn-create {
+        background: #007bff;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .btn-back {
+        background: #6c757d;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 15px;
+    }
+</style>
+
+<div class="itinerary-container">
+    <h1 class="text-center">Create New Itinerary</h1>
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Form to create a new itinerary -->
+            <EditForm method="post" Model="Itinerary" OnValidSubmit="AddItinerary" FormName="create" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" role="alert" />
+
+                <!-- Price input field -->
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price:</label>
+                    <InputNumber id="price" @bind-Value="Itinerary.Price" class="form-control" />
+                    <ValidationMessage For="() => Itinerary.Price" class="text-danger" />
+                </div>
+
+                <!-- Duration input field -->
+                <div class="mb-3">
+                    <label for="duration" class="form-label">Duration (days):</label>
+                    <InputNumber id="duration" @bind-Value="Itinerary.Duration" class="form-control" />
+                    <ValidationMessage For="() => Itinerary.Duration" class="text-danger" />
+                </div>
+
+                <!-- Title input field -->
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title:</label>
+                    <InputText id="title" @bind-Value="Itinerary.Title" class="form-control" />
+                    <ValidationMessage For="() => Itinerary.Title" class="text-danger" />
+                </div>
+
+                <!-- Checkbox for promotion availability -->
+                <div class="mb-3">
+                    <label for="promotionavailable" class="form-label">Promotion Available:</label>
+                    <InputCheckbox id="promotionavailable" @bind-Value="Itinerary.PromotionAvailable" class="form-check-input" />
+                    <ValidationMessage For="() => Itinerary.PromotionAvailable" class="text-danger" />
+                </div>
+
+                <!-- Trip type input field -->
+                <div class="mb-3">
+                    <label for="typeoftrip" class="form-label">Type of Trip:</label>
+                    <InputText id="typeoftrip" @bind-Value="Itinerary.TypeofTrip" class="form-control" />
+                    <ValidationMessage For="() => Itinerary.TypeofTrip" class="text-danger" />
+                </div>
+
+                <!-- Dropdown for selecting available date ranges -->
+                <div class="mb-3">
+                    <label for="dateRange" class="form-label">Available Date Ranges:</label>
+                    <select id="dateRange" class="form-control" @bind="SelectedDateRange">
+                        @foreach (var dateRange in AvailableDateRanges)
+                        {
+                            <option value="@dateRange">@dateRange</option>
+                        }
+                    </select>
+                    <ValidationMessage For="() => SelectedDateRange" class="text-danger" />
+                </div>
+
+                <button type="submit" class="btn-create">Create Itinerary</button>
+            </EditForm>
+        </div>
     </div>
-</div>
 
-<div>
-    <a href="/itineraries">Back to List</a>
+    <!-- Link to navigate back to the itinerary list -->
+    <div>
+        <a href="/itineraries" class="btn-back">Back to List</a>
+    </div>
 </div>
 
 @code {
     [SupplyParameterFromForm]
     private Itinerary Itinerary { get; set; } = new();
 
-
-
-    private List<string> AvailableDateRanges = new() { "14-16 February", "16-18 February" , "20 - 22 Febr"};
+    // List of available date ranges for selection
+    private List<string> AvailableDateRanges = new() { "14-16 February", "16-18 February", "20 - 22 February" };
     private string SelectedDateRange = "14-16 February"; // Default selection
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    // Method to add a new itinerary to the database
     private async Task AddItinerary()
     {
-        
         using var context = DbFactory.CreateDbContext();
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var userEmail = authState.User.Identity?.Name;
 
+        // If user is logged in, assign their staff ID to the itinerary
         if (!string.IsNullOrEmpty(userEmail))
         {
             var staff = await context.Staff.FirstOrDefaultAsync(s => s.Email == userEmail);
@@ -89,11 +145,11 @@
             }
         }
 
-        // 🔹 Ensure selected date range is stored
+        // Store selected date range in itinerary
         Itinerary.AvailableDateRanges = SelectedDateRange;
 
         context.Itinerary.Add(Itinerary);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/itinerary");
+        NavigationManager.NavigateTo("/itinerary"); // Redirect after saving
     }
 }
